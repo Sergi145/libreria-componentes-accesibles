@@ -110,6 +110,12 @@ npm run lint       # JS
 npm run lint:css   # CSS
 npm run lint:html  # HTML (incluye reglas de accesibilidad)
 
+# Lint JS + lint CSS + tests, todo de una vez
+npm run check
+
+# Formatear con Prettier
+npm run format
+
 # Compilar la librería (dist/<componente>/<componente>.{js,css})
 npm run build
 ```
@@ -174,6 +180,22 @@ y se puede copiar tal cual.
 | [`Popover`](src/components/popover)           | [Disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)         | Solo texto; panel junto al disparador; Esc devuelve el foco            |
 | [`Tooltip`](src/components/tooltip)           | [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/)               | Retardo con ratón, hoverable, Esc sin mover el foco                    |
 
+## Convenciones de los componentes
+
+- **API de JS**: cada componente con JS exporta una clase
+  (`new Disclosure(trigger)`) y una función `init<Nombre>s(root = document)`
+  que instancia todos los elementos marcados con su atributo `data-*`
+  (p. ej. `[data-disclosure]`). Las clases tienen `destroy()` para quitar
+  sus listeners, y el constructor lanza un error si no recibe el elemento.
+- **Estado inicial desde el HTML**: el JS lee `aria-expanded`, `hidden`,
+  etc. del marcado; no hace falta configurarlo por código.
+- **CSS**: clases BEM con prefijo `c-` (`.c-bloque`,
+  `.c-bloque__elemento`, `.c-bloque--modificador`) y valores tomados
+  siempre de los tokens `var(--...)`.
+- **Estilos aparte**: ningún `.js` importa su `.css`; enlaza el CSS con
+  `<link>`.
+- **Mejora progresiva**: el `.html` de referencia es usable sin JS.
+
 ## Checklist de accesibilidad para nuevos componentes
 
 Al añadir un componente, revisa (y documenta en su `README.md`):
@@ -197,3 +219,14 @@ Al añadir un componente, revisa (y documenta en su `README.md`):
 10. Prueba manual con **NVDA** o **VoiceOver** antes de dar el
     componente por terminado — las herramientas automáticas solo
     detectan una parte de los problemas reales.
+
+## Añadir un componente
+
+1. Crea `src/components/<nombre>/` con los archivos de la
+   [estructura](#estructura) (los componentes solo CSS no llevan `.js`
+   ni `.test.js`).
+2. Añade sus historias a la auditoría de `e2e/accessibility.spec.js`.
+3. Añade su fila a [Componentes disponibles](#componentes-disponibles)
+   y, si depende de `src/utils/` o de otro componente, indícalo en su
+   `README.md`.
+4. Pasa `npm run check` y `npm run test:e2e`.
