@@ -18,6 +18,7 @@
 <dialog
   id="ejemplo-modal"
   class="c-modal"
+  tabindex="-1"
   aria-labelledby="ejemplo-modal-title"
 >
   <form method="dialog" class="c-modal__content">
@@ -51,7 +52,7 @@
       <p>¿Seguro que quieres continuar? Esta acción no se puede deshacer.</p>
     </div>
 
-    <footer class="c-modal__footer">
+    <div class="c-modal__footer">
       <button type="submit" class="c-button c-button--secondary" value="cancel">
         Cancelar
       </button>
@@ -63,6 +64,6 @@
       >
         Confirmar
       </button>
-    </footer>
+    </div>
   </form>
 </dialog>

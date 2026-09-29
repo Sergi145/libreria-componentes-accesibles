@@ -1,0 +1,22 @@
+<!--
+  Componente: Popover
+  El marcado va siempre en el HTML: el envoltorio .c-popover agrupa al
+  <button> disparador y al panel `hidden` que le sigue justo después
+  (orden de lectura y de Tab correcto). popover.js solo añade el
+  comportamiento. Solo contenido de texto: si necesitas controles
+  dentro, usa Modal o Disclosure.
+-->
+<div class="c-popover">
+  <button
+    type="button"
+    class="c-popover__trigger"
+    data-popover
+    aria-expanded="false"
+    aria-controls="popover-iban"
+  >
+    ¿Qué es el IBAN?
+  </button>
+  <div id="popover-iban" class="c-popover__panel" hidden>
+    <p>Código de 24 caracteres que identifica tu cuenta bancaria.</p>
+  </div>
+</div>

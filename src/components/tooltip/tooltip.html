@@ -1,0 +1,86 @@
+<!--
+  Componente: Tooltip
+  El marcado va siempre en el HTML: el envoltorio .c-tooltip agrupa al
+  disparador y al <span role="tooltip"> que le sigue; el
+  disparador ya lleva aria-describedby apuntando a su id. El tooltip NO
+  lleva hidden: el CSS lo oculta solo visualmente y tooltip.js le pone
+  data-visible al mostrarlo, para que NVDA lo lea al tabular.
+-->
+
+<!-- Tooltip con texto complementario: el botón ya tiene su propio texto -->
+<span class="c-tooltip">
+  <button
+    type="button"
+    class="c-button c-button--primary"
+    data-tooltip
+    aria-describedby="tooltip-guardar"
+  >
+    Guardar
+  </button>
+  <span role="tooltip" id="tooltip-guardar" class="c-tooltip__bubble">
+    Atajo: Ctrl + S
+  </span>
+</span>
+
+<!--
+  Botón solo icono: en vez de duplicar el texto en aria-label y confiar
+  en que tooltip.js compare cadenas, aria-labelledby apunta directo al
+  <span role="tooltip">. Una sola fuente del texto, y el botón tiene
+  nombre accesible desde el principio.
+-->
+<span class="c-tooltip">
+  <button
+    type="button"
+    class="c-button c-button--secondary"
+    data-tooltip
+    aria-labelledby="tooltip-copiar"
+  >
+    <svg
+      class="c-button__icon"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <rect
+        x="9"
+        y="9"
+        width="10"
+        height="10"
+        rx="1"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      />
+      <path
+        d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      />
+    </svg>
+  </button>
+  <span
+    role="tooltip"
+    id="tooltip-copiar"
+    class="c-tooltip__bubble c-tooltip__bubble--top"
+  >
+    Copiar enlace
+  </span>
+</span>
+
+<!--
+  Elemento deshabilitado: un <button disabled> no puede recibir foco ni
+  eventos de ratón, así que no puede disparar un tooltip por sí mismo.
+  El envoltorio <span tabindex="0"> alrededor SÍ es focable: el tooltip
+  se engancha a él, no al botón.
+-->
+<span class="c-tooltip">
+  <span tabindex="0" data-tooltip aria-describedby="tooltip-continuar">
+    <button type="button" class="c-button c-button--primary" disabled>
+      Continuar
+    </button>
+  </span>
+  <span role="tooltip" id="tooltip-continuar" class="c-tooltip__bubble">
+    Completa el formulario para continuar
+  </span>
+</span>

@@ -1,0 +1,191 @@
+/**
+ * Componente: Offcanvas
+ * El <dialog> no tiene padding/fondo propios (igual que Modal, ver
+ * modal.css): todo el "chrome" visual va en .c-offcanvas__content, así
+ * un clic sobre el propio <dialog> (backdrop) se puede identificar de
+ * forma fiable como clic en el backdrop.
+ *
+ * El modificador de posición (obligatorio, uno de los cuatro) usa
+ * propiedades lógicas (inset-inline-*, inset-block-*) para que
+ * --start/--end respeten dir="rtl" sin ningún cambio.
+ */
+
+.c-offcanvas {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  border: none;
+  max-width: 100vw;
+  max-height: 100vh;
+  color: var(--color-text);
+  background: transparent;
+  box-shadow: var(--shadow-lg);
+}
+
+/* El navegador añade [open] cuando showModal()/show() está activo */
+.c-offcanvas:not([open]) {
+  display: none;
+}
+
+.c-offcanvas::backdrop {
+  background: rgb(17 24 39 / 55%);
+}
+
+.c-offcanvas--start,
+.c-offcanvas--end {
+  inset-block: 0;
+  width: min(24rem, 90vw);
+  height: 100%;
+}
+
+.c-offcanvas--start {
+  inset-inline-start: 0;
+}
+
+.c-offcanvas--end {
+  inset-inline-end: 0;
+}
+
+.c-offcanvas--top,
+.c-offcanvas--bottom {
+  inset-inline: 0;
+  width: 100%;
+  max-height: min(24rem, 90vh);
+}
+
+.c-offcanvas--top {
+  inset-block-start: 0;
+}
+
+.c-offcanvas--bottom {
+  inset-block-end: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .c-offcanvas--start {
+    animation: c-offcanvas-in-start var(--transition-base)
+      var(--easing-standard);
+  }
+
+  .c-offcanvas--end {
+    animation: c-offcanvas-in-end var(--transition-base) var(--easing-standard);
+  }
+
+  .c-offcanvas--top {
+    animation: c-offcanvas-in-top var(--transition-base) var(--easing-standard);
+  }
+
+  .c-offcanvas--bottom {
+    animation: c-offcanvas-in-bottom var(--transition-base)
+      var(--easing-standard);
+  }
+}
+
+@keyframes c-offcanvas-in-start {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes c-offcanvas-in-end {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes c-offcanvas-in-top {
+  from {
+    transform: translateY(-100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes c-offcanvas-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.c-offcanvas__content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+  padding: var(--space-5);
+  overflow-y: auto;
+  background: var(--color-surface);
+}
+
+.c-offcanvas__header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.c-offcanvas__title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.c-offcanvas__body {
+  color: var(--color-text-muted);
+}
+
+/*
+ * Variante responsive: a partir de 62em (el mismo valor que
+ * RESPONSIVE_QUERY en offcanvas.js) el panel se muestra como contenido
+ * normal, con o sin el atributo [open] — así no hay un parpadeo si el
+ * usuario ensancha la ventana con el panel abierto, mientras el JS
+ * todavía no ha llamado a close(). Añade también .c-offcanvas__trigger
+ * al botón que lo abre para que se oculte a partir del mismo ancho.
+ */
+@media (width >= 62em) {
+  .c-offcanvas--responsive,
+  .c-offcanvas--responsive:not([open]) {
+    position: static;
+    display: block;
+    inset: auto;
+    width: auto;
+    max-width: none;
+    height: auto;
+    max-height: none;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .c-offcanvas--responsive::backdrop {
+    display: none;
+  }
+
+  .c-offcanvas__trigger {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-offcanvas--start,
+  .c-offcanvas--end,
+  .c-offcanvas--top,
+  .c-offcanvas--bottom {
+    animation: none;
+  }
+}

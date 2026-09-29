@@ -1,0 +1,82 @@
+/**
+ * Componente: Popover
+ * .c-popover es el envoltorio relativo que agrupa al disparador y al
+ * panel, que va justo después en el DOM. Posición por defecto: abajo,
+ * alineado al inicio. Modificadores --top, --start y --end la cambian;
+ * usan propiedades lógicas para respetar dir="rtl". No hay volteo
+ * automático: si el panel no cabe, elige otra posición.
+ */
+
+.c-popover {
+  position: relative;
+  display: inline-block;
+}
+
+.c-popover__trigger {
+  min-block-size: var(--target-size-min);
+  min-inline-size: var(--target-size-min);
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  background: none;
+  color: var(--color-primary-700);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.c-popover__trigger:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-popover__panel {
+  position: absolute;
+  z-index: var(--z-overlay);
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  margin-block-start: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  inline-size: max-content;
+  max-inline-size: 18rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  box-shadow: var(--shadow-md);
+}
+
+.c-popover__panel[hidden] {
+  display: none;
+}
+
+.c-popover__title {
+  margin: 0 0 var(--space-1);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+}
+
+.c-popover__panel p {
+  margin: 0;
+}
+
+.c-popover__panel--top {
+  inset-block: auto 100%;
+  margin-block: 0 var(--space-2);
+}
+
+.c-popover__panel--start,
+.c-popover__panel--end {
+  inset-block-start: 0;
+  margin-block-start: 0;
+}
+
+.c-popover__panel--start {
+  inset-inline: auto 100%;
+  margin-inline-end: var(--space-2);
+}
+
+.c-popover__panel--end {
+  inset-inline-start: 100%;
+  margin-inline-start: var(--space-2);
+}

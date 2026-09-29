@@ -13,6 +13,26 @@ function buildMarkup() {
   `;
 }
 
+function buildAlertMarkup() {
+  document.body.innerHTML = `
+    <button type="button" data-modal-trigger="a1">Eliminar cuenta</button>
+    <dialog
+      id="a1"
+      class="c-modal"
+      role="alertdialog"
+      aria-labelledby="a1-title"
+      aria-describedby="a1-desc"
+    >
+      <form method="dialog" class="c-modal__content">
+        <h2 id="a1-title">¿Eliminar la cuenta?</h2>
+        <p id="a1-desc">No se puede deshacer.</p>
+        <button type="submit" value="cancel" autofocus>Cancelar</button>
+        <button type="submit" value="confirm">Eliminar</button>
+      </form>
+    </dialog>
+  `;
+}
+
 describe('Modal', () => {
   beforeEach(() => {
     buildMarkup();
@@ -74,5 +94,51 @@ describe('Modal', () => {
     expect(dialog.open).toBe(false);
     trigger.click();
     expect(dialog.open).toBe(true);
+  });
+
+  describe('variante alertdialog', () => {
+    it('isAlert es true solo cuando el <dialog> tiene role="alertdialog"', () => {
+      const dialog = document.getElementById('m1');
+      const modal = new Modal(dialog);
+
+      expect(modal.isAlert).toBe(false);
+
+      dialog.setAttribute('role', 'alertdialog');
+      expect(modal.isAlert).toBe(true);
+    });
+
+    it('un clic sobre el backdrop NO cierra un alertdialog', () => {
+      buildAlertMarkup();
+      const dialog = document.getElementById('a1');
+      const modal = new Modal(dialog);
+      modal.open();
+
+      dialog.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      expect(dialog.open).toBe(true);
+    });
+
+    it('un clic dentro del contenido de un alertdialog tampoco lo cierra', () => {
+      buildAlertMarkup();
+      const dialog = document.getElementById('a1');
+      const title = document.getElementById('a1-title');
+      const modal = new Modal(dialog);
+      modal.open();
+
+      title.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+      expect(dialog.open).toBe(true);
+    });
+
+    it('close() sigue cerrando un alertdialog (p. ej. al confirmar la acción)', () => {
+      buildAlertMarkup();
+      const dialog = document.getElementById('a1');
+      const modal = new Modal(dialog);
+      modal.open();
+
+      modal.close('confirm');
+
+      expect(dialog.open).toBe(false);
+    });
   });
 });

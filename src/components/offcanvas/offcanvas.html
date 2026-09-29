@@ -1,0 +1,47 @@
+<!--
+  Componente: Offcanvas
+  Panel lateral sobre el elemento <dialog> nativo: al abrirlo con
+  showModal(), el navegador atrapa el foco dentro del panel, lo cierra
+  con Escape y devuelve el foco al disparador — igual que Modal (ver
+  offcanvas.js). El modificador de posición (aquí --start) solo cambia
+  a qué borde se pega el panel; el comportamiento es el mismo en las
+  cuatro posiciones (--start, --end, --top, --bottom).
+  El botón de cerrar reutiliza el componente Close button
+  (../close-button/), igual que documenta su propio README.
+-->
+<button
+  type="button"
+  class="c-button c-button--primary"
+  data-offcanvas-trigger="ejemplo-offcanvas"
+  aria-controls="ejemplo-offcanvas"
+>
+  Abrir filtros
+</button>
+
+<dialog
+  id="ejemplo-offcanvas"
+  class="c-offcanvas c-offcanvas--start"
+  tabindex="-1"
+  aria-labelledby="ejemplo-offcanvas-title"
+>
+  <form method="dialog" class="c-offcanvas__content">
+    <header class="c-offcanvas__header">
+      <h2 id="ejemplo-offcanvas-title" class="c-offcanvas__title">Filtros</h2>
+      <button type="submit" class="c-close-button" aria-label="Cerrar filtros">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            d="M6 6l12 12M18 6L6 18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      </button>
+    </header>
+
+    <div class="c-offcanvas__body">
+      <p>Contenido del panel: formulario de filtros, navegación…</p>
+    </div>
+  </form>
+</dialog>

@@ -11,7 +11,14 @@
  *
  * Este módulo solo añade:
  *  - La conexión entre el botón que abre el modal y el <dialog>.
- *  - Cierre al hacer clic en el backdrop.
+ *  - Cierre al hacer clic en el backdrop (salvo en la variante
+ *    alertdialog, ver más abajo).
+ *
+ * Variante alertdialog: un <dialog role="alertdialog"> es un modal que
+ * interrumpe para pedir una respuesta (confirmaciones destructivas). El
+ * fondo debe ser realmente inerte, así que el clic en el backdrop NO lo
+ * cierra; Escape sigue cerrándolo para no atrapar al usuario de
+ * teclado. El HTML añade el rol; esta clase no cambia de API.
  *
  * Cerrar con los botones "Cancelar"/"Confirmar" no necesita JS: al ser
  * <button type="submit"> dentro de <form method="dialog">, el propio
@@ -57,8 +64,16 @@ export class Modal {
     }
   }
 
+  /** @returns {boolean} */
+  get isAlert() {
+    return this.dialog.getAttribute('role') === 'alertdialog';
+  }
+
   /** @param {MouseEvent} event */
   _onBackdropClick(event) {
+    // Un alertdialog no se cierra al clicar el backdrop: pide una
+    // respuesta explícita (ver la nota de la cabecera del archivo).
+    if (this.isAlert) return;
     // El <dialog> no tiene padding propio (ver modal.css), así que si el
     // target del clic es el propio <dialog> y no un descendiente, el
     // clic fue en el backdrop.
