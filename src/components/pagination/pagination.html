@@ -1,0 +1,87 @@
+<!--
+  Componente: Pagination
+  Ficha 13 de la guía (Paginación). La APG no tiene un patrón propio
+  para "pagination": es un landmark de navegación (Landmarks) con una
+  lista de enlaces (Link).
+
+  <nav aria-label="Paginación de resultados"> es un landmark con
+  nombre propio, distinto de Breadcrumb y de Navbar. La página actual
+  lleva aria-current="page" y conserva su enlace (a diferencia de
+  Breadcrumb: aquí sí tiene sentido poder recargarla). Cada número
+  lleva aria-label="Página N" porque un "3" suelto, sin más contexto
+  que su posición en una lista, es ambiguo para quien no ve la tabla
+  visual de enlaces. Las flechas Anterior/Siguiente son un SVG
+  aria-hidden="true" acompañado de texto oculto visualmente (clase
+  c-pagination__sr-text): el icono nunca es el único nombre accesible
+  del enlace. El control deshabilitado (aquí no aplica: ver las
+  historias de Storybook para "Primera página" y "Última página") es
+  un <a> sin href y con aria-disabled="true": sin href, un <a> deja de
+  ser focable, así que no hace falta tabindex="-1" adicional.
+-->
+<nav aria-label="Paginación de resultados">
+  <ul class="c-pagination">
+    <li class="c-pagination__item">
+      <a class="c-pagination__link c-pagination__link--arrow" href="?pagina=2">
+        <svg
+          class="c-pagination__icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M15 6l-6 6 6 6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        <span class="c-pagination__sr-text">Anterior</span>
+      </a>
+    </li>
+
+    <li class="c-pagination__item">
+      <a class="c-pagination__link" href="?pagina=1" aria-label="Página 1">1</a>
+    </li>
+    <li class="c-pagination__item">
+      <a class="c-pagination__link" href="?pagina=2" aria-label="Página 2">2</a>
+    </li>
+    <li class="c-pagination__item">
+      <a
+        class="c-pagination__link"
+        href="?pagina=3"
+        aria-current="page"
+        aria-label="Página 3"
+        >3</a
+      >
+    </li>
+    <li class="c-pagination__item">
+      <a class="c-pagination__link" href="?pagina=4" aria-label="Página 4">4</a>
+    </li>
+    <li class="c-pagination__item">
+      <a class="c-pagination__link" href="?pagina=5" aria-label="Página 5">5</a>
+    </li>
+
+    <li class="c-pagination__item">
+      <a class="c-pagination__link c-pagination__link--arrow" href="?pagina=4">
+        <span class="c-pagination__sr-text">Siguiente</span>
+        <svg
+          class="c-pagination__icon"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M9 6l6 6-6 6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+    </li>
+  </ul>
+</nav>

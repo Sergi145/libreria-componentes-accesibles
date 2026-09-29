@@ -1,0 +1,43 @@
+/**
+ * Componente: Close button
+ * Botón de cierre reutilizable (modal, alerta, toast, offcanvas...).
+ * Solo CSS: el nombre accesible lo da aria-label en el propio <button>
+ * del HTML de referencia; el icono es decorativo.
+ */
+
+.c-close-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--target-size-min);
+  height: var(--target-size-min);
+  padding: 0;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast) var(--easing-standard),
+    border-color var(--transition-fast) var(--easing-standard);
+}
+
+.c-close-button:hover {
+  background-color: var(--color-surface-muted);
+}
+
+.c-close-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-close-button svg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-close-button {
+    transition: none;
+  }
+}

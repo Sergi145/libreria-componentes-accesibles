@@ -1,5 +1,5 @@
 import './button.css';
-import { Button } from './button.js';
+import { Button, ToggleButton } from './button.js';
 
 export default {
   title: 'Componentes/Button',
@@ -53,5 +53,47 @@ export const CargandoEstado = {
       setTimeout(() => instance.setLoading(false), 1500);
     });
     return button;
+  },
+};
+
+export const Toggle = {
+  name: 'ToggleButton (aria-pressed)',
+  render: () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'c-button c-button--secondary';
+    button.setAttribute('aria-pressed', 'false');
+    button.textContent = 'Favorito';
+    new ToggleButton(button);
+    return button;
+  },
+};
+
+export const SoloIcono = {
+  name: 'Botón solo icono',
+  render: () => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'c-button c-button--secondary';
+    button.setAttribute('aria-label', 'Buscar');
+    button.innerHTML = `
+      <svg class="c-button__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
+        <path d="M20 20l-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+      </svg>
+    `;
+    return button;
+  },
+};
+
+export const EnlaceDeshabilitado = {
+  name: 'Enlace-botón deshabilitado',
+  render: () => {
+    const link = document.createElement('a');
+    link.className = 'c-button c-button--secondary';
+    link.setAttribute('role', 'button');
+    link.setAttribute('aria-disabled', 'true');
+    link.textContent = 'Editar (no disponible)';
+    return link;
   },
 };

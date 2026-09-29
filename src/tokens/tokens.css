@@ -36,7 +36,11 @@
   --color-text-muted: var(--color-neutral-700);
   --color-surface: var(--color-neutral-0);
   --color-surface-muted: var(--color-neutral-50);
-  --color-border: var(--color-neutral-300);
+
+  /* neutral-300 (1.47:1 sobre blanco) no cumple el 3:1 de WCAG 2.2 SC
+     1.4.11 (Non-text Contrast) para el borde del botón secundario;
+     neutral-500 sí (4.83:1 en claro, 3.49:1 en oscuro contra su fondo). */
+  --color-border: var(--color-neutral-500);
   --color-focus-ring: #1a56db;
 
   /* Tipografía */
@@ -87,18 +91,49 @@
   --z-modal: 1001;
 }
 
+/*
+ * Modo oscuro: se activa de dos formas, y la segunda gana siempre que
+ * esté presente.
+ *  1. @media (prefers-color-scheme: dark) — sigue la preferencia del
+ *     sistema operativo. Es el único mecanismo hasta aquí, pero un
+ *     selector de fondo/tema que no cambie también prefers-color-scheme
+ *     (como el de la barra de Storybook) no lo activa: el fondo puede
+ *     verse oscuro mientras el texto se queda con los colores de modo
+ *     claro, con contraste roto (comprobado: 1.40:1 en vez de 4.5:1).
+ *  2. :root[data-theme='dark'] — anulación explícita, para cualquier
+ *     interruptor de tema manual (ver .storybook/preview.js, que la usa
+ *     para sincronizar su propio selector de fondo con estos tokens).
+ *     :not([data-theme='light']) evita que la preferencia del sistema
+ *     gane si ese interruptor manual ha forzado el claro.
+ */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --color-primary-500: #818cf8;
-    --color-primary-600: #6366f1;
+
+    /* #6366f1 daba 4.47:1 con texto blanco: no llega al 4.5:1 de WCAG
+       2.2 AA para texto normal. #5f62e7 da 4.79:1 con el mismo tono. */
+    --color-primary-600: #5f62e7;
     --color-primary-700: #4f46e5;
     --color-text: var(--color-neutral-50);
     --color-text-muted: var(--color-neutral-200);
     --color-surface: #1a1d23;
     --color-surface-muted: #22262e;
-    --color-border: #3a3f4a;
+
+    /* Hereda --color-border: var(--color-neutral-500) de :root: da
+       3.49:1 contra este fondo (3.14:1 contra --color-surface-muted). */
     --color-focus-ring: #93c5fd;
   }
+}
+
+:root[data-theme='dark'] {
+  --color-primary-500: #818cf8;
+  --color-primary-600: #5f62e7;
+  --color-primary-700: #4f46e5;
+  --color-text: var(--color-neutral-50);
+  --color-text-muted: var(--color-neutral-200);
+  --color-surface: #1a1d23;
+  --color-surface-muted: #22262e;
+  --color-focus-ring: #93c5fd;
 }
 
 /* Respeta la preferencia del usuario de reducir el movimiento */

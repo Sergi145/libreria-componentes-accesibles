@@ -3,7 +3,9 @@
  */
 
 .c-accordion {
-  border-top: var(--border-width) solid var(--color-border);
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
 }
 
 .c-accordion__heading {
@@ -27,6 +29,12 @@
   font-weight: var(--font-weight-medium);
   text-align: left;
   cursor: pointer;
+}
+
+/* El último trigger no necesita divisor: el borde del contenedor ya
+   cierra la caja por abajo. */
+.c-accordion__heading:last-of-type .c-accordion__trigger {
+  border-bottom: none;
 }
 
 .c-accordion__trigger:hover {
@@ -53,7 +61,11 @@
 
 .c-accordion__panel-content {
   padding: var(--space-2) var(--space-2) var(--space-4);
-  color: var(--color-text-muted);
+
+  /* primary-500, no primary-600: sobre --color-surface, primary-600 da
+     3.53:1 en modo oscuro (no llega al 4.5:1 de texto normal); primary-500
+     da 6.29:1 en claro y 5.66:1 en oscuro. */
+  color: var(--color-primary-500);
 }
 
 .c-accordion__panel[hidden] {

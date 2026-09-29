@@ -25,9 +25,7 @@ export class Accordion {
     if (!el) throw new Error('Accordion: se requiere un elemento contenedor.');
     this.el = el;
     this.allowMultiple = allowMultiple;
-    this.triggers = Array.from(
-      el.querySelectorAll('.c-accordion__trigger')
-    );
+    this.triggers = Array.from(el.querySelectorAll('.c-accordion__trigger'));
 
     this._onClick = this._onClick.bind(this);
     this._onKeydown = this._onKeydown.bind(this);

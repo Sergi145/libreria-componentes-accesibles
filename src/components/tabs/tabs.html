@@ -1,0 +1,81 @@
+<!--
+  Componente: Tabs
+  Patrón WAI-ARIA APG "Tabs":
+  https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
+
+  role="tablist" + aria-label nombra el conjunto. Cada pestaña es un
+  <button role="tab"> con aria-selected/aria-controls; tabs.js gestiona
+  el roving tabindex y aria-selected (activación automática por
+  defecto). Cada panel es role="tabpanel" + aria-labelledby +
+  tabindex="0", para poder llegar a él con Tab aunque no tenga
+  contenido enfocable propio.
+-->
+<div class="c-tabs">
+  <div
+    class="c-tabs__list"
+    role="tablist"
+    aria-label="Datos del perfil"
+    data-tabs
+  >
+    <button
+      type="button"
+      class="c-tabs__tab"
+      id="tab-datos"
+      role="tab"
+      aria-selected="true"
+      aria-controls="panel-datos"
+    >
+      Datos personales
+    </button>
+    <button
+      type="button"
+      class="c-tabs__tab"
+      id="tab-seguridad"
+      role="tab"
+      aria-selected="false"
+      aria-controls="panel-seguridad"
+    >
+      Seguridad
+    </button>
+    <button
+      type="button"
+      class="c-tabs__tab"
+      id="tab-notificaciones"
+      role="tab"
+      aria-selected="false"
+      aria-controls="panel-notificaciones"
+    >
+      Notificaciones
+    </button>
+  </div>
+
+  <div
+    class="c-tabs__panel"
+    id="panel-datos"
+    role="tabpanel"
+    aria-labelledby="tab-datos"
+    tabindex="0"
+  >
+    <p>Formulario con nombre, apellidos y correo de contacto.</p>
+  </div>
+  <div
+    class="c-tabs__panel"
+    id="panel-seguridad"
+    role="tabpanel"
+    aria-labelledby="tab-seguridad"
+    tabindex="0"
+    hidden
+  >
+    <p>Cambio de contraseña y verificación en dos pasos.</p>
+  </div>
+  <div
+    class="c-tabs__panel"
+    id="panel-notificaciones"
+    role="tabpanel"
+    aria-labelledby="tab-notificaciones"
+    tabindex="0"
+    hidden
+  >
+    <p>Preferencias de correo y notificaciones push.</p>
+  </div>
+</div>

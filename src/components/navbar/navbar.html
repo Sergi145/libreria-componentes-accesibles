@@ -1,0 +1,66 @@
+<!--
+  Componente: Navbar
+  Landmark de navegación + botón disclosure para el menú móvil + página
+  actual. El enlace de salto va ANTES del <nav>, como primer elemento
+  enfocable de la página (ver skip-link/).
+
+  El logotipo lleva alt que dice a dónde lleva ("Inicio"), no solo el
+  nombre del sitio. El botón hamburguesa necesita aria-label="Menú"
+  porque su icono es puramente visual (sin texto propio, no tendría
+  nombre accesible). El enlace activo lleva aria-current="page".
+
+  El src es un SVG autocontenido (data URI) solo para que este ejemplo
+  se vea sin depender de un archivo externo; en tu proyecto, apunta a
+  tu logo real (p. ej. src="logo.svg").
+-->
+<a class="c-skip-link" href="#contenido">Saltar al contenido principal</a>
+
+<header>
+  <nav class="c-navbar" aria-label="Principal" data-navbar>
+    <a class="c-navbar__brand" href="/">
+      <img
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234338ca'/%3E%3Ctext x='16' y='21' text-anchor='middle' font-family='system-ui,sans-serif' font-size='13' font-weight='700' fill='%23fff'%3ELC%3C/text%3E%3C/svg%3E"
+        alt="Librería de componentes — Inicio"
+        height="32"
+      />
+    </a>
+
+    <button
+      type="button"
+      class="c-navbar__toggle"
+      aria-controls="navbar-menu"
+      aria-expanded="false"
+      aria-label="Menú"
+    >
+      <svg
+        class="c-navbar__toggle-icon"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M4 6h16M4 12h16M4 18h16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+
+    <div class="c-navbar__menu" id="navbar-menu" hidden>
+      <ul class="c-navbar__list">
+        <li>
+          <a class="c-navbar__link" href="/" aria-current="page">Inicio</a>
+        </li>
+        <li><a class="c-navbar__link" href="/servicios">Servicios</a></li>
+        <li><a class="c-navbar__link" href="/contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main id="contenido" tabindex="-1">
+  <h1>Título de la página</h1>
+  <p>Contenido principal de ejemplo.</p>
+</main>

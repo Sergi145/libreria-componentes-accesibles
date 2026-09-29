@@ -1,0 +1,79 @@
+<!--
+  Componente: List group
+  Ficha 23 de la guía (List group). Sin patrón APG propio: la semántica
+  depende de qué contiene la lista (Listbox, Tabs o Link, según el
+  uso). Aquí se cubren las tres variantes solo CSS del spec: lista
+  informativa, enlaces de navegación y botones de acción. Para
+  pestañas verticales, combina esta clase con Tabs (ver README.md).
+-->
+
+<!--
+  Variante: lista informativa. <ul> + <li>, sin interacción: solo
+  semántica de lista nativa (el lector anuncia "lista, N elementos").
+-->
+<ul class="c-list-group">
+  <li class="c-list-group__item">Factura #2026-014</li>
+  <li class="c-list-group__item">Factura #2026-013</li>
+  <li class="c-list-group__item">Factura #2026-012</li>
+</ul>
+
+<!--
+  Variante: enlaces de navegación. <nav> con nombre propio + <a> por
+  cada carpeta. La activa lleva aria-current="true" (no "page": no son
+  páginas independientes entre sí, son vistas de la misma bandeja) y
+  conserva su href: volver a cargar la carpeta ya abierta es una
+  acción válida. El contador numérico va seguido de texto oculto
+  (.c-list-group__sr-text) para dar contexto: "14" suelto no dice de
+  qué.
+-->
+<nav aria-label="Carpetas de correo">
+  <div class="c-list-group">
+    <a
+      class="c-list-group__item c-list-group__item--action"
+      href="/bandeja"
+      aria-current="true"
+    >
+      Bandeja de entrada
+      <span class="c-list-group__badge"
+        >14<span class="c-list-group__sr-text"> mensajes sin leer</span></span
+      >
+    </a>
+    <a class="c-list-group__item c-list-group__item--action" href="/enviados"
+      >Enviados</a
+    >
+    <a class="c-list-group__item c-list-group__item--action" href="/borradores"
+      >Borradores</a
+    >
+    <!--
+      Deshabilitado: <a> sin href y aria-disabled="true", el mismo
+      criterio que Pagination — sin href, un <a> deja de ser focable
+      por sí mismo, así que no hace falta tabindex="-1".
+    -->
+    <a
+      class="c-list-group__item c-list-group__item--action"
+      aria-disabled="true"
+      >Archivados</a
+    >
+  </div>
+</nav>
+
+<!--
+  Variante: botones de acción. <button> nativo por cada acción: el
+  deshabilitado usa el atributo disabled nativo (no aria-disabled),
+  porque un <button disabled> ya comunica su estado sin ayuda extra.
+-->
+<div class="c-list-group">
+  <button type="button" class="c-list-group__item c-list-group__item--action">
+    Duplicar informe
+  </button>
+  <button type="button" class="c-list-group__item c-list-group__item--action">
+    Archivar informe
+  </button>
+  <button
+    type="button"
+    class="c-list-group__item c-list-group__item--action"
+    disabled
+  >
+    Eliminar informe
+  </button>
+</div>

@@ -1,0 +1,120 @@
+/**
+ * Componente: List group
+ * Solo CSS. Misma base visual (.c-list-group + .c-list-group__item)
+ * para las tres variantes: lista informativa (<li>), enlaces de
+ * navegación (<a>) y botones de acción (<button>). Las dos últimas
+ * añaden .c-list-group__item--action, que da el estado interactivo
+ * (hover, foco, cursor); la lista simple no lo lleva porque no es
+ * interactiva.
+ */
+
+.c-list-group {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.c-list-group__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--target-size-min);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-bottom: var(--border-width) solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.c-list-group__item:last-child {
+  border-bottom: 0;
+}
+
+.c-list-group__item--action {
+  width: 100%;
+  cursor: pointer;
+}
+
+.c-list-group__item--action:hover {
+  background-color: var(--color-surface-muted);
+}
+
+/* outline-offset negativo: el contenedor recorta con overflow:hidden
+   (para las esquinas redondeadas), así que un anillo hacia fuera se
+   cortaría en los elementos del borde. */
+.c-list-group__item--action:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+/* Activo/seleccionado: mismo criterio de contraste que Tabs (ver
+   tabs.css) — primary-500 para el texto (6.29:1 en claro, 5.66:1 en
+   oscuro sobre --color-surface/--color-surface-muted), primary-600
+   para el indicador gráfico, que solo necesita 3:1. No depende solo
+   del color: también negrita (WCAG 1.4.1). */
+.c-list-group__item[aria-current='true'],
+.c-list-group__item[aria-selected='true'] {
+  position: relative;
+  background-color: var(--color-surface-muted);
+  color: var(--color-primary-500);
+  font-weight: var(--font-weight-medium);
+}
+
+.c-list-group__item[aria-current='true']::before,
+.c-list-group__item[aria-selected='true']::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  background-color: var(--color-primary-600);
+}
+
+.c-list-group__item:disabled,
+.c-list-group__item[aria-disabled='true'] {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Sin href ya lo saca del orden de tabulación (ver list-group.html);
+   pointer-events evita cualquier interacción residual con el ratón. */
+a.c-list-group__item[aria-disabled='true'] {
+  pointer-events: none;
+}
+
+.c-list-group__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5em;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary-600);
+  color: var(--color-neutral-0);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Oculto visualmente, presente para lectores de pantalla (técnica
+   .visually-hidden del capítulo 1 de la guía). */
+.c-list-group__sr-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

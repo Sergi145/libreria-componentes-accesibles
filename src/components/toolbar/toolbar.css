@@ -1,0 +1,74 @@
+/**
+ * Componente: Toolbar
+ * La orientación (fila/columna) sigue a aria-orientation, el mismo
+ * atributo que lee toolbar.js para configurar las flechas.
+ */
+
+.c-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  width: fit-content;
+}
+
+.c-toolbar[aria-orientation='vertical'] {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.c-toolbar__group {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.c-toolbar[aria-orientation='vertical'] .c-toolbar__group {
+  flex-direction: column;
+}
+
+.c-toolbar__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--target-size-min);
+  min-height: var(--target-size-min);
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-width) solid var(--color-primary-600);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-600);
+  color: var(--color-neutral-0);
+  font: inherit;
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast) var(--easing-standard),
+    border-color var(--transition-fast) var(--easing-standard);
+}
+
+.c-toolbar__item:hover {
+  background-color: var(--color-primary-700);
+  border-color: var(--color-primary-700);
+}
+
+.c-toolbar__item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Estado pulsado (ToggleButton dentro del toolbar): más oscuro que el
+   resto y con una sombra interior, para distinguirse incluso siendo la
+   misma familia de color que el resto de botones del toolbar. */
+.c-toolbar__item[aria-pressed='true'] {
+  background-color: var(--color-primary-700);
+  border-color: var(--color-primary-700);
+  box-shadow: inset 0 2px 4px rgb(0 0 0 / 30%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-toolbar__item {
+    transition: none;
+  }
+}

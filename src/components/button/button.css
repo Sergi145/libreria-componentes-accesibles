@@ -98,6 +98,27 @@
   opacity: 0.6;
 }
 
+/* Enlace usado como botón, deshabilitado: sin href ya queda fuera del
+   orden de tabulación (un <a> sin href no es focable); pointer-events
+   evita cualquier interacción residual con el ratón. */
+a.c-button[aria-disabled='true'] {
+  pointer-events: none;
+}
+
+/* --- Estado pulsado (ToggleButton) ---
+   aria-pressed="true" se muestra "lleno" con los colores ya verificados
+   de la variante primaria, sin cambiar el texto del botón. */
+.c-button[aria-pressed='true'] {
+  background-color: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  color: var(--color-neutral-0);
+}
+
+.c-button[aria-pressed='true']:hover {
+  background-color: var(--color-primary-700);
+  border-color: var(--color-primary-700);
+}
+
 /* Icono opcional dentro del botón */
 .c-button__icon {
   flex-shrink: 0;

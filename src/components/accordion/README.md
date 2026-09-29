@@ -51,3 +51,43 @@ el contenido siga siendo legible.
 - Navegar solo con teclado: `Tab`, `↑`/`↓`, `Home`/`End`, `Espacio`.
 - Con NVDA/VoiceOver, confirmar que se anuncia "expandido/contraído" al
   activar cada trigger.
+
+## Conformidad con la guía
+
+Revisión de esta implementación frente a la ficha 01 (Acordeón) de la
+guía. No se ha añadido nada al código: ya cumplía todos los puntos.
+
+**«Lo que te toca a ti»** (lo que el framework de referencia de la ficha
+no resuelve solo):
+
+- _Ajustar el nivel de encabezado a la jerarquía real de la página_: la
+  ficha avisa de que su propio ejemplo usa `<h2>` sin pensar en el
+  contexto. Aquí `accordion.html` usa `<h3>` y lo documenta como el
+  nivel "que corresponda", no como un valor fijo.
+- _Añadir `id` al botón y `role="region"` + `aria-labelledby` al panel_:
+  el botón ya tiene `id`; en vez de `role="region"` explícito se usa
+  `<section aria-labelledby="…">`, que expone el mismo rol "region" de
+  forma nativa al tener nombre accesible (ver «Rol de región» arriba) —
+  incluida la misma advertencia de la ficha de evitarlo con muchos
+  paneles.
+- _Implementar `Inicio`/`Fin` (opcional según la APG)_: implementado.
+- _Marcar en el HTML inicial si el primer panel se muestra abierto_:
+  `accordion.html` trae el primer panel con `aria-expanded="true"` y sin
+  `hidden`; el estado inicial no depende de que se ejecute el JS.
+
+**«Errores frecuentes»** (comprobado que no se cometen aquí):
+
+- Poner el disparador en el encabezado o en un `<div>` en vez de en un
+  `<button>` — aquí el `<button>` siempre va dentro del encabezado.
+- Usar `<a href="#">` como cabecera (se anunciaría como enlace, no como
+  botón) — se usa `<button type="button">`.
+- Icono de flecha como único indicador de estado — el icono lleva
+  `aria-hidden="true"` y solo seguimiento visual; el indicador real es
+  `aria-expanded`, que un lector de pantalla anuncia con independencia
+  del icono.
+
+**No aplica**: `aria-disabled="true"` en el botón — la ficha lo marca
+como opcional para "un panel que no se puede cerrar". Esta
+implementación permite cerrar cualquier panel en cualquier momento,
+incluido el único abierto en modo `allowMultiple: false`, así que no hay
+ningún trigger que deba quedar deshabilitado.

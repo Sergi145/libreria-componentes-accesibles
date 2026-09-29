@@ -5,6 +5,21 @@ import '../src/styles/base.css';
 const preview = {
   parameters: {
     layout: 'padded',
+    // Los tokens de color solo tenían un mecanismo de modo oscuro
+    // (prefers-color-scheme, la preferencia del sistema operativo). El
+    // selector de fondo por defecto de esta barra de Storybook no lo
+    // activa, así que elegir "dark" aquí dejaba el fondo oscuro con el
+    // texto todavía en colores de modo claro (contraste roto: 1.40:1 en
+    // vez de 4.5:1). Estos valores igualan los tokens --color-surface
+    // reales; el interruptor "Tema" de abajo (globalTypes) es el que de
+    // verdad sincroniza el resto de los tokens con el fondo elegido.
+    backgrounds: {
+      default: 'light',
+      values: [
+        { name: 'light', value: '#ffffff' },
+        { name: 'dark', value: '#1a1d23' },
+      ],
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -17,6 +32,27 @@ const preview = {
       test: 'todo',
     },
   },
+  globalTypes: {
+    theme: {
+      name: 'Tema',
+      description:
+        'Fuerza los tokens de color a claro/oscuro, con independencia de la preferencia del sistema operativo',
+      defaultValue: 'light',
+      toolbar: {
+        icon: 'circlehollow',
+        items: [
+          { value: 'light', icon: 'sun', title: 'Claro' },
+          { value: 'dark', icon: 'moon', title: 'Oscuro' },
+        ],
+      },
+    },
+  },
+  decorators: [
+    (story, context) => {
+      document.documentElement.dataset.theme = context.globals.theme;
+      return story();
+    },
+  ],
 };
 
 export default preview;

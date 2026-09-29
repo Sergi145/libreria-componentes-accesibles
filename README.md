@@ -30,6 +30,9 @@ independiente del resto y se puede copiar o importar por separado.
 src/
 ├─ tokens/tokens.css        # design tokens: color, tipografía, espaciado, foco…
 ├─ styles/base.css          # reset mínimo opcional (no requerido por los componentes)
+├─ utils/
+│  ├─ roving-tabindex.js    # tabindex="0"/"-1" + flechas de un grupo (usa Toolbar, Tabs)
+│  └─ roving-tabindex.test.js
 └─ components/
    ├─ button/
    │  ├─ button.html        # marcado de referencia
@@ -39,16 +42,36 @@ src/
    │  ├─ button.test.js     # tests de comportamiento (Vitest)
    │  └─ README.md          # uso + notas de accesibilidad
    ├─ accordion/
-   └─ modal/
+   ├─ modal/
+   ├─ close-button/         # solo CSS: sin .js ni .test.js
+   ├─ toolbar/
+   ├─ disclosure/
+   ├─ tabs/
+   ├─ breadcrumb/           # solo CSS
+   ├─ navbar/
+   ├─ skip-link/            # solo CSS
+   ├─ pagination/           # solo CSS
+   └─ list-group/           # solo CSS
 e2e/
-└─ accessibility.spec.js    # auditoría axe-core sobre Storybook (Playwright)
+└─ accessibility.spec.js    # auditoría axe-core + tests de teclado sobre Storybook (Playwright)
 ```
 
-Cada componente es autocontenido: sus tres archivos (`.html`, `.css`,
-`.js`) se pueden copiar tal cual a otro proyecto. La única dependencia
-compartida opcional son los tokens de `src/tokens/tokens.css` (colores,
-espaciado, anillo de foco…); si prefieres no compartirlos, sustituye las
-variables `var(--...)` de cada `.css` por valores fijos.
+Cada componente es autocontenido: sus archivos (`.html`, `.css` y,
+cuando lo necesita, `.js`) se pueden copiar tal cual a otro proyecto.
+Los componentes marcados «solo CSS» no tienen `.js` ni `.test.js`: su
+`.html` de referencia ya es accesible y navegable sin JavaScript. La
+única dependencia compartida opcional son los tokens de
+`src/tokens/tokens.css` (colores, espaciado, anillo de foco…); si
+prefieres no compartirlos, sustituye las variables `var(--...)` de cada
+`.css` por valores fijos.
+
+`src/utils/` reúne la lógica que comparten varios componentes en vez de
+duplicarla: por ahora, solo `rovingTabindex()` (usada por `Toolbar` y
+`Tabs` para mover el foco con flechas dentro de un grupo). Vite la
+empaqueta dentro del `.js` de cada componente que la usa, así que el
+resultado en `dist/` sigue siendo autónomo — pero si copias la carpeta
+de uno de esos componentes a otro proyecto, copia también
+`src/utils/roving-tabindex.js` (o el import se rompe).
 
 ## Empezar
 
@@ -116,11 +139,20 @@ y se puede copiar tal cual.
 
 ## Componentes disponibles
 
-| Componente | Patrón APG | Notas clave |
-|---|---|---|
-| [`Button`](src/components/button) | [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/) | `<button>` nativo; estado de carga accesible opcional |
-| [`Accordion`](src/components/accordion) | [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/) | Navegación por flechas/Home/End entre cabeceras |
-| [`Modal`](src/components/modal) | [Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) | Sobre `<dialog>` nativo: foco atrapado y Escape gratis |
+| Componente                                    | Patrón APG                                                                 | Notas clave                                                            |
+| --------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [`Button`](src/components/button)             | [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/)                 | `<button>` nativo; `ToggleButton` con `aria-pressed`; estado de carga  |
+| [`Accordion`](src/components/accordion)       | [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/)           | Navegación por flechas/Home/End entre cabeceras                        |
+| [`Modal`](src/components/modal)               | [Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)   | Sobre `<dialog>` nativo: foco atrapado y Escape gratis                 |
+| [`Close button`](src/components/close-button) | —                                                                          | Solo CSS; icono decorativo + `aria-label`                              |
+| [`Toolbar`](src/components/toolbar)           | [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)               | Roving tabindex propio; subgrupos con `role="group"`                   |
+| [`Disclosure`](src/components/disclosure)     | [Disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)         | `aria-expanded`/`aria-controls`; alternativa nativa `<details>`        |
+| [`Tabs`](src/components/tabs)                 | [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)                     | `tablist`/`tab`/`tabpanel`; activación automática o manual             |
+| [`Breadcrumb`](src/components/breadcrumb)     | [Breadcrumb](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)         | Solo CSS; separadores por `::before`, nunca como texto                 |
+| [`Navbar`](src/components/navbar)             | Landmarks + Disclosure                                                     | Reutiliza `Disclosure` para el menú móvil; incluye el skip link        |
+| [`Skip link`](src/components/skip-link)       | —                                                                          | Solo CSS; oculto hasta recibir el foco                                 |
+| [`Pagination`](src/components/pagination)     | Landmarks + [Link](https://www.w3.org/WAI/ARIA/apg/patterns/link/)         | Solo CSS; deshabilitados sin `href`; actual con `aria-current="page"`  |
+| [`List group`](src/components/list-group)     | [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) / Tabs / Link | Solo CSS; 3 variantes (lista, enlaces, botones); combinable con `Tabs` |
 
 ## Checklist de accesibilidad para nuevos componentes
 

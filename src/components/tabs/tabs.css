@@ -1,0 +1,93 @@
+/**
+ * Componente: Tabs
+ * La orientación (fila/columna) sigue a aria-orientation en el tablist,
+ * el mismo atributo que lee tabs.js para configurar las flechas. El
+ * modificador .c-tabs--vertical del contenedor solo cambia el layout
+ * visual (pestañas a la izquierda, panel a la derecha); lo añade quien
+ * construya el marcado, a la vez que pone aria-orientation="vertical".
+ */
+
+.c-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.c-tabs--vertical {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.c-tabs__list {
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.c-tabs__list[aria-orientation='vertical'] {
+  flex-direction: column;
+  flex-shrink: 0;
+  border-right: var(--border-width) solid var(--color-border);
+  border-bottom: none;
+  padding-right: var(--space-2);
+}
+
+.c-tabs__tab {
+  min-height: var(--target-size-min);
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+  cursor: pointer;
+}
+
+.c-tabs__list[aria-orientation='vertical'] .c-tabs__tab {
+  border-bottom: none;
+  border-right: 2px solid transparent;
+}
+
+.c-tabs__tab:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-muted);
+}
+
+.c-tabs__tab:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+/* primary-500, no primary-600: sobre --color-surface, primary-600 da
+   3.53:1 en modo oscuro (no llega al 4.5:1 de texto normal); primary-500
+   da 6.29:1 en claro y 5.66:1 en oscuro. El indicador (borde) sí puede
+   usar primary-600, porque un elemento gráfico solo necesita 3:1. */
+.c-tabs__tab[aria-selected='true'] {
+  border-bottom-color: var(--color-primary-600);
+  color: var(--color-primary-500);
+}
+
+.c-tabs__tab[aria-selected='true']:hover {
+  color: var(--color-primary-500);
+}
+
+.c-tabs__list[aria-orientation='vertical'] .c-tabs__tab[aria-selected='true'] {
+  border-right-color: var(--color-primary-600);
+}
+
+.c-tabs__panel {
+  padding: var(--space-2) var(--space-1);
+  color: var(--color-primary-500);
+}
+
+.c-tabs__panel:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-tabs__panel[hidden] {
+  display: none;
+}

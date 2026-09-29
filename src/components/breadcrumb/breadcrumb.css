@@ -1,0 +1,46 @@
+/**
+ * Componente: Breadcrumb
+ * Patrón WAI-ARIA APG "Breadcrumb". Solo CSS: el <nav> + <ol> del HTML
+ * de referencia ya son focables y navegables sin JavaScript.
+ */
+
+.c-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-size-sm);
+}
+
+.c-breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Separador generado por CSS, nunca como texto en el HTML (ver
+   breadcrumb.html): así no se anuncia como contenido en el lector. */
+.c-breadcrumb__item:not(:first-child)::before {
+  content: '/';
+  color: var(--color-text-muted);
+}
+
+.c-breadcrumb__item a {
+  color: var(--color-primary-500);
+  text-decoration: underline;
+}
+
+.c-breadcrumb__item a:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-sm);
+}
+
+/* Página actual: sin enlace, no interactiva. */
+.c-breadcrumb__item[aria-current='page'] {
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
