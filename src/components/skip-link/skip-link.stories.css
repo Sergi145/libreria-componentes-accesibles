@@ -1,0 +1,17 @@
+/**
+ * Solo para las historias de Storybook: layout de la demo (cabecera de
+ * ejemplo, texto de instrucciones). No forma parte del componente Skip
+ * link en sí (eso vive en skip-link.css).
+ */
+
+.skip-link-demo__hint {
+  margin: 0 0 var(--space-4);
+  color: var(--color-primary-500);
+}
+
+.skip-link-demo__header {
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+}

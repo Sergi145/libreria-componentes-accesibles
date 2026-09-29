@@ -11,13 +11,13 @@ La guía `guia-componentes-accesibles-aria-bootstrap5.pdf` describe 25 fichas de
 Son unos 30 componentes y no caben en un solo spec.
 Se reparten en 5 specs por grupo temático:
 
-| Spec | Grupo | Componentes |
-| --- | --- | --- |
+| Spec          | Grupo                        | Componentes                                                                                                                                            |
+| ------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **01 (este)** | Base + acciones y navegación | roving tabindex, Button (toggle), Close button, Toolbar, Disclosure, Accordion (revisión), Tabs, Breadcrumb, Navbar, Skip link, Pagination, List group |
-| 02 | Overlays | Modal (alertdialog), Offcanvas, Dropdown/Menu button, Popover, Tooltip |
-| 03 | Feedback y contenido | Alert, Toast, Progress/Spinner/Placeholder, Carousel, Card/Badge/Scrollspy |
-| 04 | Formularios y datos | Campos de texto + validación, Checkbox (mixto), Radio group, Switch, Range, Table |
-| 05 | Patrones APG avanzados | Combobox, Listbox, Menu/Menubar, Tree view, Grid, Feed, Spinbutton, Window splitter |
+| 02            | Overlays                     | Modal (alertdialog), Offcanvas, Dropdown/Menu button, Popover, Tooltip                                                                                 |
+| 03            | Feedback y contenido         | Alert, Toast, Progress/Spinner/Placeholder, Carousel, Card/Badge/Scrollspy                                                                             |
+| 04            | Formularios y datos          | Campos de texto + validación, Checkbox (mixto), Radio group, Switch, Range, Table                                                                      |
+| 05            | Patrones APG avanzados       | Combobox, Listbox, Menu/Menubar, Tree view, Grid, Feed, Spinbutton, Window splitter                                                                    |
 
 El proyecto es HTML/CSS/JS nativo sin framework.
 La guía se usa **como referencia de comportamiento** (roles, estados ARIA, teclado, errores frecuentes), no como fuente de marcado.
@@ -228,13 +228,13 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 
 ## Riesgos
 
-| Riesgo | Mitigación |
-| --- | --- |
+| Riesgo                                                                                                                                   | Mitigación                                                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | jsdom no calcula layout (`offsetParent` siempre `null`), así que el filtro de visibles de `rovingTabindex` de la guía fallaría en Vitest | Filtrar por `hidden`/`disabled` y `closest('[hidden]')` en lugar de `offsetParent`. Lo cubre un test de la utilidad. |
-| La entrada de Vite `src/components/*/*.js` no incluye `src/utils/`, y un import roto no se detectaría hasta el build | El criterio de aceptación de `dist/` sin imports relativos lo comprueba. |
-| Los componentes solo CSS no tienen tests unitarios, así que un marcado incorrecto solo se detecta con axe | Todos entran en `e2e/accessibility.spec.js`. `npm run lint:html` valida su `.html`. |
-| Navbar depende de `disclosure/`: copiar solo la carpeta `navbar/` rompe el import en `src` | El README de Navbar lo indica. El build de `dist/navbar/` es autónomo porque Vite empaqueta Disclosure. |
-| Las herramientas automáticas solo detectan una parte de los problemas | Cada README incluye pruebas manuales con NVDA/VoiceOver (punto 10 de la checklist del README raíz). |
+| La entrada de Vite `src/components/*/*.js` no incluye `src/utils/`, y un import roto no se detectaría hasta el build                     | El criterio de aceptación de `dist/` sin imports relativos lo comprueba.                                             |
+| Los componentes solo CSS no tienen tests unitarios, así que un marcado incorrecto solo se detecta con axe                                | Todos entran en `e2e/accessibility.spec.js`. `npm run lint:html` valida su `.html`.                                  |
+| Navbar depende de `disclosure/`: copiar solo la carpeta `navbar/` rompe el import en `src`                                               | El README de Navbar lo indica. El build de `dist/navbar/` es autónomo porque Vite empaqueta Disclosure.              |
+| Las herramientas automáticas solo detectan una parte de los problemas                                                                    | Cada README incluye pruebas manuales con NVDA/VoiceOver (punto 10 de la checklist del README raíz).                  |
 
 ## Lo que **no** entra en este spec
 

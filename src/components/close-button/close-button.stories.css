@@ -1,0 +1,25 @@
+/**
+ * Solo para la historia "En un panel con título" de Storybook: layout
+ * de ejemplo, no forma parte del componente Close button en sí (eso
+ * vive en close-button.css).
+ */
+
+.close-button-demo__panel {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  max-width: 20rem;
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.close-button-demo__panel p {
+  margin: 0;
+
+  /* primary-500, no primary-600: sobre --color-surface, primary-600 da
+     3.53:1 en modo oscuro (no llega al 4.5:1 de texto normal); primary-500
+     da 6.29:1 en claro y 5.66:1 en oscuro. */
+  color: var(--color-primary-500);
+}

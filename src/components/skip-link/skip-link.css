@@ -1,0 +1,42 @@
+/**
+ * Componente: Skip link
+ * "Enlace de salto", oculto hasta recibir el foco. Técnica
+ * .visually-hidden-focusable de la guía: oculta con clip (no con
+ * display:none/hidden), así sigue en el orden de tabulación y lo lee
+ * un lector de pantalla al llegar a él.
+ */
+
+.c-skip-link {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary-600);
+  color: var(--color-neutral-0);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+/*
+ * Visible al recibir el foco. Se usa :focus, no :focus-visible: un
+ * enlace de salto tiene que aparecer siempre que tenga el foco —
+ * incluida una llamada programática a .focus() —, no solo cuando el
+ * navegador infiere que el foco vino del teclado.
+ */
+.c-skip-link:focus {
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-overlay);
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}

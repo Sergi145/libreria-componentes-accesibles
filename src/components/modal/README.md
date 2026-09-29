@@ -18,16 +18,36 @@ llamar a `showModal()`:
 
 <button type="button" data-modal-trigger="ejemplo-modal">Abrir modal</button>
 
-<dialog id="ejemplo-modal" class="c-modal" aria-labelledby="ejemplo-modal-title">
+<dialog
+  id="ejemplo-modal"
+  class="c-modal"
+  aria-labelledby="ejemplo-modal-title"
+>
   <form method="dialog" class="c-modal__content">
     <header class="c-modal__header">
       <h2 id="ejemplo-modal-title" class="c-modal__title">Confirmar acción</h2>
-      <button type="submit" class="c-modal__close" aria-label="Cerrar diálogo" value="cancel">×</button>
+      <button
+        type="submit"
+        class="c-modal__close"
+        aria-label="Cerrar diálogo"
+        value="cancel"
+      >
+        ×
+      </button>
     </header>
     <div class="c-modal__body"><p>…</p></div>
     <footer class="c-modal__footer">
-      <button type="submit" class="c-button c-button--secondary" value="cancel">Cancelar</button>
-      <button type="submit" class="c-button c-button--primary" value="confirm" autofocus>Confirmar</button>
+      <button type="submit" class="c-button c-button--secondary" value="cancel">
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="c-button c-button--primary"
+        value="confirm"
+        autofocus
+      >
+        Confirmar
+      </button>
     </footer>
   </form>
 </dialog>

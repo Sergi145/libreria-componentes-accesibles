@@ -1,0 +1,20 @@
+<!--
+  Componente: Breadcrumb
+  Patrón WAI-ARIA APG "Breadcrumb":
+  https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/
+
+  <nav aria-label="Ruta de navegación"> es un landmark de navegación con
+  nombre propio, distinto de la navegación principal. La lista es un
+  <ol> (el lector anuncia "lista, N elementos" y la posición de cada
+  uno). El separador es un ::before en CSS, nunca texto en el HTML: si
+  se escribe "/" o ">" entre enlaces, el lector lo anuncia como
+  contenido. El último elemento es la página actual: sin enlace, con
+  aria-current="page".
+-->
+<nav aria-label="Ruta de navegación">
+  <ol class="c-breadcrumb">
+    <li class="c-breadcrumb__item"><a href="/">Inicio</a></li>
+    <li class="c-breadcrumb__item"><a href="/servicios/">Servicios</a></li>
+    <li class="c-breadcrumb__item" aria-current="page">Trámites en línea</li>
+  </ol>
+</nav>

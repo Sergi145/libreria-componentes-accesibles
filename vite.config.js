@@ -1,49 +1,21 @@
 import { defineConfig } from 'vite';
-import { globSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 
 /**
- * Cada componente se compila como su propio punto de entrada, para que
- * se pueda importar de forma independiente:
+ * Configuración de Vite para Vitest (`npm run test`).
  *
- *   import { Modal } from 'libreria-componentes-accesibles/modal';
- *
- * Genera dist/<componente>/<componente>.js (ESM) y su .css asociado.
+ * La librería NO se compila con `vite build`: un único build con varios
+ * "entries" (uno por componente) hace que Rollup comparta código entre
+ * ellos en chunks aparte, con imports relativos entre carpetas de
+ * dist/ — justo lo que rompe la independencia de cada
+ * dist/<componente>/. `npm run build` ejecuta en su lugar
+ * scripts/build-components.mjs, que llama a la API de Vite una vez por
+ * componente para que cada dist/<componente>/<componente>.js quede
+ * autónomo. Ver ese script para el detalle.
  */
-const componentEntries = Object.fromEntries(
-  globSync('src/components/*/*.js')
-    .filter((file) => !file.endsWith('.stories.js') && !file.endsWith('.test.js'))
-    .map((file) => {
-      const normalized = file.replace(/\\/g, '/');
-      const name = normalized.split('/').slice(-2, -1)[0];
-      return [name, fileURLToPath(new URL(normalized, import.meta.url))];
-    })
-);
-
 export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: false,
     include: ['src/**/*.test.js'],
-  },
-  build: {
-    outDir: 'dist',
-    cssCodeSplit: true,
-    lib: {
-      entry: componentEntries,
-      formats: ['es'],
-      fileName: (_format, entryName) => `${entryName}/${entryName}.js`,
-    },
-    rollupOptions: {
-      output: {
-        assetFileNames: (assetInfo) => {
-          // Coloca cada CSS junto a su componente:
-          // dist/button/button.css, dist/modal/modal.css…
-          const name = assetInfo.names?.[0] ?? assetInfo.name ?? 'asset';
-          const componentName = name.replace(/\.css$/, '');
-          return `${componentName}/${name}`;
-        },
-      },
-    },
   },
 });

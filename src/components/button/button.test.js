@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Button } from './button.js';
+import { Button, ToggleButton } from './button.js';
 
 function createButton(label = 'Guardar') {
   const el = document.createElement('button');
@@ -49,5 +49,59 @@ describe('Button', () => {
     expect(el.hasAttribute('aria-busy')).toBe(false);
     expect(el.hasAttribute('aria-disabled')).toBe(false);
     expect(el.textContent).toBe('Guardar');
+  });
+});
+
+describe('ToggleButton', () => {
+  let el;
+
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    el = createButton('Favorito');
+  });
+
+  it('lanza un error si no recibe un elemento', () => {
+    expect(() => new ToggleButton(null)).toThrow();
+  });
+
+  it('si el HTML no trae aria-pressed, lo inicializa en "false"', () => {
+    new ToggleButton(el);
+    expect(el.getAttribute('aria-pressed')).toBe('false');
+  });
+
+  it('respeta un aria-pressed="true" ya presente en el HTML', () => {
+    el.setAttribute('aria-pressed', 'true');
+    const toggle = new ToggleButton(el);
+    expect(toggle.pressed).toBe(true);
+  });
+
+  it('un clic alterna aria-pressed sin cambiar el texto del botón', () => {
+    new ToggleButton(el);
+
+    el.click();
+    expect(el.getAttribute('aria-pressed')).toBe('true');
+    expect(el.textContent).toBe('Favorito');
+
+    el.click();
+    expect(el.getAttribute('aria-pressed')).toBe('false');
+    expect(el.textContent).toBe('Favorito');
+  });
+
+  it('toggle() y el setter pressed cambian el estado sin necesidad de clic', () => {
+    const toggle = new ToggleButton(el);
+
+    toggle.toggle();
+    expect(toggle.pressed).toBe(true);
+
+    toggle.pressed = false;
+    expect(el.getAttribute('aria-pressed')).toBe('false');
+  });
+
+  it('destroy() quita el listener de clic', () => {
+    const toggle = new ToggleButton(el);
+    toggle.destroy();
+
+    el.click();
+    expect(el.getAttribute('aria-pressed')).toBe('false');
   });
 });

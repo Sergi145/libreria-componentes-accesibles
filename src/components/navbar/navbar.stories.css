@@ -1,0 +1,9 @@
+/**
+ * Solo para las historias de Storybook: layout de la demo de página
+ * completa (skip link + navbar + contenido). No forma parte del
+ * componente Navbar en sí (eso vive en navbar.css).
+ */
+
+.navbar-demo__main {
+  padding: var(--space-4);
+}

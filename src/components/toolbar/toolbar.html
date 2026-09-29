@@ -1,0 +1,35 @@
+<!--
+  Componente: Toolbar
+  Patrón WAI-ARIA APG "Toolbar":
+  https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/
+
+  role="toolbar" + aria-label nombran el conjunto. Cada subgrupo
+  relacionado es role="group" + aria-label propio; las flechas mueven el
+  foco por TODOS los controles del toolbar, cruzando subgrupos. No se
+  fija tabindex a mano: toolbar.js lo gestiona (roving tabindex) al
+  iniciar; sin JavaScript, cada botón queda como parada individual de Tab.
+-->
+<div
+  class="c-toolbar"
+  role="toolbar"
+  aria-label="Formato de texto"
+  data-toolbar
+>
+  <div class="c-toolbar__group" role="group" aria-label="Estilo de texto">
+    <button type="button" class="c-toolbar__item" aria-pressed="false">
+      Negrita
+    </button>
+    <button type="button" class="c-toolbar__item" aria-pressed="false">
+      Cursiva
+    </button>
+    <button type="button" class="c-toolbar__item" aria-pressed="false">
+      Subrayado
+    </button>
+  </div>
+
+  <div class="c-toolbar__group" role="group" aria-label="Alineación">
+    <button type="button" class="c-toolbar__item">Izquierda</button>
+    <button type="button" class="c-toolbar__item">Centro</button>
+    <button type="button" class="c-toolbar__item">Derecha</button>
+  </div>
+</div>

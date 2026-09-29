@@ -1,0 +1,37 @@
+<!--
+  Componente: Disclosure
+  Patrón WAI-ARIA APG "Disclosure (Show/Hide)":
+  https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+
+  El botón lleva aria-expanded (estado inicial) y aria-controls (apunta
+  al panel). disclosure.js alterna aria-expanded y el hidden del panel
+  al hacer clic; Espacio/Enter ya activan el <button> de forma nativa,
+  sin JS adicional para el teclado.
+-->
+<button
+  type="button"
+  class="c-disclosure__trigger"
+  aria-expanded="false"
+  aria-controls="disclosure-panel-1"
+  data-disclosure
+>
+  <svg
+    class="c-disclosure__icon"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path
+      d="M6 9l6 6 6-6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+  Más información
+</button>
+<div class="c-disclosure__panel" id="disclosure-panel-1" hidden>
+  <p>Contenido adicional que se muestra u oculta al pulsar el botón.</p>
+</div>

@@ -51,3 +51,62 @@ export function initButtons(root = document) {
     (el) => new Button(el)
   );
 }
+
+/**
+ * ToggleButton
+ * Implementa el patrón WAI-ARIA APG "Button (Toggle)": un botón con dos
+ * estados (pulsado/no pulsado) expuestos con aria-pressed, sin cambiar
+ * su texto visible.
+ * https://www.w3.org/WAI/ARIA/apg/patterns/button/
+ *
+ * Uso:
+ *   import { ToggleButton } from './button.js';
+ *   const fav = new ToggleButton(document.querySelector('[data-toggle-button]'));
+ *   fav.pressed; // true | false
+ */
+export class ToggleButton {
+  /** @param {HTMLButtonElement} el */
+  constructor(el) {
+    if (!el) throw new Error('ToggleButton: se requiere un elemento <button>.');
+    this.el = el;
+    if (!el.hasAttribute('aria-pressed')) {
+      el.setAttribute('aria-pressed', 'false');
+    }
+    this._onClick = this._onClick.bind(this);
+    this.el.addEventListener('click', this._onClick);
+  }
+
+  /** @returns {boolean} */
+  get pressed() {
+    return this.el.getAttribute('aria-pressed') === 'true';
+  }
+
+  /** @param {boolean} value */
+  set pressed(value) {
+    this.el.setAttribute('aria-pressed', String(Boolean(value)));
+  }
+
+  toggle() {
+    this.pressed = !this.pressed;
+  }
+
+  destroy() {
+    this.el.removeEventListener('click', this._onClick);
+  }
+
+  _onClick() {
+    this.toggle();
+  }
+}
+
+/**
+ * Inicializa todos los botones con [data-toggle-button] dentro de un
+ * contenedor.
+ * @param {ParentNode} [root]
+ * @returns {ToggleButton[]}
+ */
+export function initToggleButtons(root = document) {
+  return Array.from(root.querySelectorAll('[data-toggle-button]')).map(
+    (el) => new ToggleButton(el)
+  );
+}
