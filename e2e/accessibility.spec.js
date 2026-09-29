@@ -470,3 +470,46 @@ test('Tooltip: el envoltorio enfocable de un botón deshabilitado usa el anillo 
   await expect(wrapper).toBeFocused();
   await expect(wrapper).toHaveCSS('outline-width', '3px');
 });
+
+test('Dropdown: se abre con clic y con teclado, Escape devuelve el foco y un clic fuera lo cierra', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-dropdown--navegacion&viewMode=story'
+  );
+
+  const button = page.getByRole('button', { name: 'Productos' });
+  const link = page.getByRole('link', { name: 'Hardware' });
+
+  await button.click();
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+  await expect(link).toBeVisible();
+
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Software' })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(button).toBeFocused();
+  await expect(link).toBeHidden();
+
+  await page.keyboard.press('Enter');
+  await expect(link).toBeVisible();
+  await page.mouse.click(600, 400);
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('Popover: Enter lo abre, Escape lo cierra con el foco en el disparador', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-popover--iban&viewMode=story');
+
+  const button = page.getByRole('button', { name: '¿Qué es el IBAN?' });
+  await button.focus();
+  await page.keyboard.press('Enter');
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.getByText('Código de 24 caracteres')).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(button).toBeFocused();
+});
