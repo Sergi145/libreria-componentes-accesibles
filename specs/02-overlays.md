@@ -185,34 +185,34 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 
 ## Criterios de aceptación
 
-- [ ] `npm run check` (lint JS + lint CSS + Vitest) termina sin errores.
-- [ ] `npm run lint:html` termina sin errores.
-- [ ] `npm run test:e2e` pasa: cero violaciones de axe en todas las historias de la lista y todos los tests de teclado en verde.
-- [ ] `npm run build` genera `dist/<componente>/` con `.js`, `.css` y `.html` para `offcanvas`, `dropdown`, `menu-button`, `popover` y `tooltip`, además de los 12 componentes existentes.
-- [ ] Ningún `.js` de `dist/` contiene `import` de rutas relativas: `dismiss`, `rovingTabindex`, `Disclosure` y `Modal` quedan empaquetados dentro.
-- [ ] Cada componente nuevo tiene un README con uso, accesibilidad, pruebas manuales y el apartado «Conformidad con la guía». El README de Modal también lo tiene.
-- [ ] `dismissable`: tras `destroy()`, ni Esc ni un clic fuera llaman a `onDismiss`.
-- [ ] Alertdialog: un clic en el backdrop no lo cierra, Esc sí, y al abrir el foco está en el botón de cerrar (×).
-- [ ] Alertdialog: el `<dialog>` tiene `role="alertdialog"`, `aria-labelledby` y `aria-describedby` apuntando a elementos que existen.
-- [ ] Los tests existentes de Modal siguen pasando sin modificar sus aserciones.
-- [ ] Offcanvas: al abrir, Tab y Mayús+Tab no sacan el foco del panel. Esc lo cierra y el foco vuelve al disparador.
-- [ ] Offcanvas responsive: a 1280 px de ancho el contenido es visible sin pulsar nada y el disparador no se muestra. A 320 px el disparador abre el panel y el documento no tiene scroll horizontal.
-- [ ] Menu Button: Enter y ↓ en el botón abren el menú con `aria-expanded="true"` y el foco en el primer `menuitem`. ↑ abre con el foco en el último.
-- [ ] Menu Button: ↓/↑ recorren los elementos con envoltura, Inicio/Fin van al primero y al último y se saltan los deshabilitados.
-- [ ] Menu Button: Esc cierra el menú y el foco vuelve al botón. Tab cierra el menú y el foco pasa al siguiente elemento de la página.
-- [ ] Menu Button: con el foco en «Duplicar», pulsar «e» enfoca «Eliminar».
-- [ ] Menu Button: activar un `menuitemcheckbox` alterna `aria-checked` y el menú sigue abierto. En un grupo de `menuitemradio`, exactamente uno tiene `aria-checked="true"`.
-- [ ] Botón partido: el botón de flecha tiene un nombre accesible que empieza por «Más opciones de».
-- [ ] Menu Button dentro de un Modal abierto: Esc cierra el menú y el Modal sigue abierto.
-- [ ] Dropdown de navegación: no contiene ningún `role="menu"` ni `role="menuitem"`. Esc cierra y devuelve el foco al botón. Un clic fuera lo cierra.
-- [ ] Popover: Enter alterna `aria-expanded`. Esc lo cierra con el foco en el disparador. En el DOM, el panel es el siguiente hermano del disparador.
-- [ ] Tooltip: al enfocar el disparador el tooltip es visible sin esperar. Con el ratón aparece a los 300 ms, no antes.
-- [ ] Tooltip: mover el ratón del disparador al tooltip no lo oculta. Esc lo oculta y `document.activeElement` sigue siendo el disparador.
-- [ ] Tooltip: ningún tooltip contiene elementos enfocables y ninguno se engancha a un elemento no enfocable (salvo el envoltorio `tabindex="0"` de la variante deshabilitada).
-- [ ] Tooltip en un botón cuyo `aria-label` coincide con el texto: el botón no tiene `aria-describedby`.
-- [ ] Ningún componente del spec usa texto en inglés en `aria-label` ni en texto oculto.
-- [ ] Todos los controles interactivos miden al menos 24×24 px y usan el anillo `--color-focus-ring` con `:focus-visible`.
-- [ ] Todas las animaciones nuevas se desactivan con `prefers-reduced-motion: reduce`.
+- [x] `npm run check` (lint JS + lint CSS + Vitest) termina sin errores.
+- [x] `npm run lint:html` termina sin errores.
+- [x] `npm run test:e2e` pasa: cero violaciones de axe en todas las historias de la lista y todos los tests de teclado en verde.
+- [x] `npm run build` genera `dist/<componente>/` con `.js`, `.css` y `.html` para `offcanvas`, `dropdown`, `menu-button`, `popover` y `tooltip`, además de los 12 componentes existentes.
+- [x] Ningún `.js` de `dist/` contiene `import` de rutas relativas: `dismiss`, `rovingTabindex`, `Disclosure` y `Modal` quedan empaquetados dentro.
+- [x] Cada componente nuevo tiene un README con uso, accesibilidad, pruebas manuales y el apartado «Conformidad con la guía». El README de Modal también lo tiene.
+- [x] `dismissable`: tras `destroy()`, ni Esc ni un clic fuera llaman a `onDismiss`.
+- [x] Alertdialog: un clic en el backdrop no lo cierra, Esc sí, y al abrir el foco está en el botón de cerrar (×).
+- [x] Alertdialog: el `<dialog>` tiene `role="alertdialog"`, `aria-labelledby` y `aria-describedby` apuntando a elementos que existen.
+- [x] Los tests existentes de Modal siguen pasando sin modificar sus aserciones.
+- [x] Offcanvas: al abrir, Tab y Mayús+Tab no sacan el foco del panel. Esc lo cierra y el foco vuelve al disparador.
+- [x] Offcanvas responsive: a 1280 px de ancho el contenido es visible sin pulsar nada y el disparador no se muestra. A 320 px el disparador abre el panel y el documento no tiene scroll horizontal.
+- [x] Menu Button: Enter y ↓ en el botón abren el menú con `aria-expanded="true"` y el foco en el primer `menuitem`. ↑ abre con el foco en el último.
+- [x] Menu Button: ↓/↑ recorren los elementos con envoltura, Inicio/Fin van al primero y al último y se saltan los deshabilitados.
+- [x] Menu Button: Esc cierra el menú y el foco vuelve al botón. Tab cierra el menú y el foco pasa al siguiente elemento de la página.
+- [x] Menu Button: con el foco en «Duplicar», pulsar «e» enfoca «Eliminar».
+- [x] Menu Button: activar un `menuitemcheckbox` alterna `aria-checked` y el menú sigue abierto. En un grupo de `menuitemradio`, exactamente uno tiene `aria-checked="true"`.
+- [x] Botón partido: el botón de flecha tiene un nombre accesible que empieza por «Más opciones de».
+- [x] Menu Button dentro de un Modal abierto: Esc cierra el menú y el Modal sigue abierto.
+- [x] Dropdown de navegación: no contiene ningún `role="menu"` ni `role="menuitem"`. Esc cierra y devuelve el foco al botón. Un clic fuera lo cierra.
+- [x] Popover: Enter alterna `aria-expanded`. Esc lo cierra con el foco en el disparador. En el DOM, el panel es el siguiente hermano del disparador.
+- [x] Tooltip: al enfocar el disparador el tooltip es visible sin esperar. Con el ratón aparece a los 300 ms, no antes.
+- [x] Tooltip: mover el ratón del disparador al tooltip no lo oculta. Esc lo oculta y `document.activeElement` sigue siendo el disparador.
+- [x] Tooltip: ningún tooltip contiene elementos enfocables y ninguno se engancha a un elemento no enfocable (salvo el envoltorio `tabindex="0"` de la variante deshabilitada).
+- [x] Tooltip en un botón cuyo `aria-label` coincide con el texto: el botón no tiene `aria-describedby`.
+- [x] Ningún componente del spec usa texto en inglés en `aria-label` ni en texto oculto.
+- [x] Todos los controles interactivos miden al menos 24×24 px y usan el anillo `--color-focus-ring` con `:focus-visible`.
+- [x] Todas las animaciones nuevas se desactivan con `prefers-reduced-motion: reduce`.
 
 ## Decisiones
 

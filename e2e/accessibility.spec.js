@@ -432,3 +432,41 @@ test('Tooltip: se coloca solo en el lado donde no queda cortado', async ({
   expect(rect.y).toBeGreaterThanOrEqual(box.y - 0.5);
   expect(rect.y + rect.height).toBeLessThanOrEqual(box.y + box.height + 0.5);
 });
+
+test('Tooltip: con el ratón aparece a los 300 ms y se puede pasar a la burbuja sin que se oculte', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tooltip--texto-complementario&viewMode=story'
+  );
+
+  const trigger = page.getByRole('button', { name: 'Guardar' });
+  const bubble = page.locator('[role="tooltip"]');
+
+  await trigger.hover();
+  await page.waitForTimeout(100);
+  await expect(bubble).not.toHaveAttribute('data-visible', '');
+  await expect(bubble).toHaveAttribute('data-visible', '');
+
+  // Hay un hueco entre el disparador y la burbuja: cruzarlo no debe
+  // ocultarla (WCAG 1.4.13, hoverable).
+  const box = await bubble.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, {
+    steps: 20,
+  });
+  await page.waitForTimeout(200);
+  await expect(bubble).toHaveAttribute('data-visible', '');
+});
+
+test('Tooltip: el envoltorio enfocable de un botón deshabilitado usa el anillo de foco del sistema', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tooltip--elemento-deshabilitado&viewMode=story'
+  );
+
+  const wrapper = page.locator('[tabindex="0"]');
+  await wrapper.focus();
+  await expect(wrapper).toBeFocused();
+  await expect(wrapper).toHaveCSS('outline-width', '3px');
+});

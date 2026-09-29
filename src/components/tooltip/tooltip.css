@@ -69,3 +69,42 @@
   inset-inline-start: 100%;
   margin-inline-start: var(--space-2);
 }
+
+/*
+ * Puente hover (WCAG 1.4.13, «hoverable»): el hueco entre el disparador
+ * y la burbuja no pertenece a ningún elemento, así que al cruzarlo el
+ * ratón salía del envoltorio y el tooltip se ocultaba. Este pseudo-
+ * elemento, hijo de la burbuja, cubre ese hueco (--space-2) en cada lado.
+ */
+.c-tooltip__bubble::before {
+  content: '';
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline: 0;
+  block-size: var(--space-2);
+}
+
+.c-tooltip__bubble--top::before {
+  inset-block: 100% auto;
+}
+
+.c-tooltip__bubble--start::before,
+.c-tooltip__bubble--end::before {
+  inset-block: 0;
+  inline-size: var(--space-2);
+  block-size: auto;
+}
+
+.c-tooltip__bubble--start::before {
+  inset-inline: 100% auto;
+}
+
+.c-tooltip__bubble--end::before {
+  inset-inline: auto 100%;
+}
+
+/* Envoltorio enfocable de un elemento deshabilitado: anillo del sistema. */
+.c-tooltip > [tabindex='0']:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
