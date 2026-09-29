@@ -1,0 +1,30 @@
+<!--
+  Componente: Dropdown (navegación)
+  Lista de enlaces sobre un patrón Disclosure: sin roles de menú.
+  El enlace de la página actual lleva aria-current="page".
+  Para acciones de aplicación usa Menu Button.
+-->
+<div class="c-dropdown">
+  <button
+    type="button"
+    class="c-dropdown__toggle"
+    data-dropdown
+    aria-expanded="false"
+    aria-controls="dropdown-productos"
+  >
+    Productos
+  </button>
+  <ul id="dropdown-productos" class="c-dropdown__list" hidden>
+    <li>
+      <a class="c-dropdown__link" href="/productos/software" aria-current="page"
+        >Software</a
+      >
+    </li>
+    <li>
+      <a class="c-dropdown__link" href="/productos/hardware">Hardware</a>
+    </li>
+    <li>
+      <a class="c-dropdown__link" href="/productos/servicios">Servicios</a>
+    </li>
+  </ul>
+</div>

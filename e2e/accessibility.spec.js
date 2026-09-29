@@ -82,6 +82,63 @@ const stories = [
     id: 'componentes-list-group--como-pestanas-verticales',
     name: 'List group / como pestañas verticales',
   },
+
+  // Modal: alertdialog
+  { id: 'componentes-modal--alert-dialog', name: 'Modal / alertdialog' },
+
+  // Offcanvas
+  { id: 'componentes-offcanvas--start', name: 'Offcanvas / inicio' },
+  { id: 'componentes-offcanvas--end', name: 'Offcanvas / fin' },
+  { id: 'componentes-offcanvas--top', name: 'Offcanvas / arriba' },
+  { id: 'componentes-offcanvas--bottom', name: 'Offcanvas / abajo' },
+  {
+    id: 'componentes-offcanvas--responsive-movil',
+    name: 'Offcanvas / responsive móvil',
+  },
+  {
+    id: 'componentes-offcanvas--responsive-escritorio',
+    name: 'Offcanvas / responsive escritorio',
+  },
+
+  // Tooltip
+  {
+    id: 'componentes-tooltip--texto-complementario',
+    name: 'Tooltip / texto complementario',
+  },
+  { id: 'componentes-tooltip--solo-icono', name: 'Tooltip / solo icono' },
+  {
+    id: 'componentes-tooltip--colocacion-automatica',
+    name: 'Tooltip / colocación automática',
+  },
+  {
+    id: 'componentes-tooltip--elemento-deshabilitado',
+    name: 'Tooltip / elemento deshabilitado',
+  },
+
+  // Popover
+  { id: 'componentes-popover--iban', name: 'Popover' },
+  {
+    id: 'componentes-popover--con-titulo-arriba',
+    name: 'Popover / con título arriba',
+  },
+
+  // Dropdown
+  { id: 'componentes-dropdown--navegacion', name: 'Dropdown / navegación' },
+
+  // Menu Button
+  { id: 'componentes-menu-button--acciones', name: 'Menu Button / acciones' },
+  {
+    id: 'componentes-menu-button--casillas-y-radios',
+    name: 'Menu Button / casillas y radios',
+  },
+  {
+    id: 'componentes-menu-button--boton-partido',
+    name: 'Menu Button / botón partido',
+  },
+  {
+    id: 'componentes-menu-button--dentro-de-un-modal',
+    name: 'Menu Button / dentro de un modal',
+  },
 ];
 
 for (const story of stories) {
@@ -210,4 +267,249 @@ test('Disclosure: Enter alterna aria-expanded y muestra/oculta el panel', async 
 
   await expect(trigger).toHaveAttribute('aria-expanded', 'true');
   await expect(panel).toBeVisible();
+});
+
+test('Offcanvas: Tab no saca el foco del panel; Escape lo cierra y devuelve el foco', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-offcanvas--start&viewMode=story'
+  );
+
+  const trigger = page.getByRole('button', { name: 'Abrir filtros' });
+  await trigger.focus();
+  await trigger.press('Enter');
+
+  const dialog = page.getByRole('dialog', { name: 'Filtros' });
+  await expect(dialog).toBeVisible();
+
+  // Más pulsaciones que controles (× + 2 casillas). El <dialog> modal
+  // nativo pasa el foco por la interfaz del navegador (activeElement =
+  // <body>) al dar la vuelta, pero nunca lo deja en la página de fondo,
+  // que está inerte: el foco está en el panel o en <body>, nunca fuera.
+  const focusInsideDialog = () =>
+    page.evaluate(() => {
+      const active = document.activeElement;
+      return active === document.body || !!active?.closest('dialog[open]');
+    });
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Tab');
+    expect(await focusInsideDialog()).toBe(true);
+  }
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Shift+Tab');
+    expect(await focusInsideDialog()).toBe(true);
+  }
+
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
+test('Menu Button: ↓ abre, las flechas recorren y Escape devuelve el foco', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-menu-button--acciones&viewMode=story'
+  );
+
+  const button = page.getByRole('button', { name: 'Acciones' });
+  await button.focus();
+  await page.keyboard.press('ArrowDown');
+
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.getByRole('menuitem', { name: 'Editar' })).toBeFocused();
+
+  await page.keyboard.press('ArrowDown');
+  await expect(page.getByRole('menuitem', { name: 'Duplicar' })).toBeFocused();
+
+  // Archivar está deshabilitado: se salta.
+  await page.keyboard.press('ArrowDown');
+  await expect(page.getByRole('menuitem', { name: 'Eliminar' })).toBeFocused();
+
+  await page.keyboard.press('e');
+  await expect(page.getByRole('menuitem', { name: 'Editar' })).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(button).toBeFocused();
+});
+
+test('Menu Button: ↑ abre con el foco en el último y Tab cierra el menú', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-menu-button--acciones&viewMode=story'
+  );
+
+  const button = page.getByRole('button', { name: 'Acciones' });
+  await button.focus();
+  await page.keyboard.press('ArrowUp');
+  await expect(page.getByRole('menuitem', { name: 'Eliminar' })).toBeFocused();
+
+  await page.keyboard.press('Tab');
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('Menu Button: dentro de un Modal, Escape cierra el menú y el Modal sigue abierto', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-menu-button--dentro-de-un-modal&viewMode=story'
+  );
+
+  await page.getByRole('button', { name: 'Abrir modal' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Documento' });
+  await expect(dialog).toBeVisible();
+
+  const button = page.getByRole('button', { name: 'Acciones' });
+  await button.focus();
+  await page.keyboard.press('ArrowDown');
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+
+  await page.keyboard.press('Escape');
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(dialog).toBeVisible();
+  await expect(button).toBeFocused();
+});
+
+test('Tooltip: Escape lo oculta sin mover el foco', async ({ page }) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tooltip--texto-complementario&viewMode=story'
+  );
+
+  const trigger = page.getByRole('button', { name: 'Guardar' });
+  // Antes de enfocar, la descripción ya está en el árbol de
+  // accesibilidad (el tooltip no usa `hidden`): así NVDA la anuncia al
+  // tabular hasta el botón.
+  await expect(trigger).toHaveAccessibleDescription('Atajo: Ctrl + S');
+
+  await trigger.focus();
+  // Oculto solo visualmente (recorte CSS), por eso se comprueba el
+  // estado `data-visible` y no la visibilidad de Playwright.
+  const tooltip = page.locator('[role="tooltip"]');
+  await expect(tooltip).toHaveAttribute('data-visible', '');
+  await expect(trigger).toHaveAccessibleDescription('Atajo: Ctrl + S');
+
+  await page.keyboard.press('Escape');
+  await expect(tooltip).not.toHaveAttribute('data-visible', '');
+  await expect(trigger).toBeFocused();
+});
+
+test('Tooltip: los tres tipos de disparador tienen nombre y descripción antes de enfocar', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tooltip--solo-icono&viewMode=story'
+  );
+  await expect(
+    page.getByRole('button', { name: 'Copiar enlace' })
+  ).toBeVisible();
+
+  await page.goto(
+    '/iframe.html?id=componentes-tooltip--elemento-deshabilitado&viewMode=story'
+  );
+  await expect(page.locator('[tabindex="0"]')).toHaveAccessibleDescription(
+    'Completa el formulario para continuar'
+  );
+});
+
+test('Tooltip: se coloca solo en el lado donde no queda cortado', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tooltip--colocacion-automatica&viewMode=story'
+  );
+
+  await page.getByRole('button', { name: 'Guardar' }).focus();
+  const bubble = page.locator('[role="tooltip"]');
+  await expect(bubble).toHaveAttribute('data-visible', '');
+  // Pedido debajo (por defecto), pero en la caja no cabe: pasa a arriba.
+  await expect(bubble).toHaveAttribute('data-placement', 'top');
+
+  const box = await page.locator('#story-tooltip-caja').boundingBox();
+  const rect = await bubble.boundingBox();
+  expect(rect.y).toBeGreaterThanOrEqual(box.y - 0.5);
+  expect(rect.y + rect.height).toBeLessThanOrEqual(box.y + box.height + 0.5);
+});
+
+test('Tooltip: con el ratón aparece a los 300 ms y se puede pasar a la burbuja sin que se oculte', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tooltip--texto-complementario&viewMode=story'
+  );
+
+  const trigger = page.getByRole('button', { name: 'Guardar' });
+  const bubble = page.locator('[role="tooltip"]');
+
+  await trigger.hover();
+  await page.waitForTimeout(100);
+  await expect(bubble).not.toHaveAttribute('data-visible', '');
+  await expect(bubble).toHaveAttribute('data-visible', '');
+
+  // Hay un hueco entre el disparador y la burbuja: cruzarlo no debe
+  // ocultarla (WCAG 1.4.13, hoverable).
+  const box = await bubble.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, {
+    steps: 20,
+  });
+  await page.waitForTimeout(200);
+  await expect(bubble).toHaveAttribute('data-visible', '');
+});
+
+test('Tooltip: el envoltorio enfocable de un botón deshabilitado usa el anillo de foco del sistema', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tooltip--elemento-deshabilitado&viewMode=story'
+  );
+
+  const wrapper = page.locator('[tabindex="0"]');
+  await wrapper.focus();
+  await expect(wrapper).toBeFocused();
+  await expect(wrapper).toHaveCSS('outline-width', '3px');
+});
+
+test('Dropdown: se abre con clic y con teclado, Escape devuelve el foco y un clic fuera lo cierra', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-dropdown--navegacion&viewMode=story'
+  );
+
+  const button = page.getByRole('button', { name: 'Productos' });
+  const link = page.getByRole('link', { name: 'Hardware' });
+
+  await button.click();
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+  await expect(link).toBeVisible();
+
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Software' })).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(button).toBeFocused();
+  await expect(link).toBeHidden();
+
+  await page.keyboard.press('Enter');
+  await expect(link).toBeVisible();
+  await page.mouse.click(600, 400);
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('Popover: Enter lo abre, Escape lo cierra con el foco en el disparador', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-popover--iban&viewMode=story');
+
+  const button = page.getByRole('button', { name: '¿Qué es el IBAN?' });
+  await button.focus();
+  await page.keyboard.press('Enter');
+  await expect(button).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.getByText('Código de 24 caracteres')).toBeVisible();
+
+  await page.keyboard.press('Escape');
+  await expect(button).toHaveAttribute('aria-expanded', 'false');
+  await expect(button).toBeFocused();
 });

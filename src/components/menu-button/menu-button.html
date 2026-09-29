@@ -1,0 +1,144 @@
+<!--
+  Componente: Menu Button (acciones)
+  Botón con aria-haspopup="menu" y un <ul role="menu"> de acciones.
+  Cada <li> lleva role="none" y cada acción es un <button
+  role="menuitem">. Para navegación usa Dropdown.
+-->
+
+<!-- Menú básico -->
+<div class="c-menu-button">
+  <button
+    type="button"
+    id="menu-acciones-btn"
+    class="c-menu-button__toggle"
+    data-menu-button
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-controls="menu-acciones"
+  >
+    Acciones
+  </button>
+  <ul
+    id="menu-acciones"
+    class="c-menu-button__menu"
+    role="menu"
+    aria-labelledby="menu-acciones-btn"
+    hidden
+  >
+    <li role="none">
+      <button type="button" class="c-menu-button__item" role="menuitem">
+        Editar
+      </button>
+    </li>
+    <li role="none">
+      <button type="button" class="c-menu-button__item" role="menuitem">
+        Duplicar
+      </button>
+    </li>
+    <li role="none">
+      <button
+        type="button"
+        class="c-menu-button__item"
+        role="menuitem"
+        disabled
+      >
+        Archivar
+      </button>
+    </li>
+    <li role="none">
+      <button type="button" class="c-menu-button__item" role="menuitem">
+        Eliminar
+      </button>
+    </li>
+  </ul>
+</div>
+
+<!-- Casillas y radios -->
+<div class="c-menu-button">
+  <button
+    type="button"
+    id="menu-vista-btn"
+    class="c-menu-button__toggle"
+    data-menu-button
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-controls="menu-vista"
+  >
+    Vista
+  </button>
+  <ul
+    id="menu-vista"
+    class="c-menu-button__menu"
+    role="menu"
+    aria-labelledby="menu-vista-btn"
+    hidden
+  >
+    <li role="none">
+      <button
+        type="button"
+        class="c-menu-button__item"
+        role="menuitemcheckbox"
+        aria-checked="true"
+      >
+        Mostrar barra lateral
+      </button>
+    </li>
+    <li role="none">
+      <ul class="c-menu-button__group" role="group" aria-label="Ordenar por">
+        <li role="none">
+          <button
+            type="button"
+            class="c-menu-button__item"
+            role="menuitemradio"
+            aria-checked="true"
+          >
+            Nombre
+          </button>
+        </li>
+        <li role="none">
+          <button
+            type="button"
+            class="c-menu-button__item"
+            role="menuitemradio"
+            aria-checked="false"
+          >
+            Fecha
+          </button>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<!-- Botón partido -->
+<div class="c-menu-button c-menu-button--split">
+  <button type="button" class="c-menu-button__action">Guardar</button>
+  <button
+    type="button"
+    id="menu-guardar-btn"
+    class="c-menu-button__toggle"
+    data-menu-button
+    aria-label="Más opciones de guardar"
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-controls="menu-guardar"
+  ></button>
+  <ul
+    id="menu-guardar"
+    class="c-menu-button__menu"
+    role="menu"
+    aria-labelledby="menu-guardar-btn"
+    hidden
+  >
+    <li role="none">
+      <button type="button" class="c-menu-button__item" role="menuitem">
+        Guardar como…
+      </button>
+    </li>
+    <li role="none">
+      <button type="button" class="c-menu-button__item" role="menuitem">
+        Guardar todo
+      </button>
+    </li>
+  </ul>
+</div>

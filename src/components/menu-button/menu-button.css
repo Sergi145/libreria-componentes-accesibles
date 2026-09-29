@@ -1,0 +1,152 @@
+/**
+ * Componente: Menu Button
+ * .c-menu-button es el envoltorio relativo del botón y el menú.
+ * Posición por defecto: debajo, alineado al inicio. Modificador --end
+ * alinea el menú al final (propiedades lógicas, respeta dir="rtl").
+ * Sin volteo automático. El indicador de los elementos marcados sale
+ * de aria-checked.
+ */
+
+.c-menu-button {
+  position: relative;
+  display: inline-block;
+}
+
+.c-menu-button__toggle,
+.c-menu-button__action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--target-size-min);
+  min-inline-size: var(--target-size-min);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-primary-600);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-600);
+  color: var(--color-neutral-0);
+  font: inherit;
+  cursor: pointer;
+}
+
+.c-menu-button__toggle:hover,
+.c-menu-button__action:hover,
+.c-menu-button__toggle[aria-expanded='true'] {
+  border-color: var(--color-primary-700);
+  background: var(--color-primary-700);
+}
+
+.c-menu-button__toggle::after {
+  content: '';
+  inline-size: 0.5em;
+  block-size: 0.5em;
+  border-inline-end: 2px solid currentcolor;
+  border-block-end: 2px solid currentcolor;
+  transform: translateY(-25%) rotate(45deg);
+}
+
+.c-menu-button__toggle[aria-expanded='true']::after {
+  transform: translateY(25%) rotate(-135deg);
+}
+
+.c-menu-button__toggle:focus-visible,
+.c-menu-button__action:focus-visible,
+.c-menu-button__item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-menu-button__menu {
+  position: absolute;
+  z-index: var(--z-overlay);
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  margin: var(--space-1) 0 0;
+  padding: var(--space-1);
+  min-inline-size: 12rem;
+  list-style: none;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.c-menu-button__menu[hidden] {
+  display: none;
+}
+
+.c-menu-button--end .c-menu-button__menu {
+  inset-inline: auto 0;
+}
+
+.c-menu-button__group {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.c-menu-button__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  inline-size: 100%;
+  min-block-size: var(--target-size-min);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.c-menu-button__item:hover,
+.c-menu-button__item:focus {
+  background: var(--color-surface-muted);
+}
+
+.c-menu-button__item:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* Indicador de casillas y radios, a partir de aria-checked. */
+.c-menu-button__item[role='menuitemcheckbox']::before,
+.c-menu-button__item[role='menuitemradio']::before {
+  content: '';
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+  border: 2px solid currentcolor;
+}
+
+.c-menu-button__item[role='menuitemcheckbox']::before {
+  border-radius: var(--radius-sm);
+}
+
+.c-menu-button__item[role='menuitemradio']::before {
+  border-radius: 50%;
+}
+
+.c-menu-button__item[aria-checked='true']::before {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  box-shadow: inset 0 0 0 2px var(--color-surface);
+}
+
+/* Botón partido: acción principal + flecha, unidos. */
+.c-menu-button--split {
+  display: inline-flex;
+}
+
+.c-menu-button--split .c-menu-button__action {
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
+}
+
+.c-menu-button--split .c-menu-button__toggle {
+  border-inline-start-color: var(--color-primary-700);
+  border-start-start-radius: 0;
+  border-end-start-radius: 0;
+  padding-inline: var(--space-3);
+}

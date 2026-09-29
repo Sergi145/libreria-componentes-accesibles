@@ -1,0 +1,94 @@
+/**
+ * Componente: Dropdown (navegación)
+ * .c-dropdown es el envoltorio relativo del botón y la lista de
+ * enlaces. Posición por defecto: debajo, alineado al inicio.
+ * Modificador --end alinea la lista al final (propiedades lógicas,
+ * respeta dir="rtl"). Sin volteo automático.
+ */
+
+.c-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.c-dropdown__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--target-size-min);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid var(--color-primary-600);
+  border-radius: var(--radius-md);
+  background: var(--color-primary-600);
+  color: var(--color-neutral-0);
+  font: inherit;
+  cursor: pointer;
+}
+
+.c-dropdown__toggle:hover,
+.c-dropdown__toggle[aria-expanded='true'] {
+  border-color: var(--color-primary-700);
+  background: var(--color-primary-700);
+}
+
+.c-dropdown__toggle::after {
+  content: '';
+  inline-size: 0.5em;
+  block-size: 0.5em;
+  border-inline-end: 2px solid currentcolor;
+  border-block-end: 2px solid currentcolor;
+  transform: translateY(-25%) rotate(45deg);
+}
+
+.c-dropdown__toggle[aria-expanded='true']::after {
+  transform: translateY(25%) rotate(-135deg);
+}
+
+.c-dropdown__toggle:focus-visible,
+.c-dropdown__link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-dropdown__list {
+  position: absolute;
+  z-index: var(--z-overlay);
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  margin: var(--space-1) 0 0;
+  padding: var(--space-1);
+  min-inline-size: 12rem;
+  list-style: none;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.c-dropdown__list[hidden] {
+  display: none;
+}
+
+.c-dropdown--end .c-dropdown__list {
+  inset-inline: auto 0;
+}
+
+.c-dropdown__link {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--target-size-min);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.c-dropdown__link:hover {
+  background: var(--color-surface-muted);
+}
+
+.c-dropdown__link[aria-current='page'] {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-weight: var(--font-weight-bold);
+}
