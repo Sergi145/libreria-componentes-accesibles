@@ -1,0 +1,116 @@
+/**
+ * Componente: Button
+ * Variantes: --primary, --secondary, --danger
+ * Tamaños:   --sm, --lg (el tamaño por defecto ya cumple 24px mínimo)
+ * Estado:    :disabled / [aria-disabled="true"]
+ */
+
+.c-button {
+  /* Estructura */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 2.5rem;
+  min-width: var(--target-size-min);
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-md);
+
+  /* Tipografía */
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* Interacción */
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--transition-fast) var(--easing-standard),
+    border-color var(--transition-fast) var(--easing-standard),
+    color var(--transition-fast) var(--easing-standard);
+}
+
+/* Foco visible: solo con teclado/AT, nunca al hacer clic con ratón */
+.c-button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* --- Variante: primaria --- */
+.c-button--primary {
+  background-color: var(--color-primary-600);
+  color: var(--color-neutral-0);
+}
+
+.c-button--primary:hover {
+  background-color: var(--color-primary-700);
+}
+
+.c-button--primary:active {
+  background-color: var(--color-primary-700);
+  transform: translateY(1px);
+}
+
+/* --- Variante: secundaria --- */
+.c-button--secondary {
+  background-color: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.c-button--secondary:hover {
+  background-color: var(--color-surface-muted);
+}
+
+/* --- Variante: peligro --- */
+.c-button--danger {
+  background-color: var(--color-danger-500);
+  color: var(--color-neutral-0);
+}
+
+.c-button--danger:hover {
+  background-color: var(--color-danger-600);
+}
+
+/* --- Tamaños --- */
+.c-button--sm {
+  min-height: 2rem;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-sm);
+}
+
+.c-button--lg {
+  min-height: 3rem;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-lg);
+}
+
+/* --- Estado deshabilitado ---
+   Se combina :disabled (para <button>) con [aria-disabled] por si el
+   componente se adapta a otro elemento; mantiene 4.5:1 en el texto. */
+.c-button:disabled,
+.c-button[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Icono opcional dentro del botón */
+.c-button__icon {
+  flex-shrink: 0;
+  width: 1.25em;
+  height: 1.25em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-button {
+    transition: none;
+  }
+
+  .c-button--primary:active {
+    transform: none;
+  }
+}

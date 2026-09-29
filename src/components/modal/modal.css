@@ -1,0 +1,111 @@
+/**
+ * Componente: Modal
+ * El <dialog> en sí no lleva padding/fondo: todo el "chrome" visual va
+ * en .c-modal__content, así un clic sobre el propio <dialog> (fuera del
+ * contenido) se puede identificar de forma fiable como clic en el
+ * backdrop.
+ */
+
+.c-modal {
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-lg);
+  max-width: min(32rem, calc(100vw - var(--space-8)));
+  max-height: min(85vh, 40rem);
+  color: var(--color-text);
+  background: transparent;
+  box-shadow: var(--shadow-lg);
+}
+
+/* El navegador añade [open] cuando showModal()/show() está activo */
+.c-modal:not([open]) {
+  display: none;
+}
+
+.c-modal::backdrop {
+  background: rgb(17 24 39 / 55%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .c-modal {
+    animation: c-modal-in var(--transition-base) var(--easing-standard);
+  }
+}
+
+@keyframes c-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.c-modal__content {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+  margin: 0;
+  padding: var(--space-5);
+  border-radius: inherit;
+  background: var(--color-surface);
+}
+
+.c-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.c-modal__title {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.c-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--target-size-min);
+  height: var(--target-size-min);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.c-modal__close:hover {
+  background: var(--color-surface-muted);
+}
+
+.c-modal__close:focus-visible,
+.c-modal__content :focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-modal__body {
+  overflow-y: auto;
+  color: var(--color-text-muted);
+}
+
+.c-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-modal {
+    animation: none;
+  }
+}

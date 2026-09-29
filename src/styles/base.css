@@ -1,0 +1,27 @@
+/**
+ * Base mínima compartida (no obligatoria).
+ * Cada componente es independiente y funciona sin este archivo;
+ * esto solo nivela cajas y tipografía en las demos/Storybook.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+/* Anillo de foco consistente para toda la librería.
+   Se apoya en :focus-visible para no mostrarse en clic de ratón. */
+.focus-ring:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
