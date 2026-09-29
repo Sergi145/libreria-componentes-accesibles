@@ -1,5 +1,9 @@
 # Librería de componentes accesibles
 
+![Licencia](https://img.shields.io/badge/licencia-MIT-blue)
+![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
+![WCAG](https://img.shields.io/badge/WCAG-2.2%20AA-informational)
+
 Componentes de UI construidos con **HTML, CSS y JavaScript nativos**
 (sin framework). Cada componente vive en su propia carpeta, es
 independiente del resto y se puede copiar o importar por separado.
@@ -71,6 +75,44 @@ npm run lint:html  # HTML (incluye reglas de accesibilidad)
 # Compilar la librería (dist/<componente>/<componente>.{js,css})
 npm run build
 ```
+
+## Uso rápido
+
+Cada componente se apoya en HTML semántico; el CSS lo da estilo y el JS
+(opcional) añade comportamiento dinámico. Ejemplo con `Button`:
+
+```html
+<link rel="stylesheet" href="src/tokens/tokens.css" />
+<link rel="stylesheet" href="src/components/button/button.css" />
+
+<button type="button" class="c-button c-button--primary">
+  Guardar cambios
+</button>
+
+<script type="module">
+  import { Button } from './src/components/button/button.js';
+
+  // Opcional: solo si necesitas un estado de "cargando" accesible
+  const instance = new Button(document.querySelector('.c-button'));
+  instance.setLoading(true, 'Guardando…');
+</script>
+```
+
+Consulta el `README.md` de cada componente (enlazado en la tabla de abajo)
+para ver sus variantes, atributos ARIA y notas de accesibilidad.
+
+### Usar un componente en otro proyecto
+
+No hace falta instalar la librería entera: cada componente es autocontenido
+y se puede copiar tal cual.
+
+1. Copia la carpeta del componente, por ejemplo `src/components/button/`
+   (solo necesitas `button.html`, `button.css` y, si usas el estado de
+   carga, `button.js`).
+2. Copia también `src/tokens/tokens.css` (o sustituye las variables
+   `var(--...)` del `.css` copiado por valores fijos si no quieres esa
+   dependencia compartida).
+3. Importa el CSS y, si aplica, el JS como módulo ES en tu proyecto.
 
 ## Componentes disponibles
 
