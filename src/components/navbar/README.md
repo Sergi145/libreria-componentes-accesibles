@@ -62,9 +62,9 @@ new Navbar(document.querySelector('[data-navbar]'));
 initNavbars();
 ```
 
-`navbar.js` importa [`Disclosure`](../disclosure) para el botón
-hamburguesa: copiar solo la carpeta `navbar/` sin `disclosure/` rompe el
-import en `src`. El build de `dist/navbar/navbar.js` es autónomo, porque
+`navbar.js` importa `Disclosure` de `src/utils/disclosure.js` para el
+botón hamburguesa: copiar solo la carpeta `navbar/` sin esa utilidad rompe
+el import en `src`. El build de `dist/navbar/navbar.js` es autónomo, porque
 Vite empaqueta `Disclosure` dentro.
 
 ## Ancho de escritorio

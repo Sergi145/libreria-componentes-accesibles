@@ -8,7 +8,7 @@ así está implementado (reutiliza `Disclosure` y añade `dismissable`).
 El marcado va siempre en el HTML: un envoltorio `.c-popover` con el
 `<button>` y, **justo después**, el panel `hidden`.
 
-> **Dependencias:** `popover.js` importa `../disclosure/disclosure.js` y
+> **Dependencias:** `popover.js` importa `../../utils/disclosure.js` y
 > `../../utils/dismiss.js`. Si copias la carpeta a otro proyecto, copia
 > también esas dos. `dist/popover/` es autónomo (Vite las empaqueta).
 
@@ -70,11 +70,12 @@ elige la posición que quepa.
 
 - **Solo texto.** No pongas enlaces, botones ni campos dentro. Si
   necesitas contenido interactivo, usa [`Modal`](../modal) o
-  [`Disclosure`](../disclosure).
+  un botón que muestre u oculte contenido con `aria-expanded`
+  (`src/utils/disclosure.js` o `<details>`).
 - **El disparador es un `<button>`**, nunca un `<span>` o un icono sin foco.
 - **Sin `aria-describedby`** en el disparador: el panel sigue al botón en
   el orden de lectura y se leería dos veces.
-- Si el contenido es largo, considera un Disclosure o un Modal.
+- Si el contenido es largo, considera un botón de mostrar/ocultar (Disclosure) o un Modal.
 
 ## Pruebas manuales recomendadas
 

@@ -1,0 +1,80 @@
+/**
+ * Componente: Placeholder
+ * Esqueletos de carga solo CSS. Cada bloque .c-placeholder es decorativo
+ * (aria-hidden="true") y su contenedor .c-placeholder-group lleva
+ * aria-busy="true" mientras dura la carga; al terminar se sustituye el
+ * grupo por el contenido real (o se pone aria-busy="false").
+ * Bloques: --title, --text (por defecto), --avatar y --media. Anchos:
+ * --short (40 %) y --medium (70 %). El brillo animado se desactiva con
+ * prefers-reduced-motion. Al ser decorativos, no tienen requisito de
+ * contraste, pero se ven en claro y en oscuro (mezcla del color de texto).
+ */
+
+.c-placeholder-group {
+  display: grid;
+  gap: var(--space-2);
+  inline-size: 100%;
+  max-inline-size: 30rem;
+}
+
+.c-placeholder {
+  display: block;
+  inline-size: 100%;
+  block-size: 1rem;
+  border-radius: var(--radius-sm);
+  background-color: color-mix(
+    in srgb,
+    var(--color-text) 12%,
+    var(--color-surface)
+  );
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-surface) 55%, transparent) 50%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+  animation: c-placeholder-shimmer 1.4s ease-in-out infinite;
+}
+
+.c-placeholder--title {
+  block-size: 1.5rem;
+  inline-size: 60%;
+}
+
+.c-placeholder--avatar {
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: 50%;
+}
+
+.c-placeholder--media {
+  block-size: 8rem;
+  border-radius: var(--radius-md);
+}
+
+.c-placeholder--short {
+  inline-size: 40%;
+}
+
+.c-placeholder--medium {
+  inline-size: 70%;
+}
+
+@keyframes c-placeholder-shimmer {
+  from {
+    background-position: -50% 0;
+  }
+
+  to {
+    background-position: 150% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-placeholder {
+    animation: none;
+    background-image: none;
+  }
+}

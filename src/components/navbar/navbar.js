@@ -4,7 +4,7 @@
  * *disclosure* para el menú móvil (la hamburguesa) y la indicación de
  * página actual (aria-current="page", en el marcado).
  *
- * El botón hamburguesa reutiliza Disclosure (../disclosure/disclosure.js)
+ * El botón hamburguesa reutiliza Disclosure (../../utils/disclosure.js)
  * en vez de reimplementar el mismo alternado de aria-expanded/hidden.
  * En ancho de escritorio el menú se muestra siempre por CSS, con
  * independencia de ese estado (ver navbar.css).
@@ -14,7 +14,7 @@
  *   new Navbar(document.querySelector('[data-navbar]'));
  */
 
-import { Disclosure } from '../disclosure/disclosure.js';
+import { Disclosure } from '../../utils/disclosure.js';
 
 const TOGGLE_SELECTOR = '.c-navbar__toggle';
 

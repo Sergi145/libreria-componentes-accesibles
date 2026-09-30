@@ -1,0 +1,64 @@
+<!--
+  Componente: Toast
+  Sin patrón APG propio: se apoya en las regiones vivas y en el patrón
+  "Alert" (https://www.w3.org/WAI/ARIA/apg/patterns/alert/).
+
+  El toast visual NO lleva role: su texto se anuncia con announce() de
+  live-region.js al llamar a show() (o al crearlo con showToast()). Así
+  no se lee dos veces y la región viva ya existe cuando llega el texto.
+  Mostrarlo no mueve el foco.
+
+  Cada variante lleva un icono distinto (aria-hidden) y un prefijo de
+  texto oculto. data-toast-variant fija la cortesía del anuncio (assertive
+  en warning y danger, polite en info y success). El botón de cierre
+  reutiliza c-close-button (enlaza close-button.css).
+
+  Los toasts creados con showToast() van dentro de .c-toast-region, que
+  el propio JS crea al final del <body>.
+-->
+<div class="c-toast-region" data-toast-region>
+  <div
+    class="c-toast c-toast--success"
+    data-toast
+    data-toast-variant="success"
+    hidden
+  >
+    <svg
+      class="c-toast__icon"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <path d="M8 12l3 3 5-6" />
+      </g>
+    </svg>
+    <p class="c-toast__body" data-toast-body>
+      <span class="c-toast__sr-text">Correcto:</span>
+      Cambios guardados.
+    </p>
+    <button
+      type="button"
+      class="c-close-button c-toast__close"
+      aria-label="Cerrar notificación"
+      data-toast-close
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M6 6l12 12M18 6L6 18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+    </button>
+  </div>
+</div>

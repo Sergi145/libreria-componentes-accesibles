@@ -1,0 +1,206 @@
+<!--
+  Componente: Carousel
+  Patrón WAI-ARIA APG "Carousel" (variante con pestañas):
+  https://www.w3.org/WAI/ARIA/apg/patterns/carousel/
+
+  - <section aria-roledescription="carrusel" aria-label="…">: el nombre
+    dice qué contiene («Destacados»).
+  - Orden de los controles en el DOM: botón de rotación (oculto mientras
+    no haya rotación automática), Anterior / Siguiente y el selector
+    role="tablist". Después, las diapositivas.
+  - Cada diapositiva es role="tabpanel" con aria-roledescription=
+    "diapositiva" y aria-label="N de M". Cada pestaña lleva aria-label=
+    "Diapositiva N" y aria-controls hacia su diapositiva.
+  - El contenedor de diapositivas lleva aria-live="polite" (con
+    rotación automática pasa a "off" mientras rota).
+  - Cada diapositiva lleva una imagen (img/slide-N.svg) con un alt que
+    describe lo que se ve; el título y el texto van aparte, en el pie. Si
+    la imagen fuese solo decorativa, usa alt="".
+  - Rotación automática: añade data-autoplay a la <section> (y
+    data-interval="3000" para cambiar los 5000 ms). El botón de rotación,
+    que carousel.js muestra solo entonces, alterna su aria-label entre
+    «Detener rotación automática» e «Iniciar rotación automática». Pausan
+    la rotación el ratón encima y el foco dentro (temporal), y el botón
+    (permanente). Con prefers-reduced-motion no arranca sola.
+  - Sin JavaScript: los controles están hidden y todas las diapositivas
+    se ven apiladas. carousel.js quita el hidden de los controles y oculta
+    las diapositivas inactivas.
+-->
+<section
+  class="c-carousel"
+  aria-roledescription="carrusel"
+  aria-label="Destacados"
+  data-carousel
+>
+  <div class="c-carousel__controls" data-carousel-controls hidden>
+    <button
+      type="button"
+      class="c-carousel__button c-carousel__rotation"
+      aria-label="Detener rotación automática"
+      data-carousel-rotation
+      hidden
+    >
+      <svg
+        class="c-carousel__icon c-carousel__icon--pause"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M9 6v12M15 6v12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+      <svg
+        class="c-carousel__icon c-carousel__icon--play"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path d="M8 5v14l11-7z" fill="currentColor" />
+      </svg>
+    </button>
+    <button
+      type="button"
+      class="c-carousel__button"
+      aria-label="Diapositiva anterior"
+      data-carousel-prev
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M15 6l-6 6 6 6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <button
+      type="button"
+      class="c-carousel__button"
+      aria-label="Diapositiva siguiente"
+      data-carousel-next
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M9 6l6 6-6 6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </button>
+    <div
+      class="c-carousel__tabs"
+      role="tablist"
+      aria-label="Diapositivas"
+      data-carousel-tablist
+    >
+      <button
+        type="button"
+        class="c-carousel__tab"
+        role="tab"
+        id="carrusel-tab-1"
+        aria-label="Diapositiva 1"
+        aria-selected="true"
+        aria-controls="carrusel-slide-1"
+      >
+        <span class="c-carousel__dot" aria-hidden="true"></span>
+      </button>
+      <button
+        type="button"
+        class="c-carousel__tab"
+        role="tab"
+        id="carrusel-tab-2"
+        aria-label="Diapositiva 2"
+        aria-selected="false"
+        aria-controls="carrusel-slide-2"
+        tabindex="-1"
+      >
+        <span class="c-carousel__dot" aria-hidden="true"></span>
+      </button>
+      <button
+        type="button"
+        class="c-carousel__tab"
+        role="tab"
+        id="carrusel-tab-3"
+        aria-label="Diapositiva 3"
+        aria-selected="false"
+        aria-controls="carrusel-slide-3"
+        tabindex="-1"
+      >
+        <span class="c-carousel__dot" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="c-carousel__slides" aria-live="polite" data-carousel-slides>
+    <div
+      class="c-carousel__slide"
+      role="tabpanel"
+      id="carrusel-slide-1"
+      aria-roledescription="diapositiva"
+      aria-label="1 de 3"
+      data-carousel-slide
+    >
+      <img
+        class="c-carousel__media"
+        src="img/slide-1.svg"
+        alt="Ilustración de montañas violetas bajo un cielo al amanecer, con un sol naranja"
+        width="640"
+        height="360"
+      />
+      <div class="c-carousel__caption">
+        <h3 class="c-carousel__title">Bienvenida</h3>
+        <p>Descubre los componentes accesibles de la librería.</p>
+      </div>
+    </div>
+    <div
+      class="c-carousel__slide"
+      role="tabpanel"
+      id="carrusel-slide-2"
+      aria-roledescription="diapositiva"
+      aria-label="2 de 3"
+      data-carousel-slide
+    >
+      <img
+        class="c-carousel__media"
+        src="img/slide-2.svg"
+        alt="Ilustración de un teclado verde con la tecla Tab resaltada en amarillo"
+        width="640"
+        height="360"
+      />
+      <div class="c-carousel__caption">
+        <h3 class="c-carousel__title">Teclado primero</h3>
+        <p>Todo se puede hacer sin ratón y con foco siempre visible.</p>
+      </div>
+    </div>
+    <div
+      class="c-carousel__slide"
+      role="tabpanel"
+      id="carrusel-slide-3"
+      aria-roledescription="diapositiva"
+      aria-label="3 de 3"
+      data-carousel-slide
+    >
+      <img
+        class="c-carousel__media"
+        src="img/slide-3.svg"
+        alt="Ilustración de un altavoz rosa que emite ondas de sonido"
+        width="640"
+        height="360"
+      />
+      <div class="c-carousel__caption">
+        <h3 class="c-carousel__title">Lectores de pantalla</h3>
+        <p>Probados con NVDA y VoiceOver además de axe-core.</p>
+      </div>
+    </div>
+  </div>
+</section>

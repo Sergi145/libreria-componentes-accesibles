@@ -1,0 +1,37 @@
+<!--
+  Componente: Badge
+  Solo CSS. Sin patrón APG propio: es texto en línea.
+
+  Un número suelto («3») no dice qué cuenta. Añade siempre un texto
+  oculto que dé contexto («mensajes sin leer»). El color tampoco puede ser
+  la única pista: el texto dice qué es.
+
+  Un badge NO es una región viva: si el contador cambia y quieres avisar
+  de ello, usa announce() de src/utils/live-region.js.
+-->
+
+<!-- Variantes -->
+<span class="c-badge">Nuevo</span>
+<span class="c-badge c-badge--neutral">Borrador</span>
+<span class="c-badge c-badge--success">Activo</span>
+<span class="c-badge c-badge--warning">Pendiente</span>
+<span class="c-badge c-badge--danger">Error</span>
+<span class="c-badge c-badge--info">Beta</span>
+
+<!-- Contador dentro de un botón: el nombre accesible es «Mensajes 3 mensajes sin leer» -->
+<button type="button" class="c-button c-button--secondary">
+  Mensajes
+  <span class="c-badge c-badge--danger">
+    3
+    <span class="c-badge__sr-text">mensajes sin leer</span>
+  </span>
+</button>
+
+<!-- Dentro de un encabezado -->
+<h2>
+  Notificaciones
+  <span class="c-badge c-badge--info">
+    12
+    <span class="c-badge__sr-text">sin leer</span>
+  </span>
+</h2>

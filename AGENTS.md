@@ -13,7 +13,7 @@ recoge lo que no está allí.
   historias. Los identificadores de código van en inglés.
 - No añadas Bootstrap ni ninguna otra dependencia de ejecución.
 - Reutiliza `src/utils/` y los componentes existentes (p. ej. Offcanvas
-  extiende `Modal`; Dropdown y Popover usan `Disclosure` + `dismissable`)
+  extiende `Modal`; Dropdown y Popover usan `Disclosure` (utils) + `dismissable`)
   en vez de duplicar lógica. Importa siempre con rutas relativas.
 - Cabecera JSDoc en cada `.js` de componente: nombre, patrón APG con
   enlace, decisiones no obvias y un ejemplo de uso.

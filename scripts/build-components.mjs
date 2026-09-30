@@ -6,7 +6,7 @@
  * Con varios entries en un mismo build, Rollup factoriza el código que
  * comparten dos o más de ellos (utilidades como rovingTabindex, o
  * Disclosure, que Navbar importa) en chunks aparte e importados entre
- * archivos de dist/ con rutas relativas ("../disclosure/disclosure.js",
+ * archivos de dist/ con rutas relativas ("../disclosure-XXXX.js",
  * "../roving-tabindex-XXXX.js") — justo lo que rompe la independencia
  * de cada dist/<componente>/: copiar solo esa carpeta dejaría un
  * import roto. Un build por componente obliga a Rollup a incluir esas
