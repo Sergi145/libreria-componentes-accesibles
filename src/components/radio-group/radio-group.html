@@ -1,0 +1,133 @@
+<!--
+  Componente: Radio group
+  Patrón de referencia: WAI-ARIA APG "Radio Group":
+  https://www.w3.org/WAI/ARIA/apg/patterns/radio/
+  <fieldset role="radiogroup" aria-labelledby="<id-del-legend>"> con
+  <input type="radio"> nativos, todos con el mismo name. El rol
+  explícito "radiogroup" (en vez del "group" implícito de <fieldset>)
+  es el que admite aria-invalid; aria-labelledby refuerza el nombre
+  accesible del <legend> para lectores que no lo asocian solos al
+  cambiar el rol por defecto.
+
+  Flechas, Tab y la propia selección son del navegador: un grupo de
+  radios con el mismo name ya mueve el foco con las flechas y selecciona
+  al llegar, sin roving tabindex propio.
+
+  Un grupo obligatorio (data-required) se valida con RadioGroup
+  (radio-group.js), que usa setFieldError()/clearFieldError() del
+  propio <fieldset> — no hace falta un [data-field-error] aparte: el
+  mensaje se inserta como el siguiente hermano del <fieldset>, un sitio
+  seguro (a diferencia de Checkbox, aquí el control validado es el
+  <fieldset> completo, no un <input> dentro de un <label>).
+-->
+
+<!-- Grupo simple, no obligatorio -->
+<fieldset
+  class="c-radio-group"
+  id="tema"
+  role="radiogroup"
+  aria-labelledby="tema-legend"
+  data-radio-group
+>
+  <legend class="c-radio-group__legend" id="tema-legend">
+    Tema de la interfaz
+  </legend>
+  <div class="c-radio">
+    <input
+      class="c-radio__input"
+      type="radio"
+      id="tema-claro"
+      name="tema"
+      value="claro"
+      checked
+    />
+    <label class="c-radio__label" for="tema-claro">Claro</label>
+  </div>
+  <div class="c-radio">
+    <input
+      class="c-radio__input"
+      type="radio"
+      id="tema-oscuro"
+      name="tema"
+      value="oscuro"
+    />
+    <label class="c-radio__label" for="tema-oscuro">Oscuro</label>
+  </div>
+  <div class="c-radio">
+    <input
+      class="c-radio__input"
+      type="radio"
+      id="tema-sistema"
+      name="tema"
+      value="sistema"
+    />
+    <label class="c-radio__label" for="tema-sistema">
+      Igual que el sistema
+    </label>
+  </div>
+</fieldset>
+
+<!-- Grupo obligatorio, sin selección: error ya visible (aria-invalid
+     escrito a mano, para mostrar el estilo sin depender de un envío) -->
+<fieldset
+  class="c-radio-group"
+  id="preferencia"
+  role="radiogroup"
+  aria-labelledby="preferencia-legend"
+  data-radio-group
+  data-required
+  aria-invalid="true"
+  aria-describedby="preferencia-error"
+>
+  <legend class="c-radio-group__legend" id="preferencia-legend">
+    Preferencia de contacto
+    <span class="c-radio-group__required">(obligatorio)</span>
+  </legend>
+  <div class="c-radio">
+    <input
+      class="c-radio__input"
+      type="radio"
+      id="contacto-email"
+      name="contacto"
+      value="email"
+    />
+    <label class="c-radio__label" for="contacto-email">
+      Correo electrónico
+    </label>
+  </div>
+  <div class="c-radio">
+    <input
+      class="c-radio__input"
+      type="radio"
+      id="contacto-tel"
+      name="contacto"
+      value="tel"
+    />
+    <label class="c-radio__label" for="contacto-tel">Teléfono</label>
+  </div>
+</fieldset>
+<p class="c-field__error" id="preferencia-error">
+  <svg
+    class="c-field__error-icon"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <circle
+      cx="12"
+      cy="12"
+      r="9"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+    />
+    <path
+      d="M9 9l6 6M15 9l-6 6"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+  </svg>
+  Este campo es obligatorio
+</p>

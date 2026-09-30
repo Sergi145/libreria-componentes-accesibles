@@ -1,0 +1,140 @@
+<!--
+  Componente: Table
+  Tabla de datos semántica: <table> con <caption>, <th scope="col">
+  para las cabeceras de columna y <th scope="row"> para la celda que
+  identifica cada fila. El <caption> es obligatorio: es el nombre
+  accesible de la tabla, y sin él un lector solo anuncia "tabla con N
+  filas y M columnas", sin decir de qué.
+
+  El envoltorio .c-table__wrapper es un <section> (no un <div
+  role="region">: con nombre accesible, <section> ya tiene ese rol de
+  forma nativa) con tabindex="0" y aria-labelledby hacia el <caption>.
+  Así la tabla se puede desplazar en horizontal con teclado cuando no
+  cabe en el ancho disponible (WCAG 2.1.1): un contenedor con scroll
+  propio que no se puede enfocar no es operable solo con teclado. El
+  aria-labelledby coincide con el id del <caption> para que el lector
+  anuncie de qué trata la región antes de entrar en ella.
+
+  Variantes: --striped (filas alternas) y --hover (resalta al pasar el
+  ratón); se pueden combinar. .c-table__cell--numeric alinea los
+  números a la derecha (izquierda en RTL, por eso es text-align: end,
+  no right), la convención tipográfica habitual para comparar cifras.
+
+  La ordenación por columna es de table.js (SortableTable): las
+  columnas con data-sort="text|number" reciben un <button> alrededor
+  de su texto y su <th> lleva aria-sort al activarse. data-sort-value
+  en la celda da el valor real de ordenación cuando el texto visible
+  no basta (una fecha con formato dd/mm/aaaa, un importe con "€").
+  Sin JS, la tabla se lee y se recorre igual: solo faltan los botones
+  de ordenar, y las columnas quedan en su orden original.
+-->
+
+<!-- Tabla simple, ordenable: rayada + resaltado al pasar el ratón -->
+<section
+  class="c-table__wrapper"
+  tabindex="0"
+  aria-labelledby="pedidos-caption"
+>
+  <table class="c-table c-table--striped c-table--hover" data-sortable>
+    <caption id="pedidos-caption">
+      Pedidos recientes
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col" data-sort="text">Pedido</th>
+        <th scope="col" data-sort="text">Cliente</th>
+        <th scope="col" data-sort="text">Fecha</th>
+        <th scope="col" class="c-table__cell--numeric" data-sort="number">
+          Importe
+        </th>
+        <th scope="col" data-sort="text">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">#1024</th>
+        <td>Marta Ruiz</td>
+        <td data-sort-value="2026-03-12">12/03/2026</td>
+        <td class="c-table__cell--numeric" data-sort-value="48.90">
+          48,90&nbsp;€
+        </td>
+        <td>Enviado</td>
+      </tr>
+      <tr>
+        <th scope="row">#1023</th>
+        <td>Javier Soto</td>
+        <td data-sort-value="2026-03-11">11/03/2026</td>
+        <td class="c-table__cell--numeric" data-sort-value="129.00">
+          129,00&nbsp;€
+        </td>
+        <td>Procesando</td>
+      </tr>
+      <tr>
+        <th scope="row">#1022</th>
+        <td>Laura Gómez</td>
+        <td data-sort-value="2026-03-09">09/03/2026</td>
+        <td class="c-table__cell--numeric" data-sort-value="9.50">
+          9,50&nbsp;€
+        </td>
+        <td>Entregado</td>
+      </tr>
+      <tr>
+        <th scope="row">#1021</th>
+        <td>Andrés Pardo</td>
+        <td data-sort-value="2026-03-08">08/03/2026</td>
+        <td class="c-table__cell--numeric" data-sort-value="312.40">
+          312,40&nbsp;€
+        </td>
+        <td>Cancelado</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Tabla ancha: demuestra el desplazamiento horizontal enfocable del
+     envoltorio a 320px o en pantallas estrechas -->
+<section
+  class="c-table__wrapper"
+  tabindex="0"
+  aria-labelledby="inventario-caption"
+>
+  <table class="c-table">
+    <caption id="inventario-caption">
+      Inventario del almacén central
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">SKU</th>
+        <th scope="col">Producto</th>
+        <th scope="col">Categoría</th>
+        <th scope="col">Proveedor</th>
+        <th scope="col">Ubicación</th>
+        <th scope="col" class="c-table__cell--numeric">Stock</th>
+        <th scope="col" class="c-table__cell--numeric">Precio unitario</th>
+        <th scope="col">Última entrada</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">SKU-00214</th>
+        <td>Teclado mecánico 75%</td>
+        <td>Periféricos</td>
+        <td>Nortek S.L.</td>
+        <td>Pasillo 4, estante B</td>
+        <td class="c-table__cell--numeric">128</td>
+        <td class="c-table__cell--numeric">54,90&nbsp;€</td>
+        <td>02/03/2026</td>
+      </tr>
+      <tr>
+        <th scope="row">SKU-00351</th>
+        <td>Monitor 27" 144Hz</td>
+        <td>Pantallas</td>
+        <td>Vistalux</td>
+        <td>Pasillo 1, estante A</td>
+        <td class="c-table__cell--numeric">42</td>
+        <td class="c-table__cell--numeric">219,00&nbsp;€</td>
+        <td>27/02/2026</td>
+      </tr>
+    </tbody>
+  </table>
+</section>

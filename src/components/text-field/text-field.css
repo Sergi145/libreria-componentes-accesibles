@@ -1,0 +1,135 @@
+/**
+ * Componente: Text field
+ * .c-field envuelve un <label>, un control (.c-field__control: input,
+ * textarea o select), una ayuda opcional (.c-field__hint) y un mensaje
+ * de error opcional (.c-field__error). El estado inválido se lee de
+ * [aria-invalid="true"] en el control, no de una clase.
+ */
+
+.c-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-block-end: var(--space-4);
+}
+
+.c-field__label {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.c-field__required {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-normal);
+}
+
+.c-field__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.c-field__control {
+  min-height: 2.75rem;
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+}
+
+.c-field__control::placeholder {
+  color: var(--color-text-muted);
+}
+
+.c-field__control:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-field__control:disabled,
+.c-field__control[readonly] {
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+}
+
+.c-field__control:disabled {
+  cursor: not-allowed;
+}
+
+/* No es la única pista (el error también lleva texto e icono propios),
+   pero ayuda a localizar el campo sin tener que leer el mensaje. */
+.c-field__control[aria-invalid='true'] {
+  border-color: var(--color-feedback-danger);
+}
+
+textarea.c-field__control {
+  min-height: 6rem;
+  resize: vertical;
+}
+
+.c-field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+}
+
+.c-field__error-icon {
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+  margin-block-start: 0.15em;
+  color: var(--color-feedback-danger);
+}
+
+/* Resumen de errores del formulario (FormValidation). Recibe el foco
+   al fallar el envío: no hace falta role="alert", el propio cambio de
+   foco hace que el lector anuncie su contenido. */
+.c-error-summary {
+  margin-block-end: var(--space-4);
+  padding: var(--space-4);
+  border: var(--border-width) solid var(--color-feedback-danger);
+  border-inline-start-width: 4px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+}
+
+.c-error-summary[hidden] {
+  display: none;
+}
+
+.c-error-summary:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-error-summary__title {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+}
+
+.c-error-summary__list {
+  margin: 0;
+  padding-inline-start: var(--space-5);
+}
+
+.c-error-summary__list li + li {
+  margin-block-start: var(--space-1);
+}
+
+.c-error-summary__list a {
+  color: var(--color-primary-500);
+}
+
+.c-error-summary__list a:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}

@@ -1,0 +1,102 @@
+/**
+ * Componente: Range
+ * .c-range envuelve el <label>, el <input type="range"> y su <output>.
+ * La pista y el tirador se estilan con los pseudoelementos propios de
+ * cada motor (::-webkit-slider-* y ::-moz-range-*): no hay una forma
+ * estándar única de estilar un <input type="range">.
+ */
+
+.c-range {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-block-end: var(--space-4);
+}
+
+.c-range__label {
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.c-range__control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.c-range__input {
+  flex: 1;
+  width: 100%;
+
+  /* Alto real del área de toque, aunque la pista visual sea más fina. */
+  height: var(--target-size-min);
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+}
+
+.c-range__input:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.c-range__input::-webkit-slider-runnable-track {
+  height: 0.375rem;
+  border-radius: 999px;
+  background: var(--color-border);
+}
+
+.c-range__input::-moz-range-track {
+  height: 0.375rem;
+  border-radius: 999px;
+  background: var(--color-border);
+}
+
+/* Firefox rellena la parte "recorrida" de la pista con este
+   pseudoelemento aparte; WebKit no tiene equivalente. */
+.c-range__input::-moz-range-progress {
+  height: 0.375rem;
+  border-radius: 999px;
+  background: var(--color-primary-500);
+}
+
+.c-range__input::-webkit-slider-thumb {
+  appearance: none;
+  width: var(--target-size-min);
+  height: var(--target-size-min);
+  margin-block-start: calc((0.375rem - var(--target-size-min)) / 2);
+  border: none;
+  border-radius: 50%;
+  background: var(--color-primary-500);
+  cursor: pointer;
+}
+
+.c-range__input::-moz-range-thumb {
+  width: var(--target-size-min);
+  height: var(--target-size-min);
+  border: none;
+  border-radius: 50%;
+  background: var(--color-primary-500);
+  cursor: pointer;
+}
+
+.c-range__input:focus-visible::-webkit-slider-thumb {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-range__input:focus-visible::-moz-range-thumb {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-range__output {
+  flex: none;
+  min-width: 3.5rem;
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}

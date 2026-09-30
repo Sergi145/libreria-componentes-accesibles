@@ -1,0 +1,119 @@
+/**
+ * Componente: Table
+ * .c-table__wrapper es el contenedor con scroll horizontal (WCAG
+ * 2.1.1: un scroll propio que no se puede enfocar no es operable con
+ * teclado). .c-table es la tabla; --striped y --hover son
+ * modificadores combinables. .c-table__cell--numeric alinea los
+ * números al final de línea (derecha en LTR).
+ */
+
+.c-table__wrapper {
+  overflow-x: auto;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.c-table__wrapper:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+.c-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+}
+
+.c-table caption {
+  padding: var(--space-3) var(--space-3) var(--space-2);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  text-align: start;
+  caption-side: top;
+}
+
+.c-table th,
+.c-table td {
+  padding: var(--space-3);
+  border-block-end: var(--border-width) solid var(--color-border);
+  text-align: start;
+  white-space: nowrap;
+}
+
+.c-table thead th {
+  border-block-end-width: 2px;
+  font-weight: var(--font-weight-medium);
+}
+
+.c-table tbody th[scope='row'] {
+  font-weight: var(--font-weight-medium);
+}
+
+.c-table tbody tr:last-child th,
+.c-table tbody tr:last-child td {
+  border-block-end: none;
+}
+
+.c-table--striped tbody tr:nth-child(even) {
+  background: var(--color-surface-muted);
+}
+
+.c-table--hover tbody tr:hover {
+  background: var(--color-surface-muted);
+}
+
+.c-table__cell--numeric {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cabeceras ordenables (SortableTable): el botón ocupa toda la celda
+   (mejor objetivo táctil) y absorbe el padding que antes llevaba el
+   <th>. */
+.c-table__header--sortable {
+  padding: 0;
+}
+
+.c-table__sort {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--target-size-min);
+  padding: var(--space-3);
+  gap: var(--space-1);
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.c-table__cell--numeric .c-table__sort {
+  justify-content: flex-end;
+}
+
+.c-table__sort:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+.c-table__sort-icon {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+th[aria-sort] .c-table__sort-icon {
+  color: var(--color-primary-500);
+  opacity: 1;
+}
+
+th[aria-sort='descending'] .c-table__sort-icon {
+  transform: rotate(180deg);
+}

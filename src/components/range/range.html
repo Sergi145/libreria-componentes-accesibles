@@ -1,0 +1,97 @@
+<!--
+  Componente: Range
+  Sin patrón APG propio: el patrón "Slider" de la APG es para
+  interruptores deslizantes construidos a mano (role="slider"); aquí se
+  usa el <input type="range"> nativo, que ya resuelve el teclado
+  (flechas, Av Pág/Re Pág, Inicio/Fin), el rol y el valor.
+
+  El valor visible va en un <output for="<id>">, y range.js (opcional)
+  lo mantiene sincronizado además de escribir aria-valuetext con el
+  mismo texto formateado (p. ej. "40 %" en vez de solo "40"), que es lo
+  que anuncia el lector al mover el tirador.
+
+  El <output> tiene un rol implícito "status" (región viva cortés):
+  sin aria-live="off", arrastrar el tirador anunciaría cada valor
+  intermedio ("38 %, 39 %, 40 %…"). Con aria-live="off", el valor solo
+  se anuncia por aria-valuetext, al ritmo que decide el propio lector
+  de pantalla, no en cada píxel de arrastre.
+-->
+
+<!-- Básico, con formato de porcentaje -->
+<div class="c-range">
+  <label class="c-range__label" for="volumen">Volumen</label>
+  <div class="c-range__control">
+    <input
+      class="c-range__input"
+      type="range"
+      id="volumen"
+      name="volumen"
+      min="0"
+      max="100"
+      step="1"
+      value="40"
+      data-range
+      data-format="{value} %"
+    />
+    <output
+      class="c-range__output"
+      for="volumen"
+      id="volumen-output"
+      aria-live="off"
+    >
+      40 %
+    </output>
+  </div>
+</div>
+
+<!-- Sin JS: el <output> no se actualiza, pero el <input type="range">
+     sigue siendo utilizable por completo con teclado y ratón -->
+<div class="c-range">
+  <label class="c-range__label" for="brillo">Brillo de la pantalla</label>
+  <div class="c-range__control">
+    <input
+      class="c-range__input"
+      type="range"
+      id="brillo"
+      name="brillo"
+      min="0"
+      max="100"
+      step="5"
+      value="70"
+    />
+    <output
+      class="c-range__output"
+      for="brillo"
+      id="brillo-output"
+      aria-live="off"
+      >70</output
+    >
+  </div>
+</div>
+
+<!-- Deshabilitado -->
+<div class="c-range">
+  <label class="c-range__label" for="calidad">
+    Calidad de vídeo (requiere conexión estable)
+  </label>
+  <div class="c-range__control">
+    <input
+      class="c-range__input"
+      type="range"
+      id="calidad"
+      name="calidad"
+      min="0"
+      max="3"
+      step="1"
+      value="1"
+      disabled
+    />
+    <output
+      class="c-range__output"
+      for="calidad"
+      id="calidad-output"
+      aria-live="off"
+      >Media</output
+    >
+  </div>
+</div>
