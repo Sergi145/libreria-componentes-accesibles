@@ -1,7 +1,13 @@
 /**
- * Componente: Disclosure
+ * Utilidad: disclosure
  * Implementa el patrón WAI-ARIA APG "Disclosure (Show/Hide)":
  * https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/
+ * La usan Navbar, Dropdown y Popover. Ya no es un componente con estilos
+ * propios: cada uno de ellos pone su marcado y su CSS.
+ *
+ * Si no necesitas gestionar el estado desde JS, usa el elemento nativo
+ * <details>/<summary>: el navegador resuelve el toggle, el estado y el
+ * foco sin JavaScript ni ARIA.
  *
  * Un botón con aria-expanded + aria-controls muestra u oculta el
  * elemento que referencia, alternando también su atributo hidden. Solo
@@ -12,7 +18,7 @@
  * en el trigger); si falta, se asume "false".
  *
  * Uso:
- *   import { Disclosure } from './disclosure.js';
+ *   import { Disclosure } from '../../utils/disclosure.js';
  *   new Disclosure(document.querySelector('[data-disclosure]'));
  */
 

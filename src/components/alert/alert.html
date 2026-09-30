@@ -1,0 +1,135 @@
+<!--
+  Componente: Alert
+  Patrón WAI-ARIA APG "Alert", aplicado con criterio:
+  https://www.w3.org/WAI/ARIA/apg/patterns/alert/
+
+  El role depende de la variante: role="alert" (asertivo) en warning y
+  danger, role="status" (cortés) en info y success. Un role presente al
+  cargar la página no se anuncia por sí solo; para avisar de algo que
+  ocurre después de cargar, usa showAlert().
+
+  Cada variante lleva un icono distinto (aria-hidden) y un prefijo de
+  texto oculto («Información:», «Correcto:», «Aviso:», «Error:»), para
+  que el color no sea la única pista. La variante descartable añade
+  data-alert y un botón c-close-button (enlaza close-button.css).
+  data-alert-return="ID" indica dónde va el foco al cerrarla; si falta,
+  va al siguiente elemento enfocable tras la alerta.
+-->
+<div class="c-alert c-alert--info" role="status">
+  <svg
+    class="c-alert__icon"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v5M12 8h.01" />
+    </g>
+  </svg>
+  <p class="c-alert__body">
+    <span class="c-alert__sr-text">Información:</span>
+    Tu sesión caducará en 10 minutos.
+  </p>
+</div>
+
+<div class="c-alert c-alert--success" role="status">
+  <svg
+    class="c-alert__icon"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 12l3 3 5-6" />
+    </g>
+  </svg>
+  <p class="c-alert__body">
+    <span class="c-alert__sr-text">Correcto:</span>
+    Los cambios se han guardado.
+  </p>
+</div>
+
+<div class="c-alert c-alert--warning" role="alert">
+  <svg
+    class="c-alert__icon"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="M12 4l9 16H3z" />
+      <path d="M12 10v4M12 17h.01" />
+    </g>
+  </svg>
+  <p class="c-alert__body">
+    <span class="c-alert__sr-text">Aviso:</span>
+    Quedan pocas unidades de este producto.
+  </p>
+</div>
+
+<div
+  class="c-alert c-alert--danger"
+  role="alert"
+  data-alert
+  data-alert-return="email"
+>
+  <svg
+    class="c-alert__icon"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <g
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9 9l6 6M15 9l-6 6" />
+    </g>
+  </svg>
+  <p class="c-alert__body">
+    <span class="c-alert__sr-text">Error:</span>
+    No se pudo enviar el formulario.
+  </p>
+  <button
+    type="button"
+    class="c-close-button c-alert__close"
+    aria-label="Cerrar alerta"
+    data-alert-close
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M6 6l12 12M18 6L6 18"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    </svg>
+  </button>
+</div>
+<label for="email">Correo electrónico</label>
+<input id="email" type="email" />

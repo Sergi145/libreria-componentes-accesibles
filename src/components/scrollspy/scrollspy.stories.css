@@ -1,0 +1,43 @@
+/**
+ * Solo para la historia de Storybook: maqueta de ejemplo (tabla de
+ * contenidos junto al texto), no forma parte del componente Scrollspy en
+ * sí (eso vive en scrollspy.css).
+ */
+
+.scrollspy-demo {
+  display: grid;
+  gap: var(--space-6);
+  font-family: var(--font-family-base);
+  color: var(--color-text);
+}
+
+.scrollspy-demo__nav {
+  position: sticky;
+  inset-block-start: var(--space-2);
+  align-self: start;
+  padding: var(--space-2);
+  background-color: var(--color-surface);
+  top: 0;
+}
+
+.scrollspy-demo__section {
+  min-block-size: 70vh;
+  scroll-margin-block-start: var(--space-4);
+}
+
+/* La última sección debe poder llegar a la línea de referencia del
+   Scrollspy (20 % desde arriba): si la página se acaba antes, su enlace
+   nunca se activaría. */
+.scrollspy-demo__section:last-child {
+  min-block-size: 100vh;
+}
+
+.scrollspy-demo__section h2 {
+  margin-block-start: 0;
+}
+
+@media (width >= 40em) {
+  .scrollspy-demo {
+    grid-template-columns: minmax(10rem, 14rem) 1fr;
+  }
+}

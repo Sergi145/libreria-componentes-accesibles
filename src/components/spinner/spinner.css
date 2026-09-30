@@ -1,0 +1,71 @@
+/**
+ * Componente: Spinner
+ * Indicador de carga solo CSS. El contenedor lleva role="status" y un
+ * texto oculto («Cargando…»); el círculo es decorativo (aria-hidden).
+ * Tamaños: --sm y --lg (el círculo mide 1.5em; cambia con font-size).
+ * Con prefers-reduced-motion el giro se sustituye por un pulso de
+ * opacidad. El arco da ≥ 3:1 contra el fondo (WCAG 1.4.11).
+ */
+
+.c-spinner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+}
+
+.c-spinner--sm {
+  font-size: var(--font-size-sm);
+}
+
+.c-spinner--lg {
+  font-size: var(--font-size-xl);
+}
+
+.c-spinner__circle {
+  flex: none;
+  inline-size: 1.5em;
+  block-size: 1.5em;
+  border: 0.2em solid var(--color-surface-muted);
+  border-block-start-color: var(--color-primary-600);
+  border-radius: 50%;
+  animation: c-spinner-rotate 0.8s linear infinite;
+}
+
+@keyframes c-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes c-spinner-pulse {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0.35;
+  }
+}
+
+/* Oculto visualmente, presente para lectores de pantalla (técnica
+   .visually-hidden del capítulo 1 de la guía). Es el texto que anuncia el
+   role="status". */
+.c-spinner__sr-text {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-spinner__circle {
+    animation: c-spinner-pulse 1.6s ease-in-out infinite alternate;
+  }
+}

@@ -18,7 +18,7 @@
  *   new Popover(document.querySelector('[data-popover]'));
  */
 
-import { Disclosure } from '../disclosure/disclosure.js';
+import { Disclosure } from '../../utils/disclosure.js';
 import { dismissable } from '../../utils/dismiss.js';
 
 export class Popover {

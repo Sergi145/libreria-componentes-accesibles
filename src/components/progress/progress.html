@@ -1,0 +1,33 @@
+<!--
+  Componente: Progress
+  Sin patrón APG propio: el <progress> nativo ya expone el rol
+  progressbar, el valor y el máximo. "No ARIA is better than bad ARIA":
+  no se añaden role ni aria-valuenow.
+
+  El nombre accesible viene de un <label for>. Sin el atributo value, el
+  progreso es indeterminado (no se sabe cuánto falta). Un texto visible
+  con el porcentaje NO necesita aria-describedby: el lector ya anuncia el
+  valor del <progress>. Úsalo solo para información extra («3 de 5
+  archivos»).
+
+  progress.js es opcional: acota el valor y anuncia «Completado» una sola
+  vez al llegar a max (data-progress, data-complete-message).
+-->
+<div class="c-progress">
+  <label class="c-progress__label" for="subida">Subida del archivo</label>
+  <progress
+    class="c-progress__bar"
+    id="subida"
+    max="100"
+    value="60"
+    data-progress
+    data-complete-message="Subida completada"
+  >
+    60 %
+  </progress>
+</div>
+
+<div class="c-progress">
+  <label class="c-progress__label" for="cargando">Cargando resultados</label>
+  <progress class="c-progress__bar" id="cargando">Cargando…</progress>
+</div>

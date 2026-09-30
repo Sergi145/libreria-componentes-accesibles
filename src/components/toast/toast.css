@@ -1,0 +1,132 @@
+/**
+ * Componente: Toast
+ * .c-toast-region es la esquina fija (inferior, al final de la línea)
+ * donde se apilan los toasts; la crea `showToast()` si no existe. Usa
+ * propiedades lógicas para respetar dir="rtl". El toast visual no es
+ * región viva (ver toast.js). El botón de cierre reutiliza
+ * `c-close-button`: enlaza también close-button.css.
+ */
+
+.c-toast-region {
+  position: fixed;
+  z-index: var(--z-toast);
+  inset-block-end: var(--space-4);
+  inset-inline-end: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  inline-size: 24rem;
+  max-inline-size: calc(100vw - 2 * var(--space-4));
+
+  /* La región vacía o el hueco entre toasts no deben bloquear clics. */
+  pointer-events: none;
+}
+
+/* Si el foco llega a un elemento que la región taparía, toast.js la
+   sube arriba con este atributo (WCAG 2.2 SC 2.4.11). */
+.c-toast-region[data-toast-top] {
+  inset-block: var(--space-4) auto;
+}
+
+.c-toast {
+  --toast-accent: var(--color-feedback-info);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-width) solid var(--toast-accent);
+  border-inline-start-width: 4px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  animation: c-toast-in var(--transition-base) var(--easing-standard);
+}
+
+.c-toast[hidden] {
+  display: none;
+}
+
+.c-toast--success {
+  --toast-accent: var(--color-feedback-success);
+}
+
+.c-toast--warning {
+  --toast-accent: var(--color-feedback-warning);
+}
+
+.c-toast--danger {
+  --toast-accent: var(--color-feedback-danger);
+}
+
+.c-toast__icon {
+  flex: none;
+  inline-size: 1.5em;
+  block-size: 1.5em;
+  color: var(--toast-accent);
+}
+
+.c-toast__body {
+  flex: 1;
+  min-inline-size: 0;
+  margin: 0;
+}
+
+.c-toast__action {
+  flex: none;
+  min-block-size: var(--target-size-min);
+  min-inline-size: var(--target-size-min);
+  padding: var(--space-1) var(--space-2);
+  border: 0;
+  background: none;
+  color: var(--color-primary-500);
+  font: inherit;
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.c-toast__action:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-toast__close {
+  flex: none;
+}
+
+/* Oculto visualmente, presente para lectores de pantalla (técnica
+   .visually-hidden del capítulo 1 de la guía). Da el prefijo de la
+   variante («Error:»), para que el color no sea la única pista. */
+.c-toast__sr-text {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes c-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--space-2));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-toast {
+    animation: none;
+  }
+}

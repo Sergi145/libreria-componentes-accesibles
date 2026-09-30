@@ -5,7 +5,7 @@ Lista de enlaces que se despliega desde un botón. Es un patrón
 `dismissable`, **no un menú WAI-ARIA**: sin `role="menu"` ni
 `menuitem`, y sin flechas ↑/↓ (se recorre con Tab).
 
-> **Dependencias:** `dropdown.js` importa `../disclosure/disclosure.js` y
+> **Dependencias:** `dropdown.js` importa `../../utils/disclosure.js` y
 > `../../utils/dismiss.js`. Si copias la carpeta a otro proyecto, copia
 > también esas dos. `dist/dropdown/` es autónomo (Vite las empaqueta).
 

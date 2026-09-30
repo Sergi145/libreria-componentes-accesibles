@@ -1,0 +1,63 @@
+/**
+ * Componente: Badge
+ * Etiqueta pequeña con un número o una palabra corta, solo CSS.
+ * Variantes: por defecto (primaria), --neutral, --success, --warning,
+ * --danger e --info. Estilo «suave»: fondo de superficie, borde y texto
+ * del color de acento, así el texto da ≥ 4.5:1 tanto en claro como en
+ * oscuro (los acentos oscuros de --color-feedback-* dan 5.4:1 o más sobre
+ * --color-surface-muted). El color nunca es la única pista: el texto (y el
+ * texto oculto) dicen qué es.
+ */
+
+.c-badge {
+  --badge-accent: var(--color-primary-500);
+
+  display: inline-flex;
+  align-items: center;
+  min-inline-size: 1.5rem;
+  min-block-size: 1.5rem;
+  padding: 0 var(--space-2);
+  justify-content: center;
+  border: var(--border-width) solid var(--badge-accent);
+  border-radius: 999px;
+  background-color: var(--color-surface-muted);
+  color: var(--badge-accent);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.c-badge--neutral {
+  --badge-accent: var(--color-text-muted);
+}
+
+.c-badge--success {
+  --badge-accent: var(--color-feedback-success);
+}
+
+.c-badge--warning {
+  --badge-accent: var(--color-feedback-warning);
+}
+
+.c-badge--danger {
+  --badge-accent: var(--color-feedback-danger);
+}
+
+.c-badge--info {
+  --badge-accent: var(--color-feedback-info);
+}
+
+/* Oculto visualmente, presente para lectores de pantalla (técnica
+   .visually-hidden del capítulo 1 de la guía). Da contexto al número:
+   «3» + «mensajes sin leer». */
+.c-badge__sr-text {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

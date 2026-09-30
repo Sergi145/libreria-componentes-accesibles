@@ -1,0 +1,51 @@
+<!--
+  Componente: Card
+  Solo CSS. Sin patrón APG propio: un <article> con su título.
+
+  El título es un <div>, no un encabezado: no aparece en la navegación por
+  encabezados del lector de pantalla. Si la tarjeta debe poder encontrarse
+  así, usa un <h2>, <h3>… (el que continúe la jerarquía de la página) con
+  la clase c-card__title. La imagen decorativa lleva alt=""; si aporta
+  información, dale un alt descriptivo.
+
+  Tarjeta clicable (c-card--link): UN solo <a>, dentro del título, cuyo
+  ::after cubre toda la tarjeta. Una parada de Tab, nombre accesible =
+  título, clic en cualquier punto navega. No anides otros enlaces ni
+  botones dentro de una tarjeta clicable (ver el README).
+-->
+
+<!-- Tarjeta básica -->
+<article class="c-card">
+  <img
+    class="c-card__media"
+    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23c7d2fe'/%3E%3C/svg%3E"
+    alt=""
+    width="640"
+    height="360"
+  />
+  <div class="c-card__body">
+    <div class="c-card__title">Guía de accesibilidad</div>
+    <p class="c-card__text">
+      Resumen de los patrones WAI-ARIA usados en la librería.
+    </p>
+  </div>
+</article>
+
+<!-- Tarjeta clicable -->
+<article class="c-card c-card--link">
+  <img
+    class="c-card__media"
+    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23bbf7d0'/%3E%3C/svg%3E"
+    alt=""
+    width="640"
+    height="360"
+  />
+  <div class="c-card__body">
+    <div class="c-card__title">
+      <a class="c-card__link" href="https://example.com/articulo">
+        Novedades de la versión 2
+      </a>
+    </div>
+    <p class="c-card__text">Lo que cambia en los componentes de feedback.</p>
+  </div>
+</article>

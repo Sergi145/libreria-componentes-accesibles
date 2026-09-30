@@ -1,0 +1,91 @@
+/**
+ * Componente: Progress
+ * Estilos del <progress> nativo. Se estilan los dos pseudoelementos de
+ * relleno (::-webkit-progress-value en Chromium/WebKit y
+ * ::-moz-progress-bar en Firefox). El borde y el relleno dan ≥ 3:1 contra
+ * el fondo (WCAG 1.4.11). El estado indeterminado (sin atributo value)
+ * se dibuja con un degradado animado en el propio elemento, igual en los
+ * dos motores, y con prefers-reduced-motion queda estático.
+ */
+
+.c-progress {
+  display: grid;
+  gap: var(--space-2);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+}
+
+.c-progress__label {
+  font-weight: var(--font-weight-medium);
+}
+
+.c-progress__bar {
+  appearance: none;
+  display: block;
+  inline-size: 100%;
+  block-size: 0.75rem;
+  overflow: hidden;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-muted);
+  color: var(--color-primary-600);
+}
+
+.c-progress__bar::-webkit-progress-bar {
+  background: transparent;
+}
+
+.c-progress__bar::-webkit-progress-value {
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary-600);
+  transition: inline-size var(--transition-base) var(--easing-standard);
+}
+
+.c-progress__bar::-moz-progress-bar {
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary-600);
+}
+
+/* Indeterminado: el relleno nativo se oculta y se anima un degradado. */
+.c-progress__bar:indeterminate {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-primary-600) 50%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 40% 100%;
+  animation: c-progress-indeterminate 1.4s linear infinite;
+}
+
+.c-progress__bar:indeterminate::-webkit-progress-value {
+  background: transparent;
+}
+
+.c-progress__bar:indeterminate::-moz-progress-bar {
+  background: transparent;
+}
+
+@keyframes c-progress-indeterminate {
+  from {
+    background-position: -40% 0;
+  }
+
+  to {
+    background-position: 140% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-progress__bar::-webkit-progress-value {
+    transition: none;
+  }
+
+  .c-progress__bar:indeterminate {
+    animation: none;
+    background-position: 50% 0;
+  }
+}

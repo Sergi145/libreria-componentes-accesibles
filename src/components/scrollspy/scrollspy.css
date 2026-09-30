@@ -1,0 +1,67 @@
+/**
+ * Componente: Scrollspy
+ * Tabla de contenidos con el enlace de la sección actual resaltado a
+ * partir de aria-current="true". El resaltado no depende solo del color:
+ * el enlace activo va en negrita y con una barra a su inicio. Los enlaces
+ * miden al menos 24 px de alto (WCAG 2.5.8) y llevan el anillo de foco
+ * de la librería.
+ */
+
+.c-scrollspy {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text);
+}
+
+.c-scrollspy__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.c-scrollspy__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-inline-start: 2px solid var(--color-border);
+}
+
+.c-scrollspy__link {
+  display: block;
+  min-block-size: var(--target-size-min);
+  margin-inline-start: -2px;
+  padding: var(--space-1) var(--space-3);
+  border-inline-start: 2px solid transparent;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition:
+    color var(--transition-fast) var(--easing-standard),
+    border-color var(--transition-fast) var(--easing-standard);
+}
+
+.c-scrollspy__link:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.c-scrollspy__link:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Sección actual: negrita + barra + color de marca (no solo color). */
+.c-scrollspy__link[aria-current='true'] {
+  border-inline-start-color: var(--color-primary-500);
+  color: var(--color-primary-500);
+  font-weight: var(--font-weight-bold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-scrollspy__link {
+    transition: none;
+  }
+}

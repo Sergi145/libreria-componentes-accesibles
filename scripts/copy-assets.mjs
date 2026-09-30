@@ -19,6 +19,14 @@ for (const name of components) {
   const srcDir = join(componentsDir, name);
   const destDir = join(distDir, name);
 
+  // Imágenes de ejemplo referenciadas por el .html (p. ej. carousel/img/).
+  try {
+    cpSync(join(srcDir, 'img'), join(destDir, 'img'), { recursive: true });
+    console.log(`copiado dist/${name}/img/`);
+  } catch {
+    // El componente no tiene carpeta img/; se ignora.
+  }
+
   for (const ext of ['css', 'html']) {
     const file = `${name}.${ext}`;
     try {

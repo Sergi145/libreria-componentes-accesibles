@@ -1,0 +1,167 @@
+/**
+ * Componente: Carousel
+ * Barra de controles (rotación, Anterior, Siguiente y selector de
+ * diapositivas) sobre el contenedor de diapositivas. Los controles van
+ * primero en el DOM y también arriba a la vista, para que el orden de foco
+ * coincida con el visual. Sin JS los controles están `hidden` y las
+ * diapositivas se ven apiladas; con JS solo se ve la activa.
+ * Objetivos táctiles ≥ 24×24 px; la pestaña activa se distingue por el
+ * relleno (punto lleno frente a anillo), no solo por el color.
+ */
+
+.c-carousel {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  overflow: hidden;
+}
+
+.c-carousel__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-block-end: var(--border-width) solid var(--color-border);
+  background-color: var(--color-surface-muted);
+}
+
+.c-carousel__controls[hidden],
+.c-carousel__button[hidden] {
+  display: none;
+}
+
+.c-carousel__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  padding: 0;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-fast) var(--easing-standard);
+}
+
+.c-carousel__button:hover {
+  background-color: var(--color-surface-muted);
+}
+
+/* Botón de rotación: muestra el icono de la acción que hará. */
+.c-carousel__rotation[data-playing='false'] .c-carousel__icon--pause,
+.c-carousel__rotation:not([data-playing='false']) .c-carousel__icon--play {
+  display: none;
+}
+
+.c-carousel__button svg {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.c-carousel__button:focus-visible,
+.c-carousel__tab:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Selector de diapositivas: al final de la barra. */
+.c-carousel__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin-inline-start: auto;
+}
+
+.c-carousel__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.5rem;
+  min-block-size: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.c-carousel__dot {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background-color: transparent;
+}
+
+/* Activa: punto lleno (forma distinta del anillo, no solo color). */
+.c-carousel__tab[aria-selected='true'] .c-carousel__dot {
+  border-color: var(--color-primary-600);
+  background-color: var(--color-primary-600);
+}
+
+.c-carousel__slides {
+  display: grid;
+}
+
+.c-carousel__slide {
+  animation: c-carousel-in var(--transition-base) var(--easing-standard);
+}
+
+.c-carousel__slide[hidden] {
+  display: none;
+}
+
+/* Sin JS (todas visibles): se separan con un filete. */
+.c-carousel__slide + .c-carousel__slide {
+  border-block-start: var(--border-width) solid var(--color-border);
+}
+
+/* Imagen de la diapositiva, a todo el ancho y en 16:9. */
+.c-carousel__media {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.c-carousel__caption {
+  padding: var(--space-4);
+}
+
+.c-carousel__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.c-carousel__caption p {
+  margin: 0;
+}
+
+@keyframes c-carousel-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-carousel__slide {
+    animation: none;
+  }
+
+  .c-carousel__button {
+    transition: none;
+  }
+}

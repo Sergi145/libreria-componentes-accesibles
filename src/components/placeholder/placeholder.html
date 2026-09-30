@@ -1,0 +1,24 @@
+<!--
+  Componente: Placeholder
+  Solo CSS. Sin patrón APG propio. Los bloques son decorativos
+  (aria-hidden="true") y el contenedor lleva aria-busy="true" mientras
+  carga: los lectores de pantalla no leen bloques vacíos ni contenido a
+  medio cargar.
+
+  aria-busy NO avisa de nada por sí solo: el usuario de lector no sabe
+  que se está cargando ni cuándo termina. Avísalo con announce() de
+  src/utils/live-region.js («Cargando contenido…» al empezar y
+  «Contenido cargado» al terminar), o acompaña el esqueleto con un
+  Spinner. Al terminar, sustituye el grupo por el contenido real o pon
+  aria-busy="false".
+
+  Un role="status" insertado a la vez que su texto no se anuncia de forma
+  fiable: por eso el aviso va por announce() y no en este marcado.
+-->
+<div class="c-placeholder-group" aria-busy="true">
+  <div class="c-placeholder c-placeholder--media" aria-hidden="true"></div>
+  <div class="c-placeholder c-placeholder--title" aria-hidden="true"></div>
+  <div class="c-placeholder" aria-hidden="true"></div>
+  <div class="c-placeholder c-placeholder--medium" aria-hidden="true"></div>
+  <div class="c-placeholder c-placeholder--short" aria-hidden="true"></div>
+</div>

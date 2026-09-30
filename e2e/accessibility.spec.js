@@ -31,10 +31,6 @@ const stories = [
   { id: 'componentes-toolbar--horizontal', name: 'Toolbar / horizontal' },
   { id: 'componentes-toolbar--vertical', name: 'Toolbar / vertical' },
 
-  // Disclosure
-  { id: 'componentes-disclosure--cerrado', name: 'Disclosure / cerrado' },
-  { id: 'componentes-disclosure--abierto', name: 'Disclosure / abierto' },
-
   // Tabs
   { id: 'componentes-tabs--automatica', name: 'Tabs / activación automática' },
   { id: 'componentes-tabs--manual', name: 'Tabs / activación manual' },
@@ -139,6 +135,55 @@ const stories = [
     id: 'componentes-menu-button--dentro-de-un-modal',
     name: 'Menu Button / dentro de un modal',
   },
+
+  // Alert
+  { id: 'componentes-alert--variantes', name: 'Alert / variantes' },
+  { id: 'componentes-alert--descartable', name: 'Alert / descartable' },
+  { id: 'componentes-alert--dinamica', name: 'Alert / dinámica' },
+
+  // Toast
+  { id: 'componentes-toast--variantes', name: 'Toast / variantes' },
+  { id: 'componentes-toast--dinamica', name: 'Toast / dinámica' },
+
+  // Progress
+  { id: 'componentes-progress--determinado', name: 'Progress / determinado' },
+  {
+    id: 'componentes-progress--indeterminado',
+    name: 'Progress / indeterminado',
+  },
+  { id: 'componentes-progress--simulado', name: 'Progress / simulado' },
+
+  // Spinner
+  { id: 'componentes-spinner--tamanos', name: 'Spinner / tamaños' },
+  { id: 'componentes-spinner--dinamico', name: 'Spinner / dinámico' },
+
+  // Placeholder
+  { id: 'componentes-placeholder--tarjeta', name: 'Placeholder / tarjeta' },
+  { id: 'componentes-placeholder--perfil', name: 'Placeholder / perfil' },
+  { id: 'componentes-placeholder--simulado', name: 'Placeholder / simulado' },
+
+  // Badge
+  { id: 'componentes-badge--variantes', name: 'Badge / variantes' },
+  { id: 'componentes-badge--en-boton', name: 'Badge / contador en un botón' },
+  {
+    id: 'componentes-badge--en-encabezado',
+    name: 'Badge / contador en un encabezado',
+  },
+
+  // Card
+  { id: 'componentes-card--basica', name: 'Card / básica' },
+  { id: 'componentes-card--clicable', name: 'Card / clicable' },
+  { id: 'componentes-card--con-badge', name: 'Card / con badge' },
+
+  // Carousel
+  { id: 'componentes-carousel--basica', name: 'Carousel / básica' },
+  {
+    id: 'componentes-carousel--automatico',
+    name: 'Carousel / automático',
+  },
+
+  // Scrollspy
+  { id: 'componentes-scrollspy--basica', name: 'Scrollspy / básica' },
 ];
 
 for (const story of stories) {
@@ -247,26 +292,6 @@ test('Tabs: con activación manual, la flecha no selecciona pero Enter sí', asy
 
   await page.keyboard.press('Enter');
   await expect(seguridad).toHaveAttribute('aria-selected', 'true');
-});
-
-test('Disclosure: Enter alterna aria-expanded y muestra/oculta el panel', async ({
-  page,
-}) => {
-  await page.goto(
-    '/iframe.html?id=componentes-disclosure--cerrado&viewMode=story'
-  );
-
-  const trigger = page.getByRole('button', { name: 'Más información' });
-  const panel = page.locator('.c-disclosure__panel');
-
-  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-  await expect(panel).toBeHidden();
-
-  await trigger.focus();
-  await page.keyboard.press('Enter');
-
-  await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-  await expect(panel).toBeVisible();
 });
 
 test('Offcanvas: Tab no saca el foco del panel; Escape lo cierra y devuelve el foco', async ({
@@ -512,4 +537,146 @@ test('Popover: Enter lo abre, Escape lo cierra con el foco en el disparador', as
   await page.keyboard.press('Escape');
   await expect(button).toHaveAttribute('aria-expanded', 'false');
   await expect(button).toBeFocused();
+});
+
+test('Alert: cerrar con Enter quita la alerta y lleva el foco al campo indicado', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-alert--descartable&viewMode=story'
+  );
+
+  const close = page.getByRole('button', { name: 'Cerrar alerta' });
+  const field = page.getByLabel('Correo electrónico');
+  await close.focus();
+  await page.keyboard.press('Enter');
+
+  await expect(page.locator('.c-alert')).toHaveCount(0);
+  await expect(field).toBeFocused();
+});
+
+test('Alert dinámica: solo hay una a la vez, tiene role="alert" y al cerrar el foco vuelve al botón', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-alert--dinamica&viewMode=story');
+
+  const trigger = page.getByRole('button', { name: 'Mostrar error' });
+  await trigger.click();
+  await trigger.click();
+
+  const alert = page.getByRole('alert');
+  await expect(alert).toHaveCount(1);
+  await expect(alert).toContainText('Error: No se pudo guardar el documento.');
+
+  await expect(
+    page.getByRole('button', { name: 'Cerrar alerta' })
+  ).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(alert).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});
+
+test('Toast: no mueve el foco al mostrarse, el siguiente Tab es cerrar y Escape devuelve el foco', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-toast--dinamica&viewMode=story');
+
+  const trigger = page.getByRole('button', { name: 'Mostrar aviso' });
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+
+  const close = page.getByRole('button', { name: 'Cerrar notificación' });
+  await expect(close).toBeVisible();
+  // Mostrar el toast no roba el foco.
+  await expect(trigger).toBeFocused();
+
+  // La región va justo después del disparador: el siguiente Tab es «Cerrar».
+  await page.keyboard.press('Tab');
+  await expect(close).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(close).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});
+
+test('Carousel: las flechas del selector cambian de diapositiva', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-carousel--basica&viewMode=story'
+  );
+
+  const first = page.getByRole('tab', { name: 'Diapositiva 1' });
+  const second = page.getByRole('tab', { name: 'Diapositiva 2' });
+  await first.focus();
+  await expect(first).toHaveAttribute('aria-selected', 'true');
+
+  await page.keyboard.press('ArrowRight');
+  await expect(second).toBeFocused();
+  await expect(second).toHaveAttribute('aria-selected', 'true');
+  await expect(
+    page.getByRole('tabpanel', { name: '2 de 3' }).getByRole('heading')
+  ).toHaveText('Teclado primero');
+  await expect(page.getByRole('tabpanel', { name: '1 de 3' })).toBeHidden();
+});
+
+test('Carousel automático: rota solo, se detiene al enfocar un control y con el botón', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-carousel--automatico&viewMode=story'
+  );
+
+  const title = page.locator(
+    '[data-carousel-slide]:not([hidden]) .c-carousel__title'
+  );
+  const slides = page.locator('[data-carousel-slides]');
+  await expect(title).toHaveText('Bienvenida');
+  await expect(slides).toHaveAttribute('aria-live', 'off');
+
+  // Rota sola (la historia usa 4000 ms).
+  await expect(title).toHaveText('Teclado primero', { timeout: 6000 });
+
+  // Con el foco en un control, se detiene.
+  await page.getByRole('button', { name: 'Diapositiva siguiente' }).focus();
+  await expect(slides).toHaveAttribute('aria-live', 'polite');
+  const parada = await title.innerText();
+  await page.waitForTimeout(4600);
+  await expect(title).toHaveText(parada);
+
+  // «Detener» la para de forma permanente, aunque el foco salga.
+  const stop = page.getByRole('button', {
+    name: 'Detener rotación automática',
+  });
+  await stop.click();
+  await expect(
+    page.getByRole('button', { name: 'Iniciar rotación automática' })
+  ).toBeVisible();
+  await page.evaluate(() => document.activeElement?.blur());
+  await page.mouse.move(0, 0);
+  const detenida = await title.innerText();
+  await page.waitForTimeout(4600);
+  await expect(title).toHaveText(detenida);
+});
+
+test('Scrollspy: el enlace activo sigue al scroll y Enter salta a la sección sin mover el foco a otro sitio', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-scrollspy--basica&viewMode=story'
+  );
+
+  const current = page.locator('[data-scrollspy] [aria-current="true"]');
+  await expect(current).toHaveText('Introducción');
+
+  await page.evaluate(() => window.scrollTo(0, 380));
+  await expect(current).toHaveText('Uso');
+  await expect(current).toHaveCount(1);
+
+  const link = page.getByRole('link', { name: 'Accesibilidad', exact: true });
+  await link.focus();
+  await page.keyboard.press('Enter');
+  await expect(current).toHaveText('Accesibilidad');
+  // El scroll no mueve el foco: sigue en el enlace pulsado.
+  await expect(link).toBeFocused();
 });

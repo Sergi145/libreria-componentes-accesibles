@@ -1,0 +1,33 @@
+<!--
+  Componente: Scrollspy
+  Sin patrón APG propio: un <nav> de enlaces internos. scrollspy.js marca
+  con aria-current="true" el enlace de la sección que se está leyendo
+  (IntersectionObserver); nunca mueve el foco ni anuncia nada.
+
+  - El <nav> lleva un nombre (aria-label) distinto al de otras navegaciones
+    de la página, para que el lector las distinga.
+  - Cada href="#id" apunta a una sección real con ese id.
+  - Da a las secciones un scroll-margin-top si tienes una cabecera fija.
+-->
+<nav class="c-scrollspy" aria-label="En esta página" data-scrollspy>
+  <ul class="c-scrollspy__list">
+    <li><a class="c-scrollspy__link" href="#introduccion">Introducción</a></li>
+    <li><a class="c-scrollspy__link" href="#uso">Uso</a></li>
+    <li>
+      <a class="c-scrollspy__link" href="#accesibilidad">Accesibilidad</a>
+    </li>
+  </ul>
+</nav>
+
+<section id="introduccion">
+  <h2>Introducción</h2>
+  <p>Qué es y para qué sirve.</p>
+</section>
+<section id="uso">
+  <h2>Uso</h2>
+  <p>Cómo se utiliza.</p>
+</section>
+<section id="accesibilidad">
+  <h2>Accesibilidad</h2>
+  <p>Qué hay que tener en cuenta.</p>
+</section>

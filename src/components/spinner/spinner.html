@@ -1,0 +1,22 @@
+<!--
+  Componente: Spinner
+  Solo CSS. Sin patrón APG propio: es un role="status" (región viva
+  cortés) con un texto oculto; el círculo es decorativo (aria-hidden).
+
+  IMPORTANTE: un role="status" que se inserta en el DOM a la vez que su
+  texto NO se anuncia de forma fiable. Si el spinner aparece por JS,
+  inserta primero el contenedor vacío y escribe el texto en el siguiente
+  tick, o avisa con announce() de src/utils/live-region.js. El spinner
+  que ya está en el HTML al cargar la página no se anuncia por sí solo.
+
+  Tamaños: c-spinner--sm y c-spinner--lg.
+-->
+<div class="c-spinner" role="status">
+  <span class="c-spinner__circle" aria-hidden="true"></span>
+  <span class="c-spinner__sr-text">Cargando…</span>
+</div>
+
+<div class="c-spinner c-spinner--lg" role="status">
+  <span class="c-spinner__circle" aria-hidden="true"></span>
+  <span class="c-spinner__sr-text">Guardando cambios…</span>
+</div>
