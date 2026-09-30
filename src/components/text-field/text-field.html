@@ -1,0 +1,179 @@
+<!--
+  Componente: Text field
+  Sin patrón APG propio: son controles de formulario nativos (<input>,
+  <textarea>, <select>). "No ARIA is better than bad ARIA": el nombre,
+  el estado y la validación básica ya los da el navegador a partir del
+  <label> y de los atributos (required, pattern, minlength, type…).
+
+  Cada control va envuelto en .c-field junto a su <label>, una ayuda
+  opcional (id "<control>-hint") y un mensaje de error opcional (id
+  "<control>-error"), enlazados con aria-describedby. Lo obligatorio se
+  indica en el propio texto de la etiqueta, no solo con un asterisco o
+  con color.
+
+  El estado inválido se marca con aria-invalid="true"; el ejemplo de
+  correo de abajo lo escribe a mano para mostrar el estilo sin JS. En
+  la práctica lo gestiona text-field.js (ver ese archivo), que valida
+  con la Constraint Validation nativa (checkValidity()) y usa
+  src/utils/field-validation.js para pintar y enlazar el mensaje.
+-->
+
+<!-- Campo de texto simple, con ayuda -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="nombre">
+    Nombre <span class="c-field__required">(obligatorio)</span>
+  </label>
+  <input
+    class="c-field__control"
+    type="text"
+    id="nombre"
+    name="nombre"
+    autocomplete="name"
+    required
+    aria-describedby="nombre-hint"
+  />
+  <p class="c-field__hint" id="nombre-hint">
+    Como aparece en tu documento de identidad.
+  </p>
+</div>
+
+<!-- Correo electrónico, con error ya visible (aria-invalid escrito a
+     mano, solo para mostrar el estilo sin JS) -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="correo">
+    Correo electrónico <span class="c-field__required">(obligatorio)</span>
+  </label>
+  <input
+    class="c-field__control"
+    type="email"
+    id="correo"
+    name="correo"
+    autocomplete="email"
+    required
+    value="ana#ejemplo.com"
+    aria-invalid="true"
+    aria-describedby="correo-error"
+    data-error-type-mismatch="Introduce un correo electrónico válido"
+  />
+  <p class="c-field__error" id="correo-error">
+    <svg
+      class="c-field__error-icon"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      />
+      <path
+        d="M9 9l6 6M15 9l-6 6"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    </svg>
+    Introduce un correo electrónico válido
+  </p>
+</div>
+
+<!-- Contraseña -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="password">
+    Contraseña <span class="c-field__required">(obligatorio)</span>
+  </label>
+  <input
+    class="c-field__control"
+    type="password"
+    id="password"
+    name="password"
+    autocomplete="new-password"
+    required
+    minlength="8"
+    aria-describedby="password-hint"
+  />
+  <p class="c-field__hint" id="password-hint">Al menos 8 caracteres.</p>
+</div>
+
+<!-- Teléfono -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="telefono">Teléfono</label>
+  <input
+    class="c-field__control"
+    type="tel"
+    id="telefono"
+    name="telefono"
+    autocomplete="tel"
+    inputmode="tel"
+  />
+</div>
+
+<!-- URL -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="web">Sitio web</label>
+  <input
+    class="c-field__control"
+    type="url"
+    id="web"
+    name="web"
+    autocomplete="url"
+    placeholder="https://ejemplo.com"
+  />
+</div>
+
+<!-- Textarea -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="comentarios">Comentarios</label>
+  <textarea
+    class="c-field__control"
+    id="comentarios"
+    name="comentarios"
+    rows="4"
+    aria-describedby="comentarios-hint"
+  ></textarea>
+  <p class="c-field__hint" id="comentarios-hint">Máximo 500 caracteres.</p>
+</div>
+
+<!-- Select nativo -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="pais">País</label>
+  <select class="c-field__control" id="pais" name="pais">
+    <option value="">Selecciona un país</option>
+    <option value="es">España</option>
+    <option value="mx">México</option>
+    <option value="ar">Argentina</option>
+  </select>
+</div>
+
+<!-- Deshabilitado -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="plan">Plan actual</label>
+  <input
+    class="c-field__control"
+    type="text"
+    id="plan"
+    name="plan"
+    value="Profesional"
+    disabled
+  />
+</div>
+
+<!-- Solo lectura -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="id-cliente"
+    >Identificador de cliente</label
+  >
+  <input
+    class="c-field__control"
+    type="text"
+    id="id-cliente"
+    name="id-cliente"
+    value="CUS-48213"
+    readonly
+  />
+</div>

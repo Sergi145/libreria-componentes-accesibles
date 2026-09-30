@@ -1,0 +1,75 @@
+/**
+ * Componente: Checkbox
+ * .c-checkbox envuelve un <input type="checkbox"> y su <label for>
+ * como hermanos (no el label envolviendo el input, ver checkbox.html).
+ * El mensaje de error de una casilla obligatoria reutiliza las clases
+ * .c-field__error/.c-field__error-icon de ../text-field/text-field.css
+ * (enlázalo también si usas esa variante).
+ */
+
+.c-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.c-checkbox__input {
+  width: var(--target-size-min);
+  height: var(--target-size-min);
+  margin: 0;
+  accent-color: var(--color-primary-500);
+}
+
+.c-checkbox__label {
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+}
+
+.c-checkbox__required {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-normal);
+}
+
+.c-checkbox__input:disabled {
+  cursor: not-allowed;
+}
+
+.c-checkbox__input:disabled + .c-checkbox__label {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* No es la única pista (el error también lleva texto e icono
+   propios), pero ayuda a localizar la casilla sin leer el mensaje.
+   Va antes que :focus-visible para que el foco, si coincide, siga
+   siendo el anillo de foco habitual y no el color de error. */
+.c-checkbox__input[aria-invalid='true'] {
+  outline: var(--border-width) solid var(--color-feedback-danger);
+  outline-offset: 2px;
+}
+
+.c-checkbox__input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Grupo con casilla "Seleccionar todo" (CheckboxGroup, estado mixto). */
+.c-checkbox-group {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.c-checkbox-group__legend {
+  margin-block-end: var(--space-2);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.c-checkbox-group__children {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+  margin-inline-start: var(--space-6);
+}

@@ -1,0 +1,59 @@
+/**
+ * Componente: Radio group
+ * .c-radio-group es el <fieldset role="radiogroup">; .c-radio envuelve
+ * cada <input type="radio"> y su <label for> como hermanos. El mensaje
+ * de error de un grupo obligatorio reutiliza las clases
+ * .c-field__error/.c-field__error-icon de ../text-field/text-field.css
+ * (enlázalo también si usas esa variante).
+ */
+
+.c-radio-group {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.c-radio-group__legend {
+  margin-block-end: var(--space-2);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.c-radio-group__required {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-normal);
+}
+
+/* No es la única pista (el error también lleva texto e icono
+   propios): un borde real, no solo un cambio de color de texto. */
+.c-radio-group[aria-invalid='true'] {
+  padding-inline-start: var(--space-3);
+  border-inline-start: 4px solid var(--color-feedback-danger);
+}
+
+.c-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.c-radio + .c-radio {
+  margin-block-start: var(--space-2);
+}
+
+.c-radio__input {
+  width: var(--target-size-min);
+  height: var(--target-size-min);
+  margin: 0;
+  accent-color: var(--color-primary-500);
+}
+
+.c-radio__input:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-radio__label {
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+}

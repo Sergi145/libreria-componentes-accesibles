@@ -1,0 +1,143 @@
+<!--
+  Componente: Switch
+  Patrón de referencia: WAI-ARIA APG "Switch":
+  https://www.w3.org/WAI/ARIA/apg/patterns/switch/
+  La propia guía APG recomienda partir de un <input type="checkbox">
+  nativo con role="switch": el teclado (Espacio) y el estado ya los da
+  el checkbox; el rol es lo único que cambia la semántica expuesta
+  (interruptor de efecto inmediato, no una casilla que se confirma con
+  un envío).
+
+  El input real queda visualmente oculto (opacity: 0) pero sigue en el
+  flujo, enfocable y del tamaño exacto del interruptor visual: el
+  "interruptor" que se ve es .c-switch__track, un hermano posterior en
+  el DOM que reacciona a :checked/:focus-visible/:disabled del propio
+  input. El input no puede contener el track dentro (un <input> no
+  admite hijos), por eso van como hermanos dentro de
+  .c-switch__control, no uno envolviendo al otro.
+
+  El estado no depende solo del color: el tirador se desplaza y
+  cambia el icono (aspa cuando está apagado, marca cuando está
+  encendido) — ambas pistas siguen siendo visibles con
+  forced-colors: active, donde los navegadores suelen aplanar los
+  colores de fondo.
+-->
+
+<!-- Apagado -->
+<label class="c-switch">
+  <span class="c-switch__label">Modo oscuro</span>
+  <span class="c-switch__control">
+    <input type="checkbox" role="switch" class="c-switch__input" />
+    <span class="c-switch__track" aria-hidden="true">
+      <span class="c-switch__thumb">
+        <svg
+          class="c-switch__icon c-switch__icon--off"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
+          <path
+            d="M6 6l12 12M18 6L6 18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </svg>
+        <svg
+          class="c-switch__icon c-switch__icon--on"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
+          <path
+            d="M20 6L9 17l-5-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </span>
+  </span>
+</label>
+
+<!-- Encendido -->
+<label class="c-switch">
+  <span class="c-switch__label">Notificaciones push</span>
+  <span class="c-switch__control">
+    <input type="checkbox" role="switch" class="c-switch__input" checked />
+    <span class="c-switch__track" aria-hidden="true">
+      <span class="c-switch__thumb">
+        <svg
+          class="c-switch__icon c-switch__icon--off"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
+          <path
+            d="M6 6l12 12M18 6L6 18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </svg>
+        <svg
+          class="c-switch__icon c-switch__icon--on"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
+          <path
+            d="M20 6L9 17l-5-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </span>
+  </span>
+</label>
+
+<!-- Deshabilitado -->
+<label class="c-switch">
+  <span class="c-switch__label"
+    >Sincronización automática (requiere plan Pro)</span
+  >
+  <span class="c-switch__control">
+    <input type="checkbox" role="switch" class="c-switch__input" disabled />
+    <span class="c-switch__track" aria-hidden="true">
+      <span class="c-switch__thumb">
+        <svg
+          class="c-switch__icon c-switch__icon--off"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
+          <path
+            d="M6 6l12 12M18 6L6 18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+          />
+        </svg>
+        <svg
+          class="c-switch__icon c-switch__icon--on"
+          viewBox="0 0 24 24"
+          focusable="false"
+        >
+          <path
+            d="M20 6L9 17l-5-5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </span>
+  </span>
+</label>

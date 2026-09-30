@@ -184,6 +184,63 @@ const stories = [
 
   // Scrollspy
   { id: 'componentes-scrollspy--basica', name: 'Scrollspy / básica' },
+
+  // Text field
+  { id: 'componentes-text-field--basicos', name: 'Text field / básicos' },
+  { id: 'componentes-text-field--invalido', name: 'Text field / inválido' },
+  {
+    id: 'componentes-text-field--textarea-y-select',
+    name: 'Text field / textarea y select',
+  },
+  {
+    id: 'componentes-text-field--formulario',
+    name: 'Text field / formulario con resumen de errores',
+  },
+  {
+    id: 'componentes-text-field--deshabilitado-y-solo-lectura',
+    name: 'Text field / deshabilitado y solo lectura',
+  },
+
+  // Checkbox
+  { id: 'componentes-checkbox--basicas', name: 'Checkbox / básicas' },
+  {
+    id: 'componentes-checkbox--deshabilitada',
+    name: 'Checkbox / deshabilitada',
+  },
+  { id: 'componentes-checkbox--obligatoria', name: 'Checkbox / obligatoria' },
+  {
+    id: 'componentes-checkbox--estado-mixto',
+    name: 'Checkbox / estado mixto',
+  },
+
+  // Radio group
+  { id: 'componentes-radio-group--basico', name: 'Radio group / básico' },
+  {
+    id: 'componentes-radio-group--obligatorio',
+    name: 'Radio group / obligatorio',
+  },
+
+  // Switch
+  { id: 'componentes-switch--apagado', name: 'Switch / apagado' },
+  { id: 'componentes-switch--encendido', name: 'Switch / encendido' },
+  { id: 'componentes-switch--deshabilitado', name: 'Switch / deshabilitado' },
+
+  // Range
+  { id: 'componentes-range--basico', name: 'Range / básico' },
+  {
+    id: 'componentes-range--formato-personalizado',
+    name: 'Range / formato personalizado',
+  },
+  { id: 'componentes-range--sin-js', name: 'Range / sin JavaScript' },
+  { id: 'componentes-range--deshabilitado', name: 'Range / deshabilitado' },
+
+  // Table
+  { id: 'componentes-table--ordenable', name: 'Table / ordenable' },
+  {
+    id: 'componentes-table--desplazamiento-horizontal',
+    name: 'Table / desplazamiento horizontal',
+  },
+  { id: 'componentes-table--sin-js', name: 'Table / sin JavaScript' },
 ];
 
 for (const story of stories) {
@@ -679,4 +736,107 @@ test('Scrollspy: el enlace activo sigue al scroll y Enter salta a la sección si
   await expect(current).toHaveText('Accesibilidad');
   // El scroll no mueve el foco: sigue en el enlace pulsado.
   await expect(link).toBeFocused();
+});
+
+test('Formulario: enviar vacío lleva el foco al resumen y un enlace enfoca su campo', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-text-field--formulario&viewMode=story'
+  );
+
+  await page.getByRole('button', { name: 'Enviar' }).click();
+
+  const summary = page.locator('[data-error-summary]');
+  await expect(summary).toBeFocused();
+  await expect(summary).toContainText('Hay 2 errores en el formulario');
+
+  const nameField = page.getByLabel('Nombre');
+  await summary.getByRole('link').first().click();
+  await expect(nameField).toBeFocused();
+});
+
+test('Radio group: las flechas mueven el foco y cambian la selección', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-radio-group--basico&viewMode=story'
+  );
+
+  const claro = page.getByRole('radio', { name: 'Claro' });
+  const oscuro = page.getByRole('radio', { name: 'Oscuro' });
+  const sistema = page.getByRole('radio', { name: 'Igual que el sistema' });
+
+  await claro.focus();
+  await page.keyboard.press('ArrowDown');
+
+  await expect(oscuro).toBeFocused();
+  await expect(oscuro).toBeChecked();
+  await expect(claro).not.toBeChecked();
+
+  // Tab entra en el grupo una sola vez: desde la opción marcada, Tab
+  // saca el foco del grupo entero, no lo mueve a la siguiente opción.
+  await oscuro.focus();
+  await page.keyboard.press('Tab');
+  await expect(sistema).not.toBeFocused();
+  await expect(oscuro).not.toBeFocused();
+});
+
+test('Switch: Espacio alterna el estado', async ({ page }) => {
+  await page.goto('/iframe.html?id=componentes-switch--apagado&viewMode=story');
+
+  const toggle = page.getByRole('switch', { name: 'Modo oscuro' });
+  await toggle.focus();
+  await expect(toggle).not.toBeChecked();
+
+  await page.keyboard.press('Space');
+
+  await expect(toggle).toBeChecked();
+});
+
+test('Checkbox: activar el padre en estado mixto marca todas las hijas', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-checkbox--estado-mixto&viewMode=story'
+  );
+
+  const selectAll = page.getByRole('checkbox', { name: 'Seleccionar todo' });
+  const pedidos = page.getByRole('checkbox', { name: 'Estado de mis pedidos' });
+  const envios = page.getByRole('checkbox', {
+    name: 'Actualizaciones de envío',
+  });
+  const ofertas = page.getByRole('checkbox', { name: 'Ofertas y promociones' });
+
+  await expect(pedidos).toBeChecked();
+  await expect(envios).not.toBeChecked();
+
+  await selectAll.click();
+
+  await expect(selectAll).toBeChecked();
+  await expect(pedidos).toBeChecked();
+  await expect(envios).toBeChecked();
+  await expect(ofertas).toBeChecked();
+});
+
+test('Table: Enter en una cabecera ordena y mantiene el foco', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-table--ordenable&viewMode=story'
+  );
+
+  const clienteHeader = page.getByRole('button', { name: 'Cliente' });
+  await clienteHeader.focus();
+  await page.keyboard.press('Enter');
+
+  await expect(clienteHeader).toBeFocused();
+  const sortedHeader = page.locator('table[data-sortable] th[aria-sort]');
+  await expect(sortedHeader).toHaveCount(1);
+  await expect(sortedHeader).toHaveAttribute('aria-sort', 'ascending');
+
+  const firstClient = page.locator(
+    'table[data-sortable] tbody tr:first-child td:nth-child(2)'
+  );
+  await expect(firstClient).toHaveText('Andrés Pardo');
 });

@@ -1,0 +1,153 @@
+<!--
+  Componente: Checkbox
+  Patrón de referencia: WAI-ARIA APG "Checkbox" (incluida su variante de
+  estado mixto): https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/
+  Se usa el <input type="checkbox"> nativo: ya tiene el rol, el estado
+  marcado/no marcado y Espacio como tecla, sin ARIA propio. El estado
+  mixto (indeterminate) para un grupo "Seleccionar todo" se añade con
+  JS en checkbox.js (ver ese archivo, SPEC 04 paso 6).
+
+  input y label van como hermanos (label con for, no envolviendo el
+  input): si el input estuviera dentro del <label>, el mensaje de error
+  insertado junto a él pasaría a formar parte del nombre accesible de
+  la casilla. Por eso el ejemplo obligatorio de abajo también declara
+  su propio [data-field-error="<id>"] fuera de cualquier <label>, en
+  vez de dejar que field-validation.js use su respaldo por defecto
+  (insertar justo después del control, que aquí sería entre el input y
+  su label).
+-->
+
+<!-- Casilla simple -->
+<div class="c-checkbox">
+  <input
+    class="c-checkbox__input"
+    type="checkbox"
+    id="novedades"
+    name="novedades"
+  />
+  <label class="c-checkbox__label" for="novedades">
+    Recibir novedades por correo
+  </label>
+</div>
+
+<!-- Marcada de partida -->
+<div class="c-checkbox">
+  <input
+    class="c-checkbox__input"
+    type="checkbox"
+    id="recordar"
+    name="recordar"
+    checked
+  />
+  <label class="c-checkbox__label" for="recordar">Recordar mi sesión</label>
+</div>
+
+<!-- Deshabilitada -->
+<div class="c-checkbox">
+  <input
+    class="c-checkbox__input"
+    type="checkbox"
+    id="plan-anual"
+    name="plan-anual"
+    checked
+    disabled
+  />
+  <label class="c-checkbox__label" for="plan-anual">
+    Facturación anual (incluida en tu plan)
+  </label>
+</div>
+
+<!-- Obligatoria, con error ya visible (aria-invalid escrito a mano,
+     solo para mostrar el estilo sin depender de un envío) -->
+<div>
+  <div class="c-checkbox">
+    <input
+      class="c-checkbox__input"
+      type="checkbox"
+      id="terminos"
+      name="terminos"
+      required
+      aria-invalid="true"
+      aria-describedby="terminos-error"
+    />
+    <label class="c-checkbox__label" for="terminos">
+      Acepto los términos y condiciones
+      <span class="c-checkbox__required">(obligatorio)</span>
+    </label>
+  </div>
+  <div data-field-error="terminos">
+    <p class="c-field__error" id="terminos-error">
+      <svg
+        class="c-field__error-icon"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        />
+        <path
+          d="M9 9l6 6M15 9l-6 6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </svg>
+      Este campo es obligatorio
+    </p>
+  </div>
+</div>
+
+<!-- Grupo con estado mixto: la casilla "Seleccionar todo" refleja el
+     estado de sus hijas (checkbox.js, CheckboxGroup). El
+     aria-controls de abajo coincide con el que pondría el JS al
+     construirse; sin JS, las cuatro casillas funcionan como casillas
+     sueltas, sin sincronizarse entre sí. -->
+<fieldset class="c-checkbox-group" data-checkbox-group>
+  <legend class="c-checkbox-group__legend">Notificaciones</legend>
+
+  <div class="c-checkbox">
+    <input
+      class="c-checkbox__input"
+      type="checkbox"
+      id="todas-notificaciones"
+      data-checkbox-parent
+      aria-controls="notif-pedidos notif-envios notif-ofertas"
+    />
+    <label class="c-checkbox__label" for="todas-notificaciones">
+      <strong>Seleccionar todo</strong>
+    </label>
+  </div>
+
+  <div class="c-checkbox-group__children">
+    <div class="c-checkbox">
+      <input
+        class="c-checkbox__input"
+        type="checkbox"
+        id="notif-pedidos"
+        checked
+      />
+      <label class="c-checkbox__label" for="notif-pedidos">
+        Estado de mis pedidos
+      </label>
+    </div>
+    <div class="c-checkbox">
+      <input class="c-checkbox__input" type="checkbox" id="notif-envios" />
+      <label class="c-checkbox__label" for="notif-envios">
+        Actualizaciones de envío
+      </label>
+    </div>
+    <div class="c-checkbox">
+      <input class="c-checkbox__input" type="checkbox" id="notif-ofertas" />
+      <label class="c-checkbox__label" for="notif-ofertas">
+        Ofertas y promociones
+      </label>
+    </div>
+  </div>
+</fieldset>
