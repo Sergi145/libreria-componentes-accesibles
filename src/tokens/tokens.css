@@ -119,7 +119,7 @@
  */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-primary-500: #818cf8;
+    --color-primary-500: #7a85eb;
 
     /* #6366f1 daba 4.47:1 con texto blanco: no llega al 4.5:1 de WCAG
        2.2 AA para texto normal. #5f62e7 da 4.79:1 con el mismo tono. */
@@ -144,7 +144,7 @@
 }
 
 :root[data-theme='dark'] {
-  --color-primary-500: #818cf8;
+  --color-primary-500: #7a85eb;
   --color-primary-600: #5f62e7;
   --color-primary-700: #4f46e5;
   --color-text: var(--color-neutral-50);
