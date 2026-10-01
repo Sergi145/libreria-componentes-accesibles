@@ -1,0 +1,370 @@
+<!--
+  Componente: Combobox editable
+  Patrón WAI-ARIA APG "Combobox" (editable, con lista emergente
+  "list"): https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+
+  <input role="combobox" aria-autocomplete="list" aria-expanded
+  aria-controls> enlazado por aria-controls con un <ul role="listbox"
+  hidden> de opciones ya escritas en el HTML (combobox.js solo les
+  pone/quita hidden al filtrar, nunca las crea). El foco del lector
+  nunca sale del input: la opción activa se marca con
+  aria-activedescendant, no con foco real. El CSS enlaza listbox.css
+  para el aspecto de las opciones.
+
+  Con 0 resultados, el popup se queda oculto y aria-expanded en
+  "false"; en su lugar se muestra <p class="c-combobox__empty">, que
+  empieza oculto a mano (combobox.js solo le quita/pone hidden).
+
+  data-strict restringe el valor a una opción de la lista: salir del
+  campo con un texto que no coincide pinta un error con
+  setFieldError() (reutiliza .c-field__error de text-field.css).
+
+  Sin JavaScript: el popup queda oculto para siempre y el input se
+  comporta como un campo de texto libre con su propio name, que envía
+  lo escrito igual que cualquier otro campo.
+
+  Más abajo, el combobox solo-selección mejora un <select> nativo con
+  SelectCombobox: sin JavaScript, el <select> funciona igual que
+  cualquier otro; con JS, queda oculto (hidden, nunca disabled) y
+  sigue siendo el valor real del formulario, con su mismo name.
+-->
+
+<!-- Valor libre (por defecto) -->
+<div class="c-combobox">
+  <label class="c-combobox__label" for="destino" id="destino-label">
+    Destino
+  </label>
+  <input
+    type="text"
+    class="c-combobox__input"
+    id="destino"
+    name="destino"
+    role="combobox"
+    aria-autocomplete="list"
+    aria-expanded="false"
+    aria-controls="destino-listbox"
+    autocomplete="off"
+    data-combobox
+  />
+  <ul
+    class="c-listbox c-combobox__popup"
+    id="destino-listbox"
+    role="listbox"
+    aria-labelledby="destino-label"
+    hidden
+  >
+    <li
+      class="c-listbox__option"
+      role="option"
+      id="destino-opt-1"
+      data-value="mad"
+      aria-selected="false"
+    >
+      Madrid
+      <svg
+        class="c-listbox__check"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <g
+          class="c-listbox__check-forbidden"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+        </g>
+      </svg>
+    </li>
+    <li
+      class="c-listbox__option"
+      role="option"
+      id="destino-opt-2"
+      data-value="bcn"
+      aria-selected="false"
+    >
+      Barcelona
+      <svg
+        class="c-listbox__check"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <g
+          class="c-listbox__check-forbidden"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+        </g>
+      </svg>
+    </li>
+    <li
+      class="c-listbox__option"
+      role="option"
+      id="destino-opt-3"
+      data-value="val"
+      aria-selected="false"
+    >
+      Valencia
+      <svg
+        class="c-listbox__check"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <g
+          class="c-listbox__check-forbidden"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+        </g>
+      </svg>
+    </li>
+    <li
+      class="c-listbox__option"
+      role="option"
+      id="destino-opt-4"
+      data-value="sev"
+      aria-selected="false"
+    >
+      Sevilla
+      <svg
+        class="c-listbox__check"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <g
+          class="c-listbox__check-forbidden"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+        </g>
+      </svg>
+    </li>
+    <li
+      class="c-listbox__option"
+      role="option"
+      id="destino-opt-5"
+      data-value="mal"
+      aria-selected="false"
+    >
+      Málaga
+      <svg
+        class="c-listbox__check"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <g
+          class="c-listbox__check-forbidden"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+        </g>
+      </svg>
+    </li>
+  </ul>
+  <p class="c-combobox__empty" hidden>Sin resultados</p>
+</div>
+
+<!-- data-strict: solo admite un valor de la lista; salir del campo con
+     un texto que no coincide pinta un error con setFieldError(). -->
+<div class="c-combobox">
+  <label class="c-combobox__label" for="pais" id="pais-label">
+    País (elige uno de la lista)
+  </label>
+  <input
+    type="text"
+    class="c-combobox__input"
+    id="pais"
+    name="pais"
+    role="combobox"
+    aria-autocomplete="list"
+    aria-expanded="false"
+    aria-controls="pais-listbox"
+    autocomplete="off"
+    data-combobox
+    data-strict
+  />
+  <ul
+    class="c-listbox c-combobox__popup"
+    id="pais-listbox"
+    role="listbox"
+    aria-labelledby="pais-label"
+    hidden
+  >
+    <li
+      class="c-listbox__option"
+      role="option"
+      id="pais-opt-1"
+      data-value="es"
+      aria-selected="false"
+    >
+      España
+      <svg
+        class="c-listbox__check"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <g
+          class="c-listbox__check-forbidden"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+        </g>
+      </svg>
+    </li>
+    <li
+      class="c-listbox__option"
+      role="option"
+      id="pais-opt-2"
+      data-value="pt"
+      aria-selected="false"
+    >
+      Portugal
+      <svg
+        class="c-listbox__check"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <g
+          class="c-listbox__check-forbidden"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+        </g>
+      </svg>
+    </li>
+    <li
+      class="c-listbox__option"
+      role="option"
+      id="pais-opt-3"
+      data-value="fr"
+      aria-selected="false"
+    >
+      Francia
+      <svg
+        class="c-listbox__check"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M5 13l4 4L19 7"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <g
+          class="c-listbox__check-forbidden"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+        </g>
+      </svg>
+    </li>
+  </ul>
+  <p class="c-combobox__empty" hidden>Sin resultados</p>
+</div>
+
+<!-- Solo-selección: SelectCombobox mejora este <select> nativo. El
+     <label for> apunta a su id; no hace falta ponerle un id a mano, lo
+     deriva SelectCombobox si no lo tenía. El <optgroup> se convierte
+     en role="group"; la opción con "selected" marca el valor inicial. -->
+<div class="c-combobox">
+  <label for="asiento">Asiento</label>
+  <select id="asiento" name="asiento" data-combobox>
+    <optgroup label="Clase económica">
+      <option value="12a">12A — Pasillo</option>
+      <option value="12b" selected>12B — Centro</option>
+    </optgroup>
+    <optgroup label="Primera clase">
+      <option value="1a">1A — Ventana</option>
+      <option value="1b" disabled>1B — Ocupado</option>
+    </optgroup>
+  </select>
+</div>

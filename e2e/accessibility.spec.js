@@ -246,6 +246,50 @@ const stories = [
     name: 'Table / desplazamiento horizontal',
   },
   { id: 'componentes-table--sin-js', name: 'Table / sin JavaScript' },
+
+  // Listbox
+  {
+    id: 'componentes-listbox--seleccion-simple',
+    name: 'Listbox / selección simple',
+  },
+  {
+    id: 'componentes-listbox--seleccion-multiple',
+    name: 'Listbox / selección múltiple',
+  },
+  { id: 'componentes-listbox--grupos', name: 'Listbox / grupos' },
+
+  // Combobox
+  { id: 'componentes-combobox--editable', name: 'Combobox / editable' },
+  {
+    id: 'componentes-combobox--modo-estricto',
+    name: 'Combobox / modo estricto',
+  },
+  {
+    id: 'componentes-combobox--solo-seleccion',
+    name: 'Combobox / solo-selección',
+  },
+
+  // Spinbutton
+  { id: 'componentes-spinbutton--basico', name: 'Spinbutton / básico' },
+  {
+    id: 'componentes-spinbutton--con-formato',
+    name: 'Spinbutton / con formato',
+  },
+  { id: 'componentes-spinbutton--sin-js', name: 'Spinbutton / sin JavaScript' },
+
+  // Window splitter
+  {
+    id: 'componentes-window-splitter--lado-a-lado',
+    name: 'Window splitter / lado a lado',
+  },
+  {
+    id: 'componentes-window-splitter--apilado',
+    name: 'Window splitter / apilado',
+  },
+  {
+    id: 'componentes-window-splitter--sin-js',
+    name: 'Window splitter / sin JavaScript',
+  },
 ];
 
 for (const story of stories) {
@@ -844,4 +888,121 @@ test('Table: Enter en una cabecera ordena y mantiene el foco', async ({
     'table[data-sortable] tbody tr:first-child td:nth-child(2)'
   );
   await expect(firstClient).toHaveText('Andrés Pardo');
+});
+
+test('Listbox: ↓ mueve el foco y la selección; en el múltiple, Espacio alterna sin que las flechas cambien nada', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-listbox--seleccion-simple&viewMode=story'
+  );
+
+  const madrid = page.getByRole('option', { name: 'Madrid' });
+  const barcelona = page.getByRole('option', { name: 'Barcelona' });
+  await madrid.focus();
+  await page.keyboard.press('ArrowDown');
+
+  await expect(barcelona).toBeFocused();
+  await expect(barcelona).toHaveAttribute('aria-selected', 'true');
+  await expect(madrid).toHaveAttribute('aria-selected', 'false');
+
+  await page.goto(
+    '/iframe.html?id=componentes-listbox--seleccion-multiple&viewMode=story'
+  );
+
+  const archivado = page.getByRole('option', { name: 'Archivado' });
+  await page.getByRole('option', { name: 'Urgente' }).focus();
+  await page.keyboard.press('ArrowDown'); // Revisión, ya seleccionada: no cambia
+  await page.keyboard.press('ArrowDown'); // Archivado, sin seleccionar
+  await expect(archivado).toBeFocused();
+  await expect(archivado).toHaveAttribute('aria-selected', 'false');
+
+  await page.keyboard.press('Space');
+  await expect(archivado).toHaveAttribute('aria-selected', 'true');
+});
+
+test('Combobox editable: escribir filtra la lista y Enter acepta la opción activa', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-combobox--editable&viewMode=story'
+  );
+
+  const input = page.getByRole('combobox', { name: 'Destino' });
+  await input.fill('avila');
+  await expect(page.getByRole('option', { name: 'Ávila' })).toBeVisible();
+  await expect(input).toHaveAttribute('aria-expanded', 'true');
+
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+
+  await expect(input).toHaveValue('Ávila');
+  await expect(input).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('Combobox solo-selección: Enter abre, ↓ y Enter eligen y actualizan el <select>', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-combobox--solo-seleccion&viewMode=story'
+  );
+
+  const trigger = page.getByRole('combobox', { name: 'Asiento' });
+  await trigger.focus();
+  await page.keyboard.press('Enter');
+  await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+  await page.keyboard.press('ArrowDown'); // de 12B (ya elegida) a 1A
+  await page.keyboard.press('Enter');
+
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  await expect(trigger).toHaveText('1A — Ventana');
+  await expect(page.locator('select[data-combobox]')).toHaveValue('1a');
+});
+
+test('Spinbutton: ↑ suma data-step y Fin va al máximo', async ({ page }) => {
+  await page.goto(
+    '/iframe.html?id=componentes-spinbutton--basico&viewMode=story'
+  );
+
+  const input = page.getByRole('spinbutton', { name: 'Cantidad' });
+  await input.focus();
+  await page.keyboard.press('ArrowUp');
+  await expect(input).toHaveAttribute('aria-valuenow', '2');
+
+  await page.keyboard.press('End');
+  await expect(input).toHaveAttribute('aria-valuenow', '10');
+});
+
+test('Window splitter: → cambia aria-valuenow, Enter colapsa y el arrastre con el ratón también lo cambia', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-window-splitter--lado-a-lado&viewMode=story'
+  );
+
+  const separator = page.getByRole('separator', {
+    name: 'Cambiar tamaño del panel de navegación',
+  });
+  await separator.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(separator).toHaveAttribute('aria-valuenow', '55');
+
+  await page.keyboard.press('Enter'); // colapsa
+  await expect(separator).toHaveAttribute('aria-valuenow', '0');
+  await page.keyboard.press('Enter'); // restaura el valor anterior (55, no 50)
+  await expect(separator).toHaveAttribute('aria-valuenow', '55');
+
+  const box = await separator.boundingBox();
+  const containerBox = await page.locator('.c-splitter').boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(
+    containerBox.x + containerBox.width * 0.75,
+    box.y + box.height / 2,
+    { steps: 5 }
+  );
+  await page.mouse.up();
+
+  await expect(separator).toHaveAttribute('aria-valuenow', '75');
 });

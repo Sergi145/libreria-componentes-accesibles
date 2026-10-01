@@ -1,0 +1,71 @@
+/**
+ * Componente: Spinbutton
+ * Enlaza text-field.css para .c-field/.c-field__label/.c-field__control
+ * (el input reutiliza este último). .c-spinbutton es el envoltorio que
+ * crea spinbutton.js alrededor del input, con un botón a cada lado;
+ * los tres juntos miden como un solo control (bordes compartidos, sin
+ * espacio entre ellos).
+ */
+
+.c-spinbutton {
+  display: flex;
+  align-items: stretch;
+  width: fit-content;
+}
+
+.c-spinbutton__input {
+  width: 6rem;
+  border-radius: 0;
+  text-align: center;
+}
+
+.c-spinbutton__input:focus-visible {
+  position: relative;
+  z-index: 1;
+}
+
+.c-spinbutton__button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--target-size-min);
+  padding: 0;
+  border: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.c-spinbutton__button:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  border-inline-end-width: 0;
+}
+
+.c-spinbutton__button:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-inline-start-width: 0;
+}
+
+.c-spinbutton__button:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+}
+
+.c-spinbutton__button:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* No es la única pista: el cursor también cambia, y el botón deja de
+   responder al clic (disabled de verdad, no solo visual). */
+.c-spinbutton__button:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.c-spinbutton__button svg {
+  width: 1rem;
+  height: 1rem;
+}

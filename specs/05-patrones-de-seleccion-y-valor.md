@@ -1,6 +1,6 @@
 # SPEC 05 — Patrones APG de selección y valor
 
-> **Estado:** Borrador
+> **Estado:** Implementado
 > **Depende de:** SPEC 01, SPEC 02, SPEC 03, SPEC 04
 > **Fecha:** 2026-10-01
 > **Objetivo:** Crear la utilidad compartida de typeahead y los componentes Listbox, Combobox, Spinbutton y Window splitter según sus patrones APG.
@@ -209,39 +209,39 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 
 ## Criterios de aceptación
 
-- [ ] `npm run check` (lint JS + lint CSS + Vitest) termina sin errores.
-- [ ] `npm run lint:html` termina sin errores.
-- [ ] `npm run test:e2e` pasa: cero violaciones de axe en todas las historias de la lista y todos los tests de teclado en verde.
-- [ ] `npm run build` genera `dist/<componente>/` con `.js`, `.css` y `.html` para `listbox`, `combobox`, `spinbutton` y `window-splitter`, además de los 31 existentes.
-- [ ] Ningún `.js` de `dist/` contiene `import` de rutas relativas: `typeahead` y las demás utilidades quedan empaquetadas dentro.
-- [ ] Cada componente nuevo tiene un README con uso, accesibilidad, pruebas manuales y el apartado «Conformidad con la guía».
-- [ ] `typeahead`: «ma» tecleado en menos de 500 ms encuentra la primera opción que empieza por «ma»; tras 500 ms sin teclas, la siguiente tecla empieza una búsqueda nueva; `normalizeText('Ávila')` devuelve `'avila'`.
-- [ ] Listbox simple: Tab entra una sola vez, en la opción seleccionada; ↓ mueve el foco y la selección; solo una opción tiene `aria-selected="true"`.
-- [ ] Listbox múltiple: tiene `aria-multiselectable="true"`; ↓ no cambia la selección; Espacio alterna `aria-selected`; Ctrl+A selecciona todas; `value` devuelve un array.
-- [ ] Listbox con `data-name`: hay un `<input type="hidden">` con ese `name` por cada valor seleccionado, y ninguno más.
-- [ ] Listbox: las opciones con `aria-disabled="true"` no reciben el foco con las flechas ni se seleccionan con clic.
-- [ ] Combobox editable: `document.activeElement` es el input durante toda la navegación por la lista, y `aria-activedescendant` apunta al `id` de la opción activa.
-- [ ] Combobox editable: escribir «avila» muestra la opción «Ávila»; con 0 resultados el texto «Sin resultados» es visible y `aria-expanded="false"`.
-- [ ] Combobox editable: tras escribir varias letras seguidas se hace una sola llamada a `announce()` con el recuento.
-- [ ] Combobox editable: Enter acepta la opción activa; Escape cierra; un segundo Escape vacía el campo.
-- [ ] Combobox con `data-strict`: salir con un texto que no es una opción deja `aria-invalid="true"` y un mensaje enlazado en `aria-describedby`.
-- [ ] Combobox solo-selección: el `<select>` original tiene `hidden` y su `value` coincide con la opción elegida; enviar el formulario incluye ese valor.
-- [ ] Combobox solo-selección: el combobox tiene nombre accesible desde la `<label>` original, y hacer clic en ella le da el foco.
-- [ ] Combobox solo-selección: Escape cierra la lista sin cambiar el valor; Tab con la lista abierta elige la opción activa.
-- [ ] Combobox solo-selección: `destroy()` deja el `<select>` visible y elimina el combobox creado.
-- [ ] Spinbutton: el input tiene `role="spinbutton"`, `aria-valuenow`, `aria-valuemin` y `aria-valuemax`; ↑/↓, RePág/AvPág e Inicio/Fin cambian `aria-valuenow` según el paso.
-- [ ] Spinbutton: los botones −/+ tienen `tabindex="-1"` y nombre accesible, están deshabilitados en el extremo correspondiente y pulsarlos no saca el foco del input.
-- [ ] Spinbutton: escribir «2,5» y salir deja `aria-valuenow="2.5"`; escribir «abc» y salir muestra «Introduce un número» con `aria-invalid="true"` y no cambia `aria-valuenow`.
-- [ ] Spinbutton: sin JS no hay botones −/+ en la página y el campo se envía con su valor.
-- [ ] Window splitter: el separador tiene `tabindex="0"`, `aria-valuenow` entre `aria-valuemin` y `aria-valuemax`, `aria-controls` del panel principal y nombre accesible.
-- [ ] Window splitter: las flechas de su orientación cambian `aria-valuenow` en `data-step`, y el panel principal cambia de tamaño a la vez.
-- [ ] Window splitter: Enter lleva `aria-valuenow` al mínimo y un segundo Enter restaura el valor anterior.
-- [ ] Window splitter: arrastrar el separador con el ratón en Playwright cambia `aria-valuenow`.
-- [ ] Ningún componente del spec usa texto en inglés en `aria-label`, mensajes, anuncios ni texto oculto.
-- [ ] Todos los controles interactivos miden al menos 24×24 px y usan el anillo `--color-focus-ring` con `:focus-visible` (o, en el combobox, sobre la opción activa).
-- [ ] Todas las transiciones nuevas se desactivan con `prefers-reduced-motion: reduce`.
-- [ ] La opción seleccionada o activa se distingue sin depender del color y también con `forced-colors: active`.
-- [ ] Los tests existentes de los SPEC 01 a 04 siguen pasando sin modificar sus aserciones.
+- [x] `npm run check` (lint JS + lint CSS + Vitest) termina sin errores.
+- [x] `npm run lint:html` termina sin errores.
+- [x] `npm run test:e2e` pasa: cero violaciones de axe en todas las historias de la lista y todos los tests de teclado en verde.
+- [x] `npm run build` genera `dist/<componente>/` con `.js`, `.css` y `.html` para `listbox`, `combobox`, `spinbutton` y `window-splitter`, además de los 31 existentes.
+- [x] Ningún `.js` de `dist/` contiene `import` de rutas relativas: `typeahead` y las demás utilidades quedan empaquetadas dentro.
+- [x] Cada componente nuevo tiene un README con uso, accesibilidad, pruebas manuales y el apartado «Conformidad con la guía».
+- [x] `typeahead`: «ma» tecleado en menos de 500 ms encuentra la primera opción que empieza por «ma»; tras 500 ms sin teclas, la siguiente tecla empieza una búsqueda nueva; `normalizeText('Ávila')` devuelve `'avila'`.
+- [x] Listbox simple: Tab entra una sola vez, en la opción seleccionada; ↓ mueve el foco y la selección; solo una opción tiene `aria-selected="true"`.
+- [x] Listbox múltiple: tiene `aria-multiselectable="true"`; ↓ no cambia la selección; Espacio alterna `aria-selected`; Ctrl+A selecciona todas; `value` devuelve un array.
+- [x] Listbox con `data-name`: hay un `<input type="hidden">` con ese `name` por cada valor seleccionado, y ninguno más.
+- [x] Listbox: las opciones con `aria-disabled="true"` no reciben el foco con las flechas ni se seleccionan con clic.
+- [x] Combobox editable: `document.activeElement` es el input durante toda la navegación por la lista, y `aria-activedescendant` apunta al `id` de la opción activa.
+- [x] Combobox editable: escribir «avila» muestra la opción «Ávila»; con 0 resultados el texto «Sin resultados» es visible y `aria-expanded="false"`.
+- [x] Combobox editable: tras escribir varias letras seguidas se hace una sola llamada a `announce()` con el recuento.
+- [x] Combobox editable: Enter acepta la opción activa; Escape cierra; un segundo Escape vacía el campo.
+- [x] Combobox con `data-strict`: salir con un texto que no es una opción deja `aria-invalid="true"` y un mensaje enlazado en `aria-describedby`.
+- [x] Combobox solo-selección: el `<select>` original tiene `hidden` y su `value` coincide con la opción elegida; enviar el formulario incluye ese valor.
+- [x] Combobox solo-selección: el combobox tiene nombre accesible desde la `<label>` original, y hacer clic en ella le da el foco.
+- [x] Combobox solo-selección: Escape cierra la lista sin cambiar el valor; Tab con la lista abierta elige la opción activa.
+- [x] Combobox solo-selección: `destroy()` deja el `<select>` visible y elimina el combobox creado.
+- [x] Spinbutton: el input tiene `role="spinbutton"`, `aria-valuenow`, `aria-valuemin` y `aria-valuemax`; ↑/↓, RePág/AvPág e Inicio/Fin cambian `aria-valuenow` según el paso.
+- [x] Spinbutton: los botones −/+ tienen `tabindex="-1"` y nombre accesible, están deshabilitados en el extremo correspondiente y pulsarlos no saca el foco del input.
+- [x] Spinbutton: escribir «2,5» y salir deja `aria-valuenow="2.5"`; escribir «abc» y salir muestra «Introduce un número» con `aria-invalid="true"` y no cambia `aria-valuenow`.
+- [x] Spinbutton: sin JS no hay botones −/+ en la página y el campo se envía con su valor.
+- [x] Window splitter: el separador tiene `tabindex="0"`, `aria-valuenow` entre `aria-valuemin` y `aria-valuemax`, `aria-controls` del panel principal y nombre accesible.
+- [x] Window splitter: las flechas de su orientación cambian `aria-valuenow` en `data-step`, y el panel principal cambia de tamaño a la vez.
+- [x] Window splitter: Enter lleva `aria-valuenow` al mínimo y un segundo Enter restaura el valor anterior.
+- [x] Window splitter: arrastrar el separador con el ratón en Playwright cambia `aria-valuenow`.
+- [x] Ningún componente del spec usa texto en inglés en `aria-label`, mensajes, anuncios ni texto oculto.
+- [x] Todos los controles interactivos miden al menos 24×24 px y usan el anillo `--color-focus-ring` con `:focus-visible` (o, en el combobox, sobre la opción activa).
+- [x] Todas las transiciones nuevas se desactivan con `prefers-reduced-motion: reduce`.
+- [x] La opción seleccionada o activa se distingue sin depender del color y también con `forced-colors: active`.
+- [x] Los tests existentes de los SPEC 01 a 04 siguen pasando sin modificar sus aserciones.
 
 ## Decisiones
 
@@ -282,6 +282,7 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 - **No:** persistir la posición del splitter en `localStorage`. Introduce persistencia y versionado de clave; si hace falta, va en su propio spec.
 - **Sí:** Menubar (SPEC 06) en una carpeta `menubar/` nueva, extrayendo la lógica de menú común de `menu-button/` sin cambiar la API de `MenuButton`, con submenús de un nivel. Se anota aquí porque se decidió al definir este spec.
 - **Sí:** `Listbox`, `Combobox`, `SelectCombobox`, `Spinbutton` y `WindowSplitter` siguen la convención de las clases del proyecto: constructor con el elemento, `destroy()` y una función `init…`.
+- **Corrección tras aceptar el spec:** `.c-splitter--vertical` (paneles apilados) usaba `min-height: 16rem`, heredado de `.c-splitter`. `flex-basis` en porcentaje (`--c-splitter-position`) no se resuelve contra un tamaño principal indefinido, y `min-height` no cuenta como definido — así que con `flex-direction: column` el alto de los paneles nunca cambiaba visualmente (`aria-valuenow` sí, por eso no lo detectaron los tests ni el criterio de aceptación, que solo comprueba el atributo). Se detectó al probar la variante apilada a mano. Arreglado dándole a `.c-splitter--vertical` un `height: 16rem` propio (tamaño definido); `.c-splitter--horizontal` no lo necesita porque el ancho de un bloque ya es definido por el flujo normal.
 
 ## Riesgos
 

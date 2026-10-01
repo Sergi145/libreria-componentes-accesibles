@@ -1,0 +1,53 @@
+<!--
+  Componente: Spinbutton
+  Patrón WAI-ARIA APG "Spinbutton":
+  https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/
+
+  <input type="text" inputmode="decimal" role="spinbutton"> en vez de
+  <input type="number">: controla aria-valuetext, admite la coma
+  decimal (algunos navegadores la rechazan en type="number") y no
+  cambia de valor con la rueda del ratón sin querer. spinbutton.js
+  inserta los botones −/+ con tabindex="-1" (no son paradas de Tab
+  propias, APG) y los deshabilita en los extremos.
+
+  Sin JavaScript: no hay botones −/+, y el campo es un <input> de
+  texto normal que se envía igual que cualquier otro.
+-->
+
+<!-- Paso entero, sin data-format -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="cantidad">Cantidad</label>
+  <input
+    type="text"
+    inputmode="decimal"
+    class="c-field__control c-spinbutton__input"
+    id="cantidad"
+    name="cantidad"
+    role="spinbutton"
+    aria-valuenow="1"
+    aria-valuemin="1"
+    aria-valuemax="10"
+    data-spinbutton
+    data-step="1"
+  />
+</div>
+
+<!-- Paso decimal, con data-step-large y data-format -->
+<div class="c-field" data-field>
+  <label class="c-field__label" for="peso">Peso</label>
+  <input
+    type="text"
+    inputmode="decimal"
+    class="c-field__control c-spinbutton__input"
+    id="peso"
+    name="peso"
+    role="spinbutton"
+    aria-valuenow="70"
+    aria-valuemin="30"
+    aria-valuemax="200"
+    data-spinbutton
+    data-step="0.5"
+    data-step-large="5"
+    data-format="{value} kg"
+  />
+</div>

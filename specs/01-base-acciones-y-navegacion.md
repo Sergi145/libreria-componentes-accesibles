@@ -11,13 +11,14 @@ La guía `guia-componentes-accesibles-aria-bootstrap5.pdf` describe 25 fichas de
 Son unos 30 componentes y no caben en un solo spec.
 Se reparten en 5 specs por grupo temático:
 
-| Spec          | Grupo                        | Componentes                                                                                                                                            |
-| ------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **01 (este)** | Base + acciones y navegación | roving tabindex, Button (toggle), Close button, Toolbar, Disclosure, Accordion (revisión), Tabs, Breadcrumb, Navbar, Skip link, Pagination, List group |
-| 02            | Overlays                     | Modal (alertdialog), Offcanvas, Dropdown/Menu button, Popover, Tooltip                                                                                 |
-| 03            | Feedback y contenido         | Alert, Toast, Progress/Spinner/Placeholder, Carousel, Card/Badge/Scrollspy                                                                             |
-| 04            | Formularios y datos          | Campos de texto + validación, Checkbox (mixto), Radio group, Switch, Range, Table                                                                      |
-| 05            | Patrones APG avanzados       | Combobox, Listbox, Menu/Menubar, Tree view, Grid, Feed, Spinbutton, Window splitter                                                                    |
+| Spec          | Grupo                             | Componentes                                                                                                                                            |
+| ------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **01 (este)** | Base + acciones y navegación      | roving tabindex, Button (toggle), Close button, Toolbar, Disclosure, Accordion (revisión), Tabs, Breadcrumb, Navbar, Skip link, Pagination, List group |
+| 02            | Overlays                          | Modal (alertdialog), Offcanvas, Dropdown/Menu button, Popover, Tooltip                                                                                 |
+| 03            | Feedback y contenido              | Alert, Toast, Progress/Spinner/Placeholder, Carousel, Card/Badge/Scrollspy                                                                             |
+| 04            | Formularios y datos               | Campos de texto + validación, Checkbox (mixto), Radio group, Switch, Range, Table                                                                      |
+| 05            | Patrones APG de selección y valor | typeahead, Listbox, Combobox, Spinbutton, Window splitter                                                                                              |
+| 06            | Patrones APG compuestos           | Menubar, Tree view, Grid, Feed                                                                                                                         |
 
 El proyecto es HTML/CSS/JS nativo sin framework.
 La guía se usa **como referencia de comportamiento** (roles, estados ARIA, teclado, errores frecuentes), no como fuente de marcado.
@@ -207,9 +208,9 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 
 - **Sí:** HTML/CSS/JS nativo, con la guía como referencia de comportamiento. Mantiene la filosofía del README (sin lock-in, cada componente copiable).
 - **No:** añadir Bootstrap 5.3. Rompería la independencia de los componentes y el sistema de tokens.
-- **Sí:** repartir la guía en 5 specs por grupo, empezando por base + navegación. Un spec único tendría más de 100 pasos y no sería verificable.
+- **Sí:** repartir la guía en specs por grupo, empezando por base + navegación. Un spec único tendría más de 100 pasos y no sería verificable. (Nota del SPEC 05: el grupo final pasó de 5 a 6 specs, al partir los patrones avanzados en dos — ver sus Decisiones.)
 - **No:** un spec por componente. Demasiado proceso repetido para componentes pequeños.
-- **Sí:** los patrones del capítulo 4 (Combobox, Tree…) en el último spec (05). Son los más complejos y se benefician de tener las utilidades ya probadas.
+- **Sí:** los patrones del capítulo 4 (Combobox, Tree…) en los últimos specs (05 y 06). Son los más complejos y se benefician de tener las utilidades ya probadas.
 - **Sí:** utilidades en `src/utils/`, importadas desde los componentes. Vite las empaqueta en cada `.js` de `dist/`, así que el resultado compilado sigue siendo independiente.
 - **No:** copiar las utilidades en cada componente. Duplicaría el código y los bugs.
 - **Sí:** crear cada utilidad en el spec que la usa por primera vez. Este spec solo necesita `rovingTabindex`.
@@ -241,7 +242,8 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 - Overlays: Modal (alertdialog), Offcanvas, Dropdown, Popover, Tooltip → SPEC 02.
 - Feedback y contenido: Alert, Toast, Progress, Carousel, Card/Badge/Scrollspy → SPEC 03.
 - Formularios y tablas → SPEC 04.
-- Combobox, Listbox, Menu/Menubar, Tree, Grid, Feed, Spinbutton, Window splitter → SPEC 05.
+- typeahead, Listbox, Combobox, Spinbutton, Window splitter → SPEC 05.
+- Menubar, Tree view, Grid, Feed → SPEC 06.
 - Trampa de foco, anunciador de regiones vivas y generador de ids.
 - Paginación por AJAX, carga diferida de pestañas y dropdowns en la navbar.
 - Bootstrap como dependencia.
