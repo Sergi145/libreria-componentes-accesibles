@@ -79,3 +79,57 @@ export const UnoSoloAbierto = {
   name: 'Solo un panel abierto a la vez',
   render: () => render(false, 'uno'),
 };
+
+const NATIVE_ITEMS = [
+  {
+    question: '¿Qué es esta librería?',
+    answer:
+      'Un conjunto de componentes accesibles con HTML, CSS y JS independientes.',
+    open: true,
+  },
+  {
+    question: '¿Necesito JavaScript para usarlo?',
+    answer: 'No en esta variante: <details> y <summary> abren y cierran solos.',
+    open: false,
+  },
+  {
+    question: '¿Cumple WCAG 2.2 AA?',
+    answer: 'Ese es el objetivo de cada componente de la librería.',
+    open: false,
+  },
+];
+
+/**
+ * Variante solo HTML: sin accordion.js. El atributo `name` compartido
+ * hace que abrir un <details> cierre los demás (acordeón exclusivo
+ * nativo); se genera uno por render para que las copias de la página
+ * Docs no se cierren entre sí.
+ * @param {boolean} exclusive
+ */
+function renderNative(exclusive) {
+  const name = exclusive ? `nativo-${instanceCount++}` : '';
+  const wrapper = document.createElement('div');
+  wrapper.className = 'c-accordion';
+  wrapper.innerHTML = NATIVE_ITEMS.map(
+    ({ question, answer, open }) => `
+      <details class="c-accordion__item"${name ? ` name="${name}"` : ''}${open ? ' open' : ''}>
+        <summary class="c-accordion__summary">
+          <span>${question}</span>
+          ${CHEVRON}
+        </summary>
+        <div class="c-accordion__panel-content"><p>${answer.replace(/</g, '&lt;')}</p></div>
+      </details>
+    `
+  ).join('');
+  return wrapper;
+}
+
+export const Nativo = {
+  name: 'Nativo con details/summary (sin JS)',
+  render: () => renderNative(false),
+};
+
+export const NativoExclusivo = {
+  name: 'Nativo con details/summary, uno solo abierto (name)',
+  render: () => renderNative(true),
+};

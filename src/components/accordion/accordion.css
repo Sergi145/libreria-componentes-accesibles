@@ -72,6 +72,49 @@
   display: none;
 }
 
+/* Variante nativa: <details>/<summary>, sin JS. El navegador gestiona
+   el estado (atributo `open`), el teclado (Enter/Espacio) y lo expone
+   como expandido/contraído. Reutiliza el aspecto de .c-accordion__trigger. */
+.c-accordion__item + .c-accordion__item {
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.c-accordion__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 3rem;
+  padding: var(--space-3) var(--space-2);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  list-style: none;
+  cursor: pointer;
+}
+
+/* Quita el triángulo por defecto: el icono propio indica el estado. */
+.c-accordion__summary::-webkit-details-marker {
+  display: none;
+}
+
+.c-accordion__summary:hover {
+  background: var(--color-surface-muted);
+}
+
+.c-accordion__summary:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+.c-accordion__item[open] > .c-accordion__summary {
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.c-accordion__item[open] > .c-accordion__summary .c-accordion__icon {
+  transform: rotate(180deg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .c-accordion__icon {
     transition: none;

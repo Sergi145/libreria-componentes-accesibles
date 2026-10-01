@@ -130,3 +130,62 @@
     </div>
   </section>
 </div>
+
+<!--
+  Variante nativa: <details>/<summary>, sin accordion.js.
+  El navegador gestiona el estado (`open`), Enter/Espacio y el anuncio
+  "expandido/contraído". El atributo `name` compartido hace que solo
+  haya un panel abierto a la vez; quítalo para permitir varios.
+-->
+<div class="c-accordion">
+  <details class="c-accordion__item" name="faq" open>
+    <summary class="c-accordion__summary">
+      <span>¿Qué es esta librería?</span>
+      <svg
+        class="c-accordion__icon"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M6 9l6 6 6-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </summary>
+    <div class="c-accordion__panel-content">
+      <p>
+        Un conjunto de componentes de UI accesibles, cada uno con su propio
+        HTML, CSS y JavaScript independientes.
+      </p>
+    </div>
+  </details>
+
+  <details class="c-accordion__item" name="faq">
+    <summary class="c-accordion__summary">
+      <span>¿Necesito JavaScript para usarlo?</span>
+      <svg
+        class="c-accordion__icon"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          d="M6 9l6 6 6-6"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </summary>
+    <div class="c-accordion__panel-content">
+      <p>No en esta variante: el navegador abre y cierra cada panel.</p>
+    </div>
+  </details>
+</div>
