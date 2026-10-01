@@ -5,6 +5,17 @@ import { announce, initLiveRegions } from '../../utils/live-region.js';
 export default {
   title: 'Componentes/Placeholder',
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component: `Esqueleto de carga: bloques grises animados que ocupan el sitio del contenido mientras llega. **No es un fallo de carga**: «Tarjeta» y «Perfil» muestran solo el esqueleto, que en una página real se sustituye por el contenido al terminar.
+
+Para ver el ciclo completo, abre la historia **«Simulado (carga con aviso)»** y pulsa «Cargar artículo»: aparece el esqueleto y, a los 3 segundos, el artículo real.
+
+Los bloques llevan \`aria-hidden="true"\` y el grupo \`aria-busy="true"\`. Como \`aria-busy\` no avisa por sí solo, el inicio y el final de la carga se anuncian con \`announce()\` (\`src/utils/live-region.js\`).`,
+      },
+    },
+  },
 };
 
 const CARD = `

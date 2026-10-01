@@ -44,10 +44,13 @@
 
 /* Página actual: mismo enlace que el resto (ver pagination.html), pero
    destacado. No solo color: también fondo y negrita, para no depender
-   únicamente del color (WCAG 1.4.1). */
+   únicamente del color (WCAG 1.4.1). primary-600, no primary-500: en
+   modo oscuro el texto blanco sobre primary-500 (#656ec3) da 2.98:1;
+   sobre primary-600 da 7.90:1 en claro y 4.79:1 en oscuro (el fondo,
+   7.90:1 y 3.53:1 contra --color-surface). */
 .c-pagination__link[aria-current='page'] {
-  border-color: var(--color-primary-500);
-  background-color: var(--color-primary-500);
+  border-color: var(--color-primary-600);
+  background-color: var(--color-primary-600);
   color: var(--color-neutral-0);
   font-weight: var(--font-weight-medium);
 }

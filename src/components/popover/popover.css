@@ -18,7 +18,11 @@
   padding: var(--space-1) var(--space-2);
   border: 0;
   background: none;
-  color: var(--color-primary-700);
+
+  /* primary-500, no primary-700: en modo oscuro primary-700 (#4f46e5) da
+     2.68:1 sobre --color-surface (no llega al 4.5:1 de texto normal);
+     primary-500 da 6.29:1 en claro y 5.66:1 en oscuro. */
+  color: var(--color-primary-500);
   font: inherit;
   text-decoration: underline;
   cursor: pointer;

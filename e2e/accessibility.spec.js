@@ -10,6 +10,11 @@ import AxeBuilder from '@axe-core/playwright';
 const stories = [
   { id: 'componentes-button--primary', name: 'Button / primary' },
   { id: 'componentes-accordion--varios-abiertos', name: 'Accordion' },
+  { id: 'componentes-accordion--nativo', name: 'Accordion / nativo' },
+  {
+    id: 'componentes-accordion--nativo-exclusivo',
+    name: 'Accordion / nativo exclusivo',
+  },
   { id: 'componentes-modal--default', name: 'Modal' },
 
   // Button: ToggleButton, botón solo icono, enlace-botón deshabilitado

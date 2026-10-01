@@ -21,7 +21,7 @@
 }
 
 .c-checkbox__label {
-  color: var(--color-text);
+  color: var(--color-primary-500);
   font-size: var(--font-size-base);
 }
 

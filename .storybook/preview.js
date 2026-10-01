@@ -48,9 +48,24 @@ const preview = {
     },
   },
   decorators: [
+    // El fondo del lienzo (selector de fondos) y el recuadro de cada
+    // historia en Docs son blancos fijos y no siguen al tema: con el tema
+    // oscuro, el texto claro quedaba sobre blanco. Cada historia lleva su
+    // propio fondo desde los tokens. El margen negativo cubre el relleno
+    // de layout 'padded' (1rem) sin desplazar el contenido.
     (story, context) => {
       document.documentElement.dataset.theme = context.globals.theme;
-      return story();
+      const content = story();
+      const surface = document.createElement('div');
+      surface.style.cssText =
+        'margin: -1rem; padding: 1rem; ' +
+        'background: var(--color-surface); color: var(--color-text);';
+      if (typeof content === 'string') {
+        surface.innerHTML = content;
+      } else {
+        surface.append(content);
+      }
+      return surface;
     },
   ],
 };
