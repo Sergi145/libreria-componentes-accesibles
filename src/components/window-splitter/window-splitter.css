@@ -1,0 +1,111 @@
+/**
+ * Componente: Window splitter
+ * .c-splitter es el contenedor flex; --c-splitter-position (en el
+ * propio contenedor) da el tamaño del primer panel a lo largo del eje
+ * principal — por eso la misma regla sirve para las dos variantes:
+ * en --horizontal (flex-direction: row) se traduce en ancho, en
+ * --vertical (flex-direction: column) en alto, sin reglas aparte.
+ * El separador es una franja de --target-size-min con una línea fina
+ * centrada (::before): la franja entera es la zona de agarre, no solo
+ * la línea visible.
+ *
+ * box-sizing: border-box en los paneles para que --c-splitter-position
+ * incluya el relleno (padding), con o sin `src/styles/base.css`
+ * enlazado (es opcional). Aun así, un panel al 0 % no llega a 0px:
+ * el padding nunca deja que el contenido sea negativo, así que el
+ * panel colapsado conserva un margen visual igual a su propio
+ * padding — es una limitación conocida, no afecta a aria-valuenow
+ * (sí llega a 0) ni al resto del comportamiento.
+ */
+
+.c-splitter {
+  --c-splitter-position: 50%;
+  display: flex;
+  min-height: 16rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.c-splitter__pane,
+.c-splitter__separator {
+  box-sizing: border-box;
+}
+
+.c-splitter--horizontal {
+  flex-direction: row;
+}
+
+.c-splitter--vertical {
+  flex-direction: column;
+
+  /* flex-basis en porcentaje (--c-splitter-position) solo se resuelve
+     contra un tamaño principal DEFINIDO del contenedor. En
+     flex-direction: row ese tamaño es el ancho, que ya es definido por
+     el flujo de bloque normal; en column es el alto, y min-height no
+     basta (no es un tamaño definido): sin esta altura fija, el
+     porcentaje se ignora y los paneles no cambian de tamaño visible,
+     aunque aria-valuenow sí cambie. */
+  height: 16rem;
+}
+
+.c-splitter__pane {
+  overflow: auto;
+  padding: var(--space-3);
+  color: var(--color-text);
+}
+
+.c-splitter__pane:first-child {
+  flex: 0 0 var(--c-splitter-position);
+  min-width: 0;
+  min-height: 0;
+}
+
+.c-splitter__pane:last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  background: var(--color-surface-muted);
+}
+
+.c-splitter__separator {
+  position: relative;
+  flex: none;
+  width: var(--target-size-min);
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.c-splitter__separator::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 50%;
+  width: var(--border-width);
+  background: var(--color-border);
+  transform: translateX(-50%);
+}
+
+.c-splitter__separator:hover::before,
+.c-splitter__separator:focus-visible::before {
+  background: var(--color-primary-500);
+}
+
+.c-splitter__separator:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+.c-splitter--vertical .c-splitter__separator {
+  width: auto;
+  height: var(--target-size-min);
+  cursor: row-resize;
+}
+
+.c-splitter--vertical .c-splitter__separator::before {
+  inset-block: auto;
+  inset-block-start: 50%;
+  inset-inline: 0;
+  width: auto;
+  height: var(--border-width);
+  transform: translateY(-50%);
+}

@@ -1,0 +1,153 @@
+/**
+ * Componente: Listbox
+ * .c-listbox es el contenedor role="listbox"; .c-listbox__option, cada
+ * role="option". El icono (.c-listbox__check) está siempre en el
+ * marcado, con sus dos formas ya dentro (el visto bueno y el símbolo
+ * de prohibido): solo cambia cuál de las dos se ve, según
+ * aria-selected o aria-disabled; ninguna la crea ni la destruye JS. La
+ * opción seleccionada o deshabilitada también cambia de color (y la
+ * seleccionada, de fondo), pero el icono es la pista que no depende
+ * del color.
+ */
+
+.c-listbox__label {
+  display: block;
+  margin-block-end: var(--space-2);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.c-listbox {
+  margin: 0;
+  padding: var(--space-1);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  list-style: none;
+}
+
+.c-listbox__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--target-size-min);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-fast) var(--easing-standard);
+}
+
+/* :not([aria-selected='true']) para que pasar el ratón (o, en
+   SelectCombobox, recorrer con el teclado: .is-active) por la opción
+   ya elegida no sustituya su fondo (verificado con primary-500
+   encima) por este, más oscuro y sin comprobar contra ese color. */
+.c-listbox__option:hover:not([aria-selected='true']),
+.c-listbox__option.is-active:not([aria-selected='true']) {
+  background: var(--color-neutral-200);
+}
+
+.c-listbox__option:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+}
+
+/* primary-500, no primary-600: 6.02:1 en claro y 4.61:1 en oscuro sobre
+   --color-surface-muted (el fondo real de la opción seleccionada; ver
+   accordion.css para el mismo color sobre --color-surface). */
+.c-listbox__option[aria-selected='true'] {
+  background: var(--color-surface-muted);
+  color: var(--color-primary-500);
+  font-weight: var(--font-weight-medium);
+}
+
+.c-listbox__check {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  visibility: hidden;
+}
+
+/* El símbolo de prohibido vive en el mismo <svg> que el visto bueno
+   (mismo hueco reservado, sin desplazar el resto de opciones) y solo
+   se muestra en vez de él cuando la opción está deshabilitada. */
+.c-listbox__check-forbidden {
+  display: none;
+}
+
+.c-listbox__option[aria-selected='true'] .c-listbox__check,
+.c-listbox__option[aria-disabled='true'] .c-listbox__check {
+  visibility: visible;
+}
+
+.c-listbox__option[aria-disabled='true'] .c-listbox__check > path {
+  display: none;
+}
+
+.c-listbox__option[aria-disabled='true'] .c-listbox__check-forbidden {
+  display: block;
+}
+
+/* Hereda --color-text-muted de la regla de abajo a través de
+   currentColor: la misma pista de color que ya tiene el texto
+   deshabilitado, sin necesidad de fijarlo aparte. */
+.c-listbox__option[aria-disabled='true'] {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.c-listbox__option[aria-disabled='true']:hover {
+  background: none;
+}
+
+.c-listbox__group {
+  list-style: none;
+}
+
+.c-listbox__group-label {
+  display: block;
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.c-listbox__group-options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-listbox__option {
+    transition: none;
+  }
+}
+
+/* Los navegadores suelen aplanar el fondo en modo de alto contraste: el
+   borde y el icono (ya independiente del color) siguen marcando la
+   opción seleccionada. */
+@media (forced-colors: active) {
+  .c-listbox__option[aria-selected='true'] {
+    border: 1px solid ButtonText;
+  }
+}
+
+/* --color-neutral-200 no tiene variante oscura (es un tono fijo,
+   pensado para fondos claros): en tema oscuro necesita su propio valor,
+   no la variable, igual que el fondo de .c-alert en alert.css. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light'])
+    .c-listbox__option:hover:not([aria-selected='true']),
+  :root:not([data-theme='light'])
+    .c-listbox__option.is-active:not([aria-selected='true']) {
+    background: #2a2f38;
+  }
+}
+
+:root[data-theme='dark'] .c-listbox__option:hover:not([aria-selected='true']),
+:root[data-theme='dark']
+  .c-listbox__option.is-active:not([aria-selected='true']) {
+  background: #2a2f38;
+}

@@ -1,0 +1,491 @@
+<!--
+  Componente: Listbox
+  Patrón WAI-ARIA APG "Listbox":
+  https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+
+  role="listbox" con roving tabindex: listbox.js (SPEC 05, paso 3) pone
+  tabindex="0" en una sola opción a la vez y mueve ese tabindex y el
+  foco con las flechas. No se escribe tabindex a mano en este marcado:
+  al iniciar, listbox.js elige la opción con aria-selected="true" si la
+  hay o, si no, la primera, igual que tabs.js con aria-selected.
+  aria-labelledby nombra la lista desde el <span> visible que la
+  precede.
+
+  Sin JavaScript: el rol, el nombre y el estado (aria-selected) de cada
+  opción se leen igual, pero no hay flechas que muevan el foco ni clic
+  que cambie la selección. Si el control no necesita las flechas o el
+  typeahead, usa un <select> o casillas/radios nativos en su lugar.
+-->
+
+<!-- Selección simple: la selección sigue al foco (listbox.js, paso 3) -->
+<span class="c-listbox__label" id="destino-label">Destino</span>
+<ul
+  class="c-listbox"
+  id="destino"
+  role="listbox"
+  aria-labelledby="destino-label"
+  data-listbox
+>
+  <li
+    class="c-listbox__option"
+    role="option"
+    data-value="mad"
+    aria-selected="true"
+  >
+    Madrid
+    <svg
+      class="c-listbox__check"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g
+        class="c-listbox__check-forbidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </li>
+  <li
+    class="c-listbox__option"
+    role="option"
+    data-value="bcn"
+    aria-selected="false"
+  >
+    Barcelona
+    <svg
+      class="c-listbox__check"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g
+        class="c-listbox__check-forbidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </li>
+  <li
+    class="c-listbox__option"
+    role="option"
+    data-value="sev"
+    aria-selected="false"
+  >
+    Sevilla
+    <svg
+      class="c-listbox__check"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g
+        class="c-listbox__check-forbidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </li>
+  <li
+    class="c-listbox__option"
+    role="option"
+    data-value="val"
+    aria-selected="false"
+    aria-disabled="true"
+  >
+    Valencia (sin plazas)
+    <svg
+      class="c-listbox__check"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g
+        class="c-listbox__check-forbidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </li>
+</ul>
+
+<!-- Selección múltiple: aria-multiselectable="true" (listbox.js, paso 4) -->
+<span class="c-listbox__label" id="etiquetas-label">Etiquetas</span>
+<ul
+  class="c-listbox"
+  id="etiquetas"
+  role="listbox"
+  aria-labelledby="etiquetas-label"
+  aria-multiselectable="true"
+  data-listbox
+  data-name="etiquetas"
+>
+  <li
+    class="c-listbox__option"
+    role="option"
+    data-value="urgente"
+    aria-selected="true"
+  >
+    Urgente
+    <svg
+      class="c-listbox__check"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g
+        class="c-listbox__check-forbidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </li>
+  <li
+    class="c-listbox__option"
+    role="option"
+    data-value="revision"
+    aria-selected="true"
+  >
+    Revisión
+    <svg
+      class="c-listbox__check"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g
+        class="c-listbox__check-forbidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </li>
+  <li
+    class="c-listbox__option"
+    role="option"
+    data-value="archivado"
+    aria-selected="false"
+  >
+    Archivado
+    <svg
+      class="c-listbox__check"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g
+        class="c-listbox__check-forbidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </li>
+  <li
+    class="c-listbox__option"
+    role="option"
+    data-value="borrador"
+    aria-selected="false"
+  >
+    Borrador
+    <svg
+      class="c-listbox__check"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        d="M5 13l4 4L19 7"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <g
+        class="c-listbox__check-forbidden"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <line x1="6.5" y1="17.5" x2="17.5" y2="6.5" stroke-linecap="round" />
+      </g>
+    </svg>
+  </li>
+</ul>
+
+<!--
+  Grupos de opciones: cada grupo es un <li role="presentation"> (fuera
+  del árbol de accesibilidad: solo agrupa visualmente) con su etiqueta
+  visible y un <ul role="group" aria-labelledby> anidado, válido en
+  HTML porque un <ul> puede ir dentro de un <li>. aria-labelledby del
+  grupo apunta a esa etiqueta, nunca a un aria-label repetido a mano.
+-->
+<span class="c-listbox__label" id="asiento-label">Asiento</span>
+<ul
+  class="c-listbox"
+  id="asiento"
+  role="listbox"
+  aria-labelledby="asiento-label"
+  data-listbox
+>
+  <li class="c-listbox__group" role="presentation">
+    <span class="c-listbox__group-label" id="asiento-economica-label">
+      Clase económica
+    </span>
+    <ul
+      class="c-listbox__group-options"
+      role="group"
+      aria-labelledby="asiento-economica-label"
+    >
+      <li
+        class="c-listbox__option"
+        role="option"
+        data-value="12a"
+        aria-selected="true"
+      >
+        12A — Pasillo
+        <svg
+          class="c-listbox__check"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M5 13l4 4L19 7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <g
+            class="c-listbox__check-forbidden"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <line
+              x1="6.5"
+              y1="17.5"
+              x2="17.5"
+              y2="6.5"
+              stroke-linecap="round"
+            />
+          </g>
+        </svg>
+      </li>
+      <li
+        class="c-listbox__option"
+        role="option"
+        data-value="12b"
+        aria-selected="false"
+      >
+        12B — Centro
+        <svg
+          class="c-listbox__check"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M5 13l4 4L19 7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <g
+            class="c-listbox__check-forbidden"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <line
+              x1="6.5"
+              y1="17.5"
+              x2="17.5"
+              y2="6.5"
+              stroke-linecap="round"
+            />
+          </g>
+        </svg>
+      </li>
+    </ul>
+  </li>
+  <li class="c-listbox__group" role="presentation">
+    <span class="c-listbox__group-label" id="asiento-primera-label">
+      Primera clase
+    </span>
+    <ul
+      class="c-listbox__group-options"
+      role="group"
+      aria-labelledby="asiento-primera-label"
+    >
+      <li
+        class="c-listbox__option"
+        role="option"
+        data-value="1a"
+        aria-selected="false"
+      >
+        1A — Ventana
+        <svg
+          class="c-listbox__check"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M5 13l4 4L19 7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <g
+            class="c-listbox__check-forbidden"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <line
+              x1="6.5"
+              y1="17.5"
+              x2="17.5"
+              y2="6.5"
+              stroke-linecap="round"
+            />
+          </g>
+        </svg>
+      </li>
+      <li
+        class="c-listbox__option"
+        role="option"
+        data-value="1b"
+        aria-selected="false"
+        aria-disabled="true"
+      >
+        1B — Ocupado
+        <svg
+          class="c-listbox__check"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <path
+            d="M5 13l4 4L19 7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <g
+            class="c-listbox__check-forbidden"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <line
+              x1="6.5"
+              y1="17.5"
+              x2="17.5"
+              y2="6.5"
+              stroke-linecap="round"
+            />
+          </g>
+        </svg>
+      </li>
+    </ul>
+  </li>
+</ul>

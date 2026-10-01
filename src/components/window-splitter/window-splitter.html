@@ -1,0 +1,62 @@
+<!--
+  Componente: Window splitter
+  Patrón WAI-ARIA APG "Window Splitter":
+  https://www.w3.org/WAI/ARIA/apg/patterns/window-splitter/
+
+  El separador (role="separator") es un <div> entre el panel principal
+  (con id, referenciado por aria-controls) y el panel secundario. Su
+  tamaño lo da la propiedad --c-splitter-position del contenedor
+  .c-splitter, que window-splitter.js actualiza en cada cambio.
+
+  aria-orientation describe la orientación del SEPARADOR, no la de los
+  paneles: en la variante por defecto (paneles lado a lado,
+  c-splitter--horizontal) la línea divisoria es vertical
+  (aria-orientation="vertical", ←/→ la mueven); en la variante apilada
+  (c-splitter--vertical) es horizontal (aria-orientation="horizontal",
+  ↑/↓ la mueven).
+
+  Sin JavaScript: el separador no lleva tabindex ni aria-value* (los
+  añade window-splitter.js al construirse — sin JS no tiene sentido
+  una parada de tabulación que no hace nada) y los paneles quedan al
+  50 %, el valor inicial de la propia variable CSS.
+-->
+
+<!-- Paneles lado a lado (línea divisoria vertical) -->
+<div class="c-splitter c-splitter--horizontal">
+  <div class="c-splitter__pane" id="splitter-nav-principal">
+    <h3>Navegación</h3>
+    <p>Panel principal: su tamaño lo controla el separador.</p>
+  </div>
+  <div
+    class="c-splitter__separator"
+    role="separator"
+    aria-controls="splitter-nav-principal"
+    aria-label="Cambiar tamaño del panel de navegación"
+    aria-orientation="vertical"
+    data-splitter
+  ></div>
+  <div class="c-splitter__pane">
+    <h3>Contenido</h3>
+    <p>Panel secundario: ocupa el espacio que deja el principal.</p>
+  </div>
+</div>
+
+<!-- Paneles apilados (línea divisoria horizontal) -->
+<div class="c-splitter c-splitter--vertical">
+  <div class="c-splitter__pane" id="splitter-superior-principal">
+    <h3>Panel superior</h3>
+    <p>Panel principal: su tamaño lo controla el separador.</p>
+  </div>
+  <div
+    class="c-splitter__separator"
+    role="separator"
+    aria-controls="splitter-superior-principal"
+    aria-label="Cambiar tamaño del panel superior"
+    aria-orientation="horizontal"
+    data-splitter
+  ></div>
+  <div class="c-splitter__pane">
+    <h3>Panel inferior</h3>
+    <p>Panel secundario: ocupa el espacio que deja el principal.</p>
+  </div>
+</div>

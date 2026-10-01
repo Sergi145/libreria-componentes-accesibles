@@ -3,6 +3,7 @@
   "elements": ["html5"],
   "rules": {
     "no-inline-style": "off",
-    "void-style": ["error", { "style": "selfclosing" }]
+    "void-style": ["error", { "style": "selfclosing" }],
+    "prefer-native-element": ["error", { "exclude": ["listbox"] }]
   }
 }

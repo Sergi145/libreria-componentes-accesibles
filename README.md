@@ -39,10 +39,12 @@ src/
 │  ├─ disclosure.test.js
 │  ├─ live-region.js        # regiones vivas persistentes + announce() (usa Toast, Progress)
 │  ├─ live-region.test.js
-│  ├─ placement.js          # elige el lado donde un flotante no se corta (usa Tooltip)
+│  ├─ placement.js          # elige el lado donde un flotante no se corta (usa Tooltip, Combobox)
 │  ├─ placement.test.js
-│  ├─ field-validation.js   # setFieldError()/clearFieldError() (usa Text field, Checkbox, Radio group)
-│  └─ field-validation.test.js
+│  ├─ field-validation.js   # setFieldError()/clearFieldError() (usa Text field, Checkbox, Radio group, Combobox, Spinbutton)
+│  ├─ field-validation.test.js
+│  ├─ typeahead.js          # buscar por texto escrito (usa Listbox, Combobox)
+│  └─ typeahead.test.js
 └─ components/
    ├─ button/
    │  ├─ button.html        # marcado de referencia
@@ -80,7 +82,11 @@ src/
    ├─ radio-group/          # fieldset role="radiogroup" + validación de grupo
    ├─ switch/               # solo CSS; input checkbox con role="switch"
    ├─ range/                # input range + output sincronizado
-   └─ table/                # tabla semántica + ordenable por columna
+   ├─ table/                # tabla semántica + ordenable por columna
+   ├─ listbox/              # role="listbox"; selección simple o múltiple, con grupos
+   ├─ combobox/             # editable (lista/estricto) y de solo-selección sobre un <select>
+   ├─ spinbutton/            # input numérico con botones +/- y formato opcional
+   └─ window-splitter/       # separador arrastrable entre dos paneles
 e2e/
 └─ accessibility.spec.js    # auditoría axe-core + tests de teclado sobre Storybook (Playwright)
 ```
@@ -107,18 +113,24 @@ duplicarla:
   persistentes (`role="status"` y `role="alert"`) para avisar a los lectores
   de pantalla sin mover el foco. Se crean por adelantado: una región creada
   justo al anunciar suele no leerse la primera vez.
-- `setFieldError()`/`clearFieldError()` (`Text field`, `Checkbox` y
-  `Radio group`): pintan o quitan el mensaje de error de un control y lo
-  enlazan con `aria-describedby`, sin pisar la ayuda que ya tuviera.
+- `setFieldError()`/`clearFieldError()` (`Text field`, `Checkbox`,
+  `Radio group`, `Combobox` y `Spinbutton`): pintan o quitan el mensaje de
+  error de un control y lo enlazan con `aria-describedby`, sin pisar la
+  ayuda que ya tuviera.
+- `createTypeahead()` (`Listbox` y `Combobox`): busca por el texto escrito
+  (acumula letras con un tiempo de espera, y repetir la misma letra pasa
+  a la siguiente coincidencia); `normalizeText()` quita tildes y
+  mayúsculas para comparar.
 
 Vite las empaqueta dentro del `.js` de cada componente que las usa, así que el
 resultado en `dist/` sigue siendo autónomo — pero si copias la carpeta de uno
 de esos componentes a otro proyecto, copia también la utilidad que importe
 (`src/utils/roving-tabindex.js`, `dismiss.js`, `placement.js`,
-`disclosure.js`, `live-region.js` o `field-validation.js`), o el import se
-rompe. `Offcanvas` depende además de `modal/`; `Alert` y `Toast` enlazan el
-CSS de `close-button/` para su botón de cierre; `Checkbox` y `Radio group`
-enlazan el CSS de `text-field/` para el estilo del mensaje de error.
+`disclosure.js`, `live-region.js`, `field-validation.js` o `typeahead.js`),
+o el import se rompe. `Offcanvas` depende además de `modal/`; `Alert` y
+`Toast` enlazan el CSS de `close-button/` para su botón de cierre;
+`Checkbox` y `Radio group` enlazan el CSS de `text-field/` para el estilo
+del mensaje de error.
 
 ## Empezar
 
@@ -192,39 +204,43 @@ y se puede copiar tal cual.
 
 ## Componentes disponibles
 
-| Componente                                    | Patrón APG                                                                 | Notas clave                                                                   |
-| --------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| [`Button`](src/components/button)             | [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/)                 | `<button>` nativo; `ToggleButton` con `aria-pressed`; estado de carga         |
-| [`Accordion`](src/components/accordion)       | [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/)           | Navegación por flechas/Home/End entre cabeceras                               |
-| [`Modal`](src/components/modal)               | [Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)   | Sobre `<dialog>` nativo: foco atrapado y Escape gratis                        |
-| [`Close button`](src/components/close-button) | —                                                                          | Solo CSS; icono decorativo + `aria-label`                                     |
-| [`Toolbar`](src/components/toolbar)           | [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)               | Roving tabindex propio; subgrupos con `role="group"`                          |
-| [`Tabs`](src/components/tabs)                 | [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)                     | `tablist`/`tab`/`tabpanel`; activación automática o manual                    |
-| [`Breadcrumb`](src/components/breadcrumb)     | [Breadcrumb](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)         | Solo CSS; separadores por `::before`, nunca como texto                        |
-| [`Navbar`](src/components/navbar)             | Landmarks + Disclosure                                                     | Reutiliza `Disclosure` (utils) para el menú móvil; incluye el skip link       |
-| [`Skip link`](src/components/skip-link)       | —                                                                          | Solo CSS; oculto hasta recibir el foco                                        |
-| [`Pagination`](src/components/pagination)     | Landmarks + [Link](https://www.w3.org/WAI/ARIA/apg/patterns/link/)         | Solo CSS; deshabilitados sin `href`; actual con `aria-current="page"`         |
-| [`List group`](src/components/list-group)     | [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) / Tabs / Link | Solo CSS; 3 variantes (lista, enlaces, botones); combinable con `Tabs`        |
-| [`Offcanvas`](src/components/offcanvas)       | [Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)   | Extiende `Modal`; 4 posiciones y variante responsive (`62em`)                 |
-| [`Dropdown`](src/components/dropdown)         | [Disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)         | Lista de enlaces de navegación; sin roles de menú; Esc y clic fuera           |
-| [`Menu Button`](src/components/menu-button)   | [Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)       | `role="menu"` de acciones; typeahead, casillas, radios y botón partido        |
-| [`Popover`](src/components/popover)           | [Disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)         | Solo texto; panel junto al disparador; Esc devuelve el foco                   |
-| [`Tooltip`](src/components/tooltip)           | [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/)               | Retardo con ratón, hoverable, Esc sin mover el foco                           |
-| [`Alert`](src/components/alert)               | [Alert](https://www.w3.org/WAI/ARIA/apg/patterns/alert/)                   | `role` por variante; descartable con foco devuelto; `showAlert()`             |
-| [`Toast`](src/components/toast)               | [Alert](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) + regiones vivas  | `showToast()`; no mueve el foco; autohide con pausa; Esc lo cierra            |
-| [`Progress`](src/components/progress)         | —                                                                          | `<progress>` nativo; indeterminado; anuncia «Completado» una vez              |
-| [`Spinner`](src/components/spinner)           | —                                                                          | Solo CSS; `role="status"` con texto oculto; pulso con movimiento reducido     |
-| [`Placeholder`](src/components/placeholder)   | —                                                                          | Solo CSS; bloques `aria-hidden` y contenedor `aria-busy`                      |
-| [`Carousel`](src/components/carousel)         | [Carousel](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/)             | Con pestañas; imágenes con `alt`; rotación opcional con Play/Pausa            |
-| [`Card`](src/components/card)                 | —                                                                          | Solo CSS; variante con toda la tarjeta clicable (un solo enlace)              |
-| [`Badge`](src/components/badge)               | —                                                                          | Solo CSS; texto oculto que da contexto a los números                          |
-| [`Scrollspy`](src/components/scrollspy)       | Landmarks + `aria-current`                                                 | `IntersectionObserver`; nunca mueve el foco ni anuncia                        |
-| [`Text field`](src/components/text-field)     | —                                                                          | `input`/`textarea`/`select`; validación nativa; resumen de errores enfocable  |
-| [`Checkbox`](src/components/checkbox)         | [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/)             | Estado mixto (`indeterminate`) con «Seleccionar todo»                         |
-| [`Radio group`](src/components/radio-group)   | [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)             | `fieldset role="radiogroup"`; validación de grupo obligatorio                 |
-| [`Switch`](src/components/switch)             | [Switch](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)                 | Solo CSS; `input checkbox role="switch"`; estado por posición e icono         |
-| [`Range`](src/components/range)               | —                                                                          | `input type="range"` + `output` sincronizado; `aria-valuetext`                |
-| [`Table`](src/components/table)               | [Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/)                   | `caption` obligatorio; envoltorio con scroll enfocable; ordenable por columna |
+| Componente                                          | Patrón APG                                                                   | Notas clave                                                                   |
+| --------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [`Button`](src/components/button)                   | [Button](https://www.w3.org/WAI/ARIA/apg/patterns/button/)                   | `<button>` nativo; `ToggleButton` con `aria-pressed`; estado de carga         |
+| [`Accordion`](src/components/accordion)             | [Accordion](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/)             | Navegación por flechas/Home/End entre cabeceras                               |
+| [`Modal`](src/components/modal)                     | [Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)     | Sobre `<dialog>` nativo: foco atrapado y Escape gratis                        |
+| [`Close button`](src/components/close-button)       | —                                                                            | Solo CSS; icono decorativo + `aria-label`                                     |
+| [`Toolbar`](src/components/toolbar)                 | [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)                 | Roving tabindex propio; subgrupos con `role="group"`                          |
+| [`Tabs`](src/components/tabs)                       | [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)                       | `tablist`/`tab`/`tabpanel`; activación automática o manual                    |
+| [`Breadcrumb`](src/components/breadcrumb)           | [Breadcrumb](https://www.w3.org/WAI/ARIA/apg/patterns/breadcrumb/)           | Solo CSS; separadores por `::before`, nunca como texto                        |
+| [`Navbar`](src/components/navbar)                   | Landmarks + Disclosure                                                       | Reutiliza `Disclosure` (utils) para el menú móvil; incluye el skip link       |
+| [`Skip link`](src/components/skip-link)             | —                                                                            | Solo CSS; oculto hasta recibir el foco                                        |
+| [`Pagination`](src/components/pagination)           | Landmarks + [Link](https://www.w3.org/WAI/ARIA/apg/patterns/link/)           | Solo CSS; deshabilitados sin `href`; actual con `aria-current="page"`         |
+| [`List group`](src/components/list-group)           | [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/) / Tabs / Link   | Solo CSS; 3 variantes (lista, enlaces, botones); combinable con `Tabs`        |
+| [`Offcanvas`](src/components/offcanvas)             | [Dialog (Modal)](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)     | Extiende `Modal`; 4 posiciones y variante responsive (`62em`)                 |
+| [`Dropdown`](src/components/dropdown)               | [Disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)           | Lista de enlaces de navegación; sin roles de menú; Esc y clic fuera           |
+| [`Menu Button`](src/components/menu-button)         | [Menu Button](https://www.w3.org/WAI/ARIA/apg/patterns/menu-button/)         | `role="menu"` de acciones; typeahead, casillas, radios y botón partido        |
+| [`Popover`](src/components/popover)                 | [Disclosure](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/)           | Solo texto; panel junto al disparador; Esc devuelve el foco                   |
+| [`Tooltip`](src/components/tooltip)                 | [Tooltip](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/)                 | Retardo con ratón, hoverable, Esc sin mover el foco                           |
+| [`Alert`](src/components/alert)                     | [Alert](https://www.w3.org/WAI/ARIA/apg/patterns/alert/)                     | `role` por variante; descartable con foco devuelto; `showAlert()`             |
+| [`Toast`](src/components/toast)                     | [Alert](https://www.w3.org/WAI/ARIA/apg/patterns/alert/) + regiones vivas    | `showToast()`; no mueve el foco; autohide con pausa; Esc lo cierra            |
+| [`Progress`](src/components/progress)               | —                                                                            | `<progress>` nativo; indeterminado; anuncia «Completado» una vez              |
+| [`Spinner`](src/components/spinner)                 | —                                                                            | Solo CSS; `role="status"` con texto oculto; pulso con movimiento reducido     |
+| [`Placeholder`](src/components/placeholder)         | —                                                                            | Solo CSS; bloques `aria-hidden` y contenedor `aria-busy`                      |
+| [`Carousel`](src/components/carousel)               | [Carousel](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/)               | Con pestañas; imágenes con `alt`; rotación opcional con Play/Pausa            |
+| [`Card`](src/components/card)                       | —                                                                            | Solo CSS; variante con toda la tarjeta clicable (un solo enlace)              |
+| [`Badge`](src/components/badge)                     | —                                                                            | Solo CSS; texto oculto que da contexto a los números                          |
+| [`Scrollspy`](src/components/scrollspy)             | Landmarks + `aria-current`                                                   | `IntersectionObserver`; nunca mueve el foco ni anuncia                        |
+| [`Text field`](src/components/text-field)           | —                                                                            | `input`/`textarea`/`select`; validación nativa; resumen de errores enfocable  |
+| [`Checkbox`](src/components/checkbox)               | [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/)               | Estado mixto (`indeterminate`) con «Seleccionar todo»                         |
+| [`Radio group`](src/components/radio-group)         | [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)               | `fieldset role="radiogroup"`; validación de grupo obligatorio                 |
+| [`Switch`](src/components/switch)                   | [Switch](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)                   | Solo CSS; `input checkbox role="switch"`; estado por posición e icono         |
+| [`Range`](src/components/range)                     | —                                                                            | `input type="range"` + `output` sincronizado; `aria-valuetext`                |
+| [`Table`](src/components/table)                     | [Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/)                     | `caption` obligatorio; envoltorio con scroll enfocable; ordenable por columna |
+| [`Listbox`](src/components/listbox)                 | [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)                 | `aria-activedescendant`; selección simple o múltiple; typeahead               |
+| [`Combobox`](src/components/combobox)               | [Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)               | Editable (lista o estricto) o de solo-selección sobre un `<select>`           |
+| [`Spinbutton`](src/components/spinbutton)           | [Spinbutton](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/)           | Input numérico con botones +/-; formato (moneda, unidades…) opcional          |
+| [`Window splitter`](src/components/window-splitter) | [Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/window-splitter/) | Separador arrastrable (ratón o teclado) entre dos paneles; colapsable         |
 
 ## Convenciones de los componentes
 
