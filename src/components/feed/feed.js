@@ -25,7 +25,7 @@
 export class Feed {
   /** @param {HTMLElement} el [data-feed] sobre <section> */
   constructor(el, { loadMore } = {}) {
-    if (!el || el.tagName !== 'SECTION') {
+    if (!el || (el.tagName !== 'SECTION' && !el.hasAttribute('data-feed'))) {
       throw new Error('Feed: se requiere un elemento <section>[data-feed].');
     }
     this.el = el;
@@ -141,6 +141,7 @@ export class Feed {
         newArticles.forEach((articleData) => {
           const article = document.createElement('article');
           article.innerHTML = `<h3>${articleData.title}</h3><p>${articleData.description}</p>`;
+          article.setAttribute('aria-label', articleData.title);
           this.el.insertBefore(
             article,
             this.el.querySelector('.c-feed__more') || null

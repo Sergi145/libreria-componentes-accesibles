@@ -53,6 +53,9 @@
   --color-border: var(--color-neutral-500);
   --color-focus-ring: #1a56db;
 
+  /* Enlaces: primary-500 en claro cumple 6.29:1 contra blanco */
+  --color-link: var(--color-primary-500);
+
   /* Tipografía */
   --font-family-base:
     system-ui, -apple-system, 'Segoe UI', roboto, helvetica, arial, sans-serif;
@@ -140,6 +143,9 @@
     --color-feedback-success: #4ade80;
     --color-feedback-warning: #fbbf24;
     --color-feedback-danger: #f87171;
+
+    /* Enlaces: #60a5fa (feedback-info) en oscuro cumple 6.64:1 contra #1a1d23 */
+    --color-link: #60a5fa;
   }
 }
 
@@ -156,6 +162,7 @@
   --color-feedback-success: #4ade80;
   --color-feedback-warning: #fbbf24;
   --color-feedback-danger: #f87171;
+  --color-link: #60a5fa;
 }
 
 /* Respeta la preferencia del usuario de reducir el movimiento */

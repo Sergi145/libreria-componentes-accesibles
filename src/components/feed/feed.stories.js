@@ -14,31 +14,33 @@ function createFeed(withLoadMore = false, withError = false) {
 
   const wrapper = document.createElement('div');
   wrapper.innerHTML = `
-    <section class="c-feed" id="${feedId}" data-feed aria-labelledby="${feedId}-title">
+    <div class="c-feed">
       <h2 id="${feedId}-title">Últimas noticias</h2>
 
-      <article>
-        <h3>Primer artículo</h3>
-        <p>Resumen del primer artículo con contenido interesante para leer sobre temas de tecnología.</p>
-      </article>
+      <section id="${feedId}" data-feed aria-labelledby="${feedId}-title">
+        <article>
+          <h3>Primer artículo</h3>
+          <p>Resumen del primer artículo con contenido interesante para leer sobre temas de tecnología.</p>
+        </article>
 
-      <article>
-        <h3>Segundo artículo</h3>
-        <p>Resumen del segundo artículo con más información relevante sobre desarrollo web.</p>
-      </article>
+        <article>
+          <h3>Segundo artículo</h3>
+          <p>Resumen del segundo artículo con más información relevante sobre desarrollo web.</p>
+        </article>
 
-      <article>
-        <h3>Tercer artículo</h3>
-        <p>Resumen del tercer artículo para completar el flujo inicial de noticias.</p>
-      </article>
+        <article>
+          <h3>Tercer artículo</h3>
+          <p>Resumen del tercer artículo para completar el flujo inicial de noticias.</p>
+        </article>
 
-      <article>
-        <h3>Cuarto artículo</h3>
-        <p>Resumen del cuarto artículo con detalles adicionales y contexto importante.</p>
-      </article>
+        <article>
+          <h3>Cuarto artículo</h3>
+          <p>Resumen del cuarto artículo con detalles adicionales y contexto importante.</p>
+        </article>
 
-      ${withLoadMore ? '<a class="c-feed__more" data-feed-more href="#">Cargar más artículos</a>' : ''}
-    </section>
+        ${withLoadMore ? '<a class="c-feed__more" data-feed-more href="#">Cargar más artículos</a>' : ''}
+      </section>
+    </div>
   `;
 
   const feed = wrapper.querySelector('[data-feed]');
