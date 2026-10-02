@@ -1,0 +1,36 @@
+<!--
+  Componente: Feed (flujo de artículos)
+  Una sección con artículos enfocables que se cargan bajo demanda.
+  Implementa el patrón WAI-ARIA APG "Feed":
+  https://www.w3.org/WAI/ARIA/apg/patterns/feed/
+
+  Sin JS es un listado simple de artículos. Con JS se agrega
+  role="feed", aria-posinset/setsize, navegación con AvPág/RePág
+  y carga infinita opcional con IntersectionObserver.
+-->
+
+<section class="c-feed" data-feed aria-labelledby="feed-title">
+  <h2 id="feed-title">Últimas noticias</h2>
+
+  <article>
+    <h3>Primer artículo</h3>
+    <p>Resumen del primer artículo con contenido interesante para leer.</p>
+  </article>
+
+  <article>
+    <h3>Segundo artículo</h3>
+    <p>Resumen del segundo artículo con más información relevante.</p>
+  </article>
+
+  <article>
+    <h3>Tercer artículo</h3>
+    <p>Resumen del tercer artículo para completar el flujo.</p>
+  </article>
+
+  <article>
+    <h3>Cuarto artículo</h3>
+    <p>Resumen del cuarto artículo con detalles adicionales.</p>
+  </article>
+
+  <a class="c-feed__more" data-feed-more href="#">Cargar más artículos</a>
+</section>
