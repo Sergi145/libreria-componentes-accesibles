@@ -36,6 +36,7 @@ export class Tree {
     this._typeahead = null;
     this._listeners = [];
     this._lastSelectedItem = null;
+    this._hiddenInputs = [];
 
     // Poner role="tree" en el contenedor
     el.setAttribute('role', 'tree');
@@ -156,6 +157,10 @@ export class Tree {
   }
 
   destroy() {
+    // Quitar inputs ocultos
+    this._hiddenInputs.forEach((input) => input.remove());
+    this._hiddenInputs = [];
+
     // Quitar listeners
     this._listeners.forEach(({ target, listener, type }) => {
       target.removeEventListener(type, listener);
@@ -347,6 +352,7 @@ export class Tree {
           for (let i = 0; i <= currentIndex; i++) {
             visibleItems[i].setAttribute('aria-selected', 'true');
           }
+          this._syncHiddenInputs();
           this.el.dispatchEvent(
             new CustomEvent('tree:change', {
               bubbles: true,
@@ -371,6 +377,7 @@ export class Tree {
           for (let i = currentIndex; i < visibleItems.length; i++) {
             visibleItems[i].setAttribute('aria-selected', 'true');
           }
+          this._syncHiddenInputs();
           this.el.dispatchEvent(
             new CustomEvent('tree:change', {
               bubbles: true,
@@ -410,6 +417,7 @@ export class Tree {
         visibleItems.forEach((item) => {
           item.setAttribute('aria-selected', String(!allSelected));
         });
+        this._syncHiddenInputs();
         this.el.dispatchEvent(
           new CustomEvent('tree:change', {
             bubbles: true,
@@ -456,6 +464,7 @@ export class Tree {
         for (let i = start; i <= end; i++) {
           visibleItems[i].setAttribute('aria-selected', 'true');
         }
+        this._syncHiddenInputs();
         this.el.dispatchEvent(
           new CustomEvent('tree:change', {
             bubbles: true,
@@ -468,6 +477,7 @@ export class Tree {
       const selected = item.getAttribute('aria-selected') !== 'true';
       item.setAttribute('aria-selected', String(selected));
       this._lastSelectedItem = item;
+      this._syncHiddenInputs();
       this.el.dispatchEvent(
         new CustomEvent('tree:change', {
           bubbles: true,
@@ -486,12 +496,37 @@ export class Tree {
       i.setAttribute('aria-selected', String(i === item));
     });
     this._lastSelectedItem = item;
+    this._syncHiddenInputs();
     this.el.dispatchEvent(
       new CustomEvent('tree:change', {
         bubbles: true,
         detail: { value: this.value },
       })
     );
+  }
+
+  _syncHiddenInputs() {
+    if (!this.el.hasAttribute('data-name')) return;
+
+    const name = this.el.getAttribute('data-name');
+    const selected = Array.from(
+      this.el.querySelectorAll('[role="treeitem"][aria-selected="true"]')
+    );
+
+    // Quitar inputs anteriores
+    this._hiddenInputs.forEach((input) => input.remove());
+    this._hiddenInputs = [];
+
+    // Crear inputs para valores seleccionados
+    selected.forEach((item) => {
+      const value = item.getAttribute('data-value') || item.textContent;
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      this.el.insertAdjacentElement('afterend', input);
+      this._hiddenInputs.push(input);
+    });
   }
 }
 
