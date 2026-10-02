@@ -1,7 +1,7 @@
 # Librería de componentes accesibles
 
 ![Licencia](https://img.shields.io/badge/licencia-MIT-blue)
-![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
+![Node](https://img.shields.io/badge/node-%3E%3D22-brightgreen)
 ![WCAG](https://img.shields.io/badge/WCAG-2.2%20AA-informational)
 
 Componentes de UI construidos con **HTML, CSS y JavaScript nativos**
