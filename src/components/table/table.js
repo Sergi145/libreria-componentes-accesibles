@@ -35,6 +35,8 @@
  *   initSortableTables();
  */
 
+import { getSortValue, compareSortValues } from '../../utils/sort.js';
+
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /**
@@ -76,7 +78,6 @@ export class SortableTable {
     }
     this.el = table;
     this._sorted = null;
-    this._collator = new Intl.Collator('es', { numeric: true });
     this._listeners = [];
 
     const headerRow = table.tHead?.rows[0];
@@ -119,12 +120,9 @@ export class SortableTable {
 
     const factor = direction === 'ascending' ? 1 : -1;
     const rows = Array.from(tbody.rows).sort((a, b) => {
-      const av = this._cellValue(a, columnIndex);
-      const bv = this._cellValue(b, columnIndex);
-      const result =
-        type === 'number'
-          ? Number(av) - Number(bv)
-          : this._collator.compare(av, bv);
+      const av = getSortValue(a.cells[columnIndex]);
+      const bv = getSortValue(b.cells[columnIndex]);
+      const result = compareSortValues(av, bv, type);
       return result * factor;
     });
 
@@ -134,18 +132,6 @@ export class SortableTable {
   destroy() {
     this._listeners.forEach(({ button, onClick }) =>
       button.removeEventListener('click', onClick)
-    );
-  }
-
-  /**
-   * @param {HTMLTableRowElement} row
-   * @param {number} columnIndex
-   * @returns {string}
-   */
-  _cellValue(row, columnIndex) {
-    const cell = row.cells[columnIndex];
-    return (
-      cell?.getAttribute('data-sort-value') ?? cell?.textContent.trim() ?? ''
     );
   }
 

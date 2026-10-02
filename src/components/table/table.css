@@ -117,3 +117,9 @@ th[aria-sort] .c-table__sort-icon {
 th[aria-sort='descending'] .c-table__sort-icon {
   transform: rotate(180deg);
 }
+
+/* Enlaces en tabla: 6.29:1 en claro (#4f46e5/#ffffff),
+   6.64:1 en oscuro (#60a5fa/#1a1d23) */
+.c-table a {
+  color: var(--color-link);
+}

@@ -1,0 +1,118 @@
+/**
+ * Componente: Tree View
+ * .c-tree es una <ul> anidada convertida en role="tree" por JS.
+ * Sin JS es una lista anidada normal. Los nodos se distinguished visualmente
+ * con indentación. Un nodo expandido/plegado se indica con un icono de flecha.
+ * La selección se muestra con aria-selected="true" más un icono de marca.
+ */
+
+.c-tree {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.c-tree > li {
+  position: relative;
+}
+
+.c-tree li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.c-tree li > ul {
+  margin-inline-start: var(--space-4);
+}
+
+.c-tree__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--target-size-min);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+[role='treeitem'] > .c-tree__label {
+  display: flex;
+  block-size: var(--target-size-min);
+}
+
+[role='treeitem']:focus-visible > .c-tree__label {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+[role='treeitem']:hover > .c-tree__label {
+  background: var(--color-surface-muted);
+}
+
+/* Nodo seleccionado: sin marca (selección simple) no se distinguía de
+   los demás (WCAG 1.4.11). Barra inicial + negrita, sin depender solo
+   del color. primary-600 contra el fondo: 7.90:1 (surface) / 7.56:1
+   (hover) en claro; 3.53:1 / 3.17:1 en oscuro. */
+[role='treeitem'][aria-selected='true'] > .c-tree__label {
+  font-weight: var(--font-weight-bold);
+  box-shadow: inset 3px 0 0 var(--color-primary-600);
+}
+
+[dir='rtl'] [role='treeitem'][aria-selected='true'] > .c-tree__label {
+  box-shadow: inset -3px 0 0 var(--color-primary-600);
+}
+
+/* Indicador de expansión (flecha) */
+.c-tree__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: 1.5em;
+  block-size: 1.5em;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 150ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-tree__toggle {
+    transition: none;
+  }
+}
+
+[role='treeitem'][aria-expanded='false'] > .c-tree__label .c-tree__toggle {
+  transform: rotate(-90deg);
+}
+
+[role='treeitem'][aria-expanded='true'] > .c-tree__label .c-tree__toggle {
+  transform: rotate(0deg);
+}
+
+/* Indicador de selección */
+.c-tree__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+  border: 2px solid currentcolor;
+  border-radius: var(--radius-sm);
+}
+
+[role='treeitem'][aria-selected='true'] > .c-tree__label .c-tree__mark {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  box-shadow: inset 0 0 0 2px var(--color-surface);
+}
+
+/* Grupo anidado plegado */
+[role='treeitem'][aria-expanded='false'] > [role='group'] {
+  display: none;
+}

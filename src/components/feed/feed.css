@@ -1,0 +1,173 @@
+/**
+ * Componente: Feed (flujo de artículos)
+ * .c-feed es una <section> convertida en role="feed" por JS.
+ * Muestra artículos enfocables con carga infinita opcional.
+ */
+
+.c-feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.c-feed h2 {
+  margin: 0 0 var(--space-3) 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.c-feed [data-feed] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+[role='feed'] {
+  outline: none;
+}
+
+[role='feed'] article {
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+[role='feed'] article:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+[role='feed'] article:hover {
+  background: var(--color-surface-muted);
+}
+
+[role='feed'] article h3 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+[role='feed'] article p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+/* Enlace "Cargar más" (fuera de role="feed"; se oculta si hay carga infinita) */
+.c-feed__more[hidden] {
+  display: none;
+}
+
+.c-feed__more {
+  display: inline-block;
+  padding: var(--space-2) var(--space-3);
+  margin-top: var(--space-2);
+  color: var(--color-primary-600);
+  text-decoration: none;
+  border: 1px solid var(--color-primary-600);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+
+.c-feed__more:hover {
+  background: var(--color-primary-600);
+  color: white;
+}
+
+.c-feed__more:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-feed__more:disabled,
+.c-feed__more[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Estado de carga y error */
+.c-feed__status {
+  padding: var(--space-3);
+  margin: var(--space-3) 0;
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.c-feed__status button {
+  display: block;
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-primary-600);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.c-feed__status button:hover {
+  background: var(--color-primary-700);
+}
+
+.c-feed__status button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Modo oscuro: primary-600 da 3.53:1 (falla).
+   primary-500 cumple 5.13:1 contra surface. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .c-feed__more {
+    color: var(--color-primary-500);
+    border-color: var(--color-primary-500);
+  }
+
+  :root:not([data-theme='light']) .c-feed__more:hover {
+    background: var(--color-primary-500);
+  }
+
+  :root:not([data-theme='light']) .c-feed__status button {
+    background: var(--color-primary-500);
+  }
+}
+
+:root[data-theme='dark'] .c-feed__more {
+  color: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+}
+
+:root[data-theme='dark'] .c-feed__more:hover {
+  background: var(--color-primary-500);
+}
+
+:root[data-theme='dark'] .c-feed__status button {
+  background: var(--color-primary-500);
+}
+
+/* Spinner para carga */
+.c-spinner {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  border: 2px solid currentcolor;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 0.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-spinner {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

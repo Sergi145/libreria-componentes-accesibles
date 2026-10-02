@@ -32,16 +32,14 @@
 
 import { rovingTabindex } from '../../utils/roving-tabindex.js';
 import { dismissable } from '../../utils/dismiss.js';
-
-const ITEM_SELECTOR = '[role^="menuitem"]';
-
-function isEnabled(el) {
-  return (
-    !el.disabled &&
-    !el.hasAttribute('disabled') &&
-    el.getAttribute('aria-disabled') !== 'true'
-  );
-}
+import {
+  MENU_ITEM_SELECTOR,
+  isMenuItemEnabled,
+  getMenuItems,
+  focusMenuItem,
+  toggleMenuItem,
+  findMenuItemByChar,
+} from '../../utils/menu.js';
 
 export class MenuButton {
   /** @param {HTMLButtonElement} button */
@@ -89,9 +87,7 @@ export class MenuButton {
   }
 
   get _items() {
-    return Array.from(this.menu.querySelectorAll(ITEM_SELECTOR)).filter(
-      isEnabled
-    );
+    return getMenuItems(this.menu);
   }
 
   /** @param {{ focus?: 'first' | 'last' }} [options] */
@@ -99,7 +95,7 @@ export class MenuButton {
     if (!this.expanded) {
       this.button.setAttribute('aria-expanded', 'true');
       this.menu.hidden = false;
-      this._rovingDestroy = rovingTabindex(this.menu, ITEM_SELECTOR, {
+      this._rovingDestroy = rovingTabindex(this.menu, MENU_ITEM_SELECTOR, {
         orientation: 'vertical',
       });
       this._dismissDestroy = dismissable(this.menu, {
@@ -109,7 +105,7 @@ export class MenuButton {
     }
     const items = this._items;
     const target = focus === 'last' ? items[items.length - 1] : items[0];
-    if (target) this._focusItem(target);
+    if (target) focusMenuItem(this.menu, target);
   }
 
   /** @param {{ returnFocus?: boolean }} [options] */
@@ -136,13 +132,6 @@ export class MenuButton {
     this.menu.removeEventListener('click', this._onMenuClick);
   }
 
-  _focusItem(item) {
-    this._items.forEach((el) =>
-      el.setAttribute('tabindex', el === item ? '0' : '-1')
-    );
-    item.focus();
-  }
-
   _onButtonClick() {
     if (this.expanded) this.close({ returnFocus: false });
     else this.open({ focus: 'first' });
@@ -166,40 +155,18 @@ export class MenuButton {
     }
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     if (event.key.length === 1 && event.key !== ' ') {
-      this._typeahead(event.key, event.target.closest(ITEM_SELECTOR));
-    }
-  }
-
-  _typeahead(char, current) {
-    const items = this._items;
-    if (items.length === 0) return;
-    const start = items.indexOf(current) + 1;
-    const letter = char.toLocaleLowerCase();
-    for (let i = 0; i < items.length; i++) {
-      const item = items[(start + i) % items.length];
-      if (item.textContent.trim().toLocaleLowerCase().startsWith(letter)) {
-        this._focusItem(item);
-        return;
-      }
+      const current = event.target.closest(MENU_ITEM_SELECTOR);
+      const found = findMenuItemByChar(event.key, this._items, current);
+      if (found) focusMenuItem(this.menu, found);
     }
   }
 
   _onMenuClick(event) {
-    const item = event.target.closest(ITEM_SELECTOR);
-    if (!item || !isEnabled(item)) return;
-    const role = item.getAttribute('role');
+    const item = event.target.closest(MENU_ITEM_SELECTOR);
+    if (!item || !isMenuItemEnabled(item)) return;
 
-    if (role === 'menuitemcheckbox') {
-      const checked = item.getAttribute('aria-checked') === 'true';
-      item.setAttribute('aria-checked', String(!checked));
-    } else if (role === 'menuitemradio') {
-      const group = item.closest('[role="group"]') ?? this.menu;
-      group
-        .querySelectorAll('[role="menuitemradio"]')
-        .forEach((radio) =>
-          radio.setAttribute('aria-checked', String(radio === item))
-        );
-    } else {
+    const isToggleable = toggleMenuItem(item, this.menu);
+    if (!isToggleable) {
       this.close({ returnFocus: true });
     }
   }

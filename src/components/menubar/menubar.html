@@ -1,0 +1,200 @@
+<!--
+  Componente: Menubar (barra horizontal)
+  Una <ul role="menubar"> con elementos que abren menús verticales.
+  Cada elemento de la barra es un <button role="menuitem">; los que
+  abren menú llevan aria-haspopup="menu" y apuntan a su menú con
+  aria-controls. Sin submenús anidados.
+-->
+
+<!-- Menú básico con acciones -->
+<ul class="c-menubar" role="menubar" aria-label="Edición">
+  <li role="none">
+    <button
+      type="button"
+      class="c-menubar__item"
+      role="menuitem"
+      aria-haspopup="menu"
+      aria-expanded="false"
+      aria-controls="menu-archivo"
+    >
+      Archivo
+    </button>
+    <ul
+      id="menu-archivo"
+      class="c-menubar__menu"
+      role="menu"
+      aria-labelledby="menu-archivo-btn"
+      hidden
+    >
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Nuevo
+        </button>
+      </li>
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Abrir…
+        </button>
+      </li>
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Guardar
+        </button>
+      </li>
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Guardar como…
+        </button>
+      </li>
+    </ul>
+  </li>
+  <li role="none">
+    <button
+      type="button"
+      class="c-menubar__item"
+      role="menuitem"
+      aria-haspopup="menu"
+      aria-expanded="false"
+      aria-controls="menu-editar"
+    >
+      Editar
+    </button>
+    <ul
+      id="menu-editar"
+      class="c-menubar__menu"
+      role="menu"
+      aria-labelledby="menu-editar-btn"
+      hidden
+    >
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Deshacer
+        </button>
+      </li>
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Rehacer
+        </button>
+      </li>
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Cortar
+        </button>
+      </li>
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Copiar
+        </button>
+      </li>
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Pegar
+        </button>
+      </li>
+    </ul>
+  </li>
+  <li role="none">
+    <button
+      type="button"
+      class="c-menubar__item"
+      role="menuitem"
+      aria-haspopup="menu"
+      aria-expanded="false"
+      aria-controls="menu-vista"
+    >
+      Vista
+    </button>
+    <ul
+      id="menu-vista"
+      class="c-menubar__menu"
+      role="menu"
+      aria-labelledby="menu-vista-btn"
+      hidden
+    >
+      <li role="none">
+        <button
+          type="button"
+          class="c-menubar__option"
+          role="menuitemcheckbox"
+          aria-checked="true"
+        >
+          Barra lateral
+        </button>
+      </li>
+      <li role="none">
+        <button
+          type="button"
+          class="c-menubar__option"
+          role="menuitemcheckbox"
+          aria-checked="false"
+        >
+          Miniatura
+        </button>
+      </li>
+      <li role="none">
+        <ul class="c-menubar__group" role="group" aria-label="Zoom">
+          <li role="none">
+            <button
+              type="button"
+              class="c-menubar__option"
+              role="menuitemradio"
+              aria-checked="false"
+            >
+              100%
+            </button>
+          </li>
+          <li role="none">
+            <button
+              type="button"
+              class="c-menubar__option"
+              role="menuitemradio"
+              aria-checked="true"
+            >
+              Ajustar a la ventana
+            </button>
+          </li>
+          <li role="none">
+            <button
+              type="button"
+              class="c-menubar__option"
+              role="menuitemradio"
+              aria-checked="false"
+            >
+              Ancho completo
+            </button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li role="none">
+    <button
+      type="button"
+      class="c-menubar__item"
+      role="menuitem"
+      aria-haspopup="menu"
+      aria-expanded="false"
+      aria-controls="menu-ayuda"
+    >
+      Ayuda
+    </button>
+    <ul
+      id="menu-ayuda"
+      class="c-menubar__menu"
+      role="menu"
+      aria-labelledby="menu-ayuda-btn"
+      hidden
+    >
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Manual
+        </button>
+      </li>
+      <li role="none">
+        <button type="button" class="c-menubar__option" role="menuitem">
+          Acerca de
+        </button>
+      </li>
+    </ul>
+  </li>
+</ul>

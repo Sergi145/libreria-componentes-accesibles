@@ -290,6 +290,14 @@ const stories = [
     id: 'componentes-window-splitter--sin-js',
     name: 'Window splitter / sin JavaScript',
   },
+
+  // Feed
+  { id: 'componentes-feed--basica', name: 'Feed / básica' },
+  {
+    id: 'componentes-feed--con-carga-infinita',
+    name: 'Feed / con carga infinita',
+  },
+  { id: 'componentes-feed--con-error', name: 'Feed / con error' },
 ];
 
 for (const story of stories) {
