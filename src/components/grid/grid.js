@@ -1,24 +1,29 @@
 /**
- * Componente: Grid (tabla de datos navegable)
+ * Componente: Grid (tabla de datos navegable y ordenable)
  * Una <table> que el JS convierte en role="grid".
  * Implementa el patrón WAI-ARIA APG "Grid":
  * https://www.w3.org/WAI/ARIA/apg/patterns/grid/
  *
- * Teclado (solo lectura, sin selección):
+ * Teclado:
  *  - ↓/↑: siguiente/anterior fila
- *  - ←/→: siguiente/anterior celda de la fila
+ *  - ←/→: siguiente/anterior celda (sin envoltura)
  *  - Inicio/Fin: primera/última celda de la fila
- *  - Ctrl+Inicio: primera celda del grid
- *  - Ctrl+Fin: última celda del grid
+ *  - Ctrl+Inicio/Ctrl+Fin: primera/última celda del grid
  *  - RePág/AvPág: siguiente/anterior página (data-page-size filas)
+ *  - En cabeceras ordenables: Enter/Space ordena (ascendente/descendente)
  *
- * Sin JS, el marcado es una tabla semántica normal.
- * Con JS se agrega: role="grid", tabindex, navegación por teclado.
+ * Ordenación:
+ *  - Cabeceras con data-sort="text|number" son ordenables
+ *  - Clic o Enter/Space ordena; primera vez ascendente, segunda descendente
+ *  - Solo una cabecera tiene aria-sort a la vez
+ *  - El foco sigue en el botón de la cabecera tras ordenar
  *
  * Uso:
  *   import { Grid, initGrids } from './grid.js';
  *   new Grid(document.querySelector('[data-grid]'));
  */
+
+import { compareSortValues } from '../../utils/sort.js';
 
 export class Grid {
   /** @param {HTMLElement} el [data-grid] sobre <table> */
@@ -29,14 +34,62 @@ export class Grid {
     this.el = el;
     this._listeners = [];
     this._initialState = [];
+    this._sortColumn = null; // { header, direction }
 
     // Poner role="grid"
     el.setAttribute('role', 'grid');
 
+    // Procesar cabeceras ordenables
+    const headers = Array.from(el.querySelectorAll('th[data-sort]'));
+    headers.forEach((header) => {
+      // Crear botón dentro del th
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'c-grid__sort-button';
+      button.textContent = header.textContent;
+      button.tabIndex = -1;
+
+      // Guardar estado inicial
+      this._initialState.push({
+        el: header,
+        hadDataSort: true,
+        originalContent: header.innerHTML,
+      });
+
+      // Reemplazar contenido del th con el botón
+      header.innerHTML = '';
+      header.appendChild(button);
+
+      // Listener para clicks y Enter/Space
+      const onClick = (event) => {
+        if (
+          event.type === 'keydown' &&
+          event.key !== 'Enter' &&
+          event.key !== ' '
+        ) {
+          return;
+        }
+        event.preventDefault();
+        this._sortBy(header);
+      };
+      button.addEventListener('click', onClick);
+      button.addEventListener('keydown', onClick);
+      this._listeners.push({
+        target: button,
+        listener: onClick,
+        type: 'click',
+      });
+      this._listeners.push({
+        target: button,
+        listener: onClick,
+        type: 'keydown',
+      });
+    });
+
     // Obtener todas las celdas
     const allCells = this._getAllCells();
 
-    // Guardar estado inicial para destroy()
+    // Guardar estado inicial de celdas
     allCells.forEach((cell) => {
       this._initialState.push({
         el: cell,
@@ -52,7 +105,9 @@ export class Grid {
 
       // Si la celda contiene un único enlace o botón, poner el foco ahí
       const link = cell.querySelector('a:only-child');
-      const button = cell.querySelector('button:only-child');
+      const button = cell.querySelector(
+        'button:only-child:not(.c-grid__sort-button)'
+      );
       if (link) {
         link.setAttribute('tabindex', '0');
         cell.setAttribute('tabindex', '-1');
@@ -90,15 +145,27 @@ export class Grid {
     this.el.removeAttribute('role');
 
     // Restaurar estado inicial
-    this._initialState.forEach(({ el: cell, hadTabindex, hadRole }) => {
-      if (!hadTabindex) cell.removeAttribute('tabindex');
-      if (!hadRole) cell.removeAttribute('role');
+    this._initialState.forEach(
+      ({ el: element, hadTabindex, hadRole, hadDataSort, originalContent }) => {
+        // Todos los elementos: quitar role="gridcell"
+        element.removeAttribute('role');
+        if (!hadTabindex) element.removeAttribute('tabindex');
 
-      const link = cell.querySelector('a');
-      const button = cell.querySelector('button');
-      if (link) link.removeAttribute('tabindex');
-      if (button) button.removeAttribute('tabindex');
-    });
+        if (element.tagName === 'TH' && hadDataSort) {
+          // Restaurar contenido original del th ordenable
+          element.innerHTML = originalContent;
+          element.removeAttribute('aria-sort');
+        } else if (element.tagName === 'TD') {
+          // Quitar tabindex de links y buttons dentro de celdas de datos
+          const link = element.querySelector('a');
+          const button = element.querySelector(
+            'button:not(.c-grid__sort-button)'
+          );
+          if (link) link.removeAttribute('tabindex');
+          if (button) button.removeAttribute('tabindex');
+        }
+      }
+    );
     this._initialState = [];
   }
 
@@ -133,7 +200,9 @@ export class Grid {
     cell.setAttribute('tabindex', '0');
 
     const link = cell.querySelector('a:only-child');
-    const button = cell.querySelector('button:only-child');
+    const button = cell.querySelector(
+      'button:only-child:not(.c-grid__sort-button)'
+    );
     if (link) {
       link.focus();
     } else if (button) {
@@ -141,6 +210,63 @@ export class Grid {
     } else {
       cell.focus();
     }
+  }
+
+  _sortBy(header) {
+    const sortType = header.getAttribute('data-sort');
+    const columnIndex = Array.from(header.parentElement.children).indexOf(
+      header
+    );
+    const tbody = this.el.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    // Determinar dirección
+    let direction = 'asc';
+    if (this._sortColumn?.header === header) {
+      direction = this._sortColumn.direction === 'asc' ? 'desc' : 'asc';
+    }
+
+    // Actualizar aria-sort
+    Array.from(this.el.querySelectorAll('[aria-sort]')).forEach((h) => {
+      h.removeAttribute('aria-sort');
+    });
+    header.setAttribute(
+      'aria-sort',
+      direction === 'asc' ? 'ascending' : 'descending'
+    );
+
+    // Ordenar filas
+    rows.sort((rowA, rowB) => {
+      const cellA = rowA.children[columnIndex];
+      const cellB = rowB.children[columnIndex];
+      const valueA = cellA.textContent.trim();
+      const valueB = cellB.textContent.trim();
+
+      let result = compareSortValues(valueA, valueB, sortType);
+      return direction === 'asc' ? result : -result;
+    });
+
+    // Reordenar filas en el DOM
+    rows.forEach((row) => {
+      tbody.appendChild(row);
+    });
+
+    // Mantener registro del ordenamiento actual
+    this._sortColumn = { header, direction };
+
+    // Mantener foco en el botón de la cabecera
+    const button = header.querySelector('.c-grid__sort-button');
+    if (button) {
+      button.focus();
+    }
+
+    // Disparar evento de cambio
+    this.el.dispatchEvent(
+      new CustomEvent('grid:sort', {
+        bubbles: true,
+        detail: { column: columnIndex, direction },
+      })
+    );
   }
 
   _onKeydown(event) {
@@ -158,7 +284,7 @@ export class Grid {
       10
     );
 
-    // ↓ siguiente fila, misma columna
+    // ↓ siguiente fila
     if (key === 'ArrowDown') {
       event.preventDefault();
       if (rowIndex < rows.length - 1) {
@@ -171,7 +297,7 @@ export class Grid {
       return;
     }
 
-    // ↑ anterior fila, misma columna
+    // ↑ anterior fila
     if (key === 'ArrowUp') {
       event.preventDefault();
       if (rowIndex > 0) {
@@ -184,7 +310,7 @@ export class Grid {
       return;
     }
 
-    // → siguiente celda de la fila (sin envoltura)
+    // → siguiente celda
     if (key === 'ArrowRight') {
       event.preventDefault();
       if (cellIndexInRow < cellsInRow.length - 1) {
@@ -193,7 +319,7 @@ export class Grid {
       return;
     }
 
-    // ← anterior celda de la fila (sin envoltura)
+    // ← anterior celda
     if (key === 'ArrowLeft') {
       event.preventDefault();
       if (cellIndexInRow > 0) {
@@ -238,7 +364,7 @@ export class Grid {
       return;
     }
 
-    // PageDown: siguiente página (pageSize filas)
+    // PageDown
     if (key === 'PageDown') {
       event.preventDefault();
       const targetRowIndex = Math.min(rowIndex + pageSize, rows.length - 1);
@@ -250,7 +376,7 @@ export class Grid {
       return;
     }
 
-    // PageUp: página anterior (pageSize filas)
+    // PageUp
     if (key === 'PageUp') {
       event.preventDefault();
       const targetRowIndex = Math.max(rowIndex - pageSize, 0);
