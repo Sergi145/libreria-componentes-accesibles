@@ -35,6 +35,7 @@ export class Tree {
     this._rovingDestroy = null;
     this._typeahead = null;
     this._listeners = [];
+    this._lastSelectedItem = null;
 
     // Poner role="tree" en el contenedor
     el.setAttribute('role', 'tree');
@@ -236,12 +237,43 @@ export class Tree {
     const visibleItems = this._getVisibleItems();
     const currentIndex = visibleItems.indexOf(current);
 
+    // Space: alternar en múltiple, o seleccionar en simple
+    if (key === ' ') {
+      event.preventDefault();
+      if (this.multiple) {
+        const selected = current.getAttribute('aria-selected') !== 'true';
+        current.setAttribute('aria-selected', String(selected));
+        this.el.dispatchEvent(
+          new CustomEvent('tree:change', {
+            bubbles: true,
+            detail: { value: this.value },
+          })
+        );
+      } else {
+        this._selectItem(current);
+      }
+      return;
+    }
+
     // ↓ siguiente visible
     if (key === 'ArrowDown') {
       event.preventDefault();
       if (currentIndex < visibleItems.length - 1) {
-        visibleItems[currentIndex + 1].focus();
-        this._selectItem(visibleItems[currentIndex + 1]);
+        const next = visibleItems[currentIndex + 1];
+        next.focus();
+        if (event.shiftKey && this.multiple) {
+          // Shift+↓: alternar selección del siguiente
+          const selected = next.getAttribute('aria-selected') !== 'true';
+          next.setAttribute('aria-selected', String(selected));
+          this.el.dispatchEvent(
+            new CustomEvent('tree:change', {
+              bubbles: true,
+              detail: { value: this.value },
+            })
+          );
+        } else {
+          this._selectItem(next);
+        }
       }
       return;
     }
@@ -250,8 +282,21 @@ export class Tree {
     if (key === 'ArrowUp') {
       event.preventDefault();
       if (currentIndex > 0) {
-        visibleItems[currentIndex - 1].focus();
-        this._selectItem(visibleItems[currentIndex - 1]);
+        const prev = visibleItems[currentIndex - 1];
+        prev.focus();
+        if (event.shiftKey && this.multiple) {
+          // Shift+↑: alternar selección del anterior
+          const selected = prev.getAttribute('aria-selected') !== 'true';
+          prev.setAttribute('aria-selected', String(selected));
+          this.el.dispatchEvent(
+            new CustomEvent('tree:change', {
+              bubbles: true,
+              detail: { value: this.value },
+            })
+          );
+        } else {
+          this._selectItem(prev);
+        }
       }
       return;
     }
@@ -295,8 +340,22 @@ export class Tree {
     if (key === 'Home') {
       event.preventDefault();
       if (visibleItems.length > 0) {
-        visibleItems[0].focus();
-        this._selectItem(visibleItems[0]);
+        const first = visibleItems[0];
+        first.focus();
+        if (event.ctrlKey && event.shiftKey && this.multiple) {
+          // Ctrl+Shift+Home: seleccionar desde inicio hasta actual
+          for (let i = 0; i <= currentIndex; i++) {
+            visibleItems[i].setAttribute('aria-selected', 'true');
+          }
+          this.el.dispatchEvent(
+            new CustomEvent('tree:change', {
+              bubbles: true,
+              detail: { value: this.value },
+            })
+          );
+        } else {
+          this._selectItem(first);
+        }
       }
       return;
     }
@@ -305,8 +364,22 @@ export class Tree {
     if (key === 'End') {
       event.preventDefault();
       if (visibleItems.length > 0) {
-        visibleItems[visibleItems.length - 1].focus();
-        this._selectItem(visibleItems[visibleItems.length - 1]);
+        const last = visibleItems[visibleItems.length - 1];
+        last.focus();
+        if (event.ctrlKey && event.shiftKey && this.multiple) {
+          // Ctrl+Shift+End: seleccionar desde actual hasta fin
+          for (let i = currentIndex; i < visibleItems.length; i++) {
+            visibleItems[i].setAttribute('aria-selected', 'true');
+          }
+          this.el.dispatchEvent(
+            new CustomEvent('tree:change', {
+              bubbles: true,
+              detail: { value: this.value },
+            })
+          );
+        } else {
+          this._selectItem(last);
+        }
       }
       return;
     }
@@ -323,6 +396,26 @@ export class Tree {
             if (childGroup) childGroup.hidden = false;
           }
         });
+      }
+      return;
+    }
+
+    // Ctrl+A: seleccionar todos los visibles (o ninguno si ya todos están seleccionados)
+    if (key === 'a' && (event.ctrlKey || event.metaKey)) {
+      if (this.multiple) {
+        event.preventDefault();
+        const allSelected = visibleItems.every(
+          (item) => item.getAttribute('aria-selected') === 'true'
+        );
+        visibleItems.forEach((item) => {
+          item.setAttribute('aria-selected', String(!allSelected));
+        });
+        this.el.dispatchEvent(
+          new CustomEvent('tree:change', {
+            bubbles: true,
+            detail: { value: this.value },
+          })
+        );
       }
       return;
     }
@@ -350,8 +443,41 @@ export class Tree {
     const item = event.target.closest('[role="treeitem"]');
     if (!item) return;
 
-    // Clic en item: seleccionar
-    this._selectItem(item);
+    if (event.shiftKey && this.multiple && this._lastSelectedItem) {
+      // Shift+clic: seleccionar rango desde el último seleccionado
+      const visibleItems = this._getVisibleItems();
+      const lastIndex = visibleItems.indexOf(this._lastSelectedItem);
+      const currentIndex = visibleItems.indexOf(item);
+      if (lastIndex !== -1 && currentIndex !== -1) {
+        const [start, end] =
+          lastIndex <= currentIndex
+            ? [lastIndex, currentIndex]
+            : [currentIndex, lastIndex];
+        for (let i = start; i <= end; i++) {
+          visibleItems[i].setAttribute('aria-selected', 'true');
+        }
+        this.el.dispatchEvent(
+          new CustomEvent('tree:change', {
+            bubbles: true,
+            detail: { value: this.value },
+          })
+        );
+      }
+    } else if (this.multiple) {
+      // Clic sin shift: alternar en múltiple
+      const selected = item.getAttribute('aria-selected') !== 'true';
+      item.setAttribute('aria-selected', String(selected));
+      this._lastSelectedItem = item;
+      this.el.dispatchEvent(
+        new CustomEvent('tree:change', {
+          bubbles: true,
+          detail: { value: this.value },
+        })
+      );
+    } else {
+      // Clic en simple: seleccionar
+      this._selectItem(item);
+    }
     item.focus();
   }
 
@@ -359,6 +485,7 @@ export class Tree {
     Array.from(this.el.querySelectorAll('[role="treeitem"]')).forEach((i) => {
       i.setAttribute('aria-selected', String(i === item));
     });
+    this._lastSelectedItem = item;
     this.el.dispatchEvent(
       new CustomEvent('tree:change', {
         bubbles: true,
