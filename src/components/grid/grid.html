@@ -1,0 +1,55 @@
+<!--
+  Componente: Grid (tabla de datos navegable)
+  Una <table> que el JS convierte en role="grid" con navegación por celdas.
+  Implementa el patrón WAI-ARIA APG "Grid":
+  https://www.w3.org/WAI/ARIA/apg/patterns/grid/
+
+  Sin JS es una tabla semántica normal. Con JS se agrega navegación
+  por teclado: flechas, Inicio/Fin, Ctrl+Inicio/Fin, RePág/AvPág.
+-->
+
+<table class="c-table c-grid" data-grid data-page-size="5">
+  <caption>
+    Productos disponibles
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Nombre</th>
+      <th scope="col">Precio</th>
+      <th scope="col">Stock</th>
+      <th scope="col">Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Laptop</td>
+      <td>$999</td>
+      <td>15</td>
+      <td><a href="#laptop">Ver detalles</a></td>
+    </tr>
+    <tr>
+      <td>Mouse</td>
+      <td>$25</td>
+      <td>100</td>
+      <td><button type="button">Agregar</button></td>
+    </tr>
+    <tr>
+      <td>Teclado</td>
+      <td>$75</td>
+      <td>50</td>
+      <td><a href="#keyboard">Ver detalles</a></td>
+    </tr>
+    <tr>
+      <td>Monitor</td>
+      <td>$299</td>
+      <td>20</td>
+      <td><button type="button">Agregar</button></td>
+    </tr>
+    <tr>
+      <td>Auriculares</td>
+      <td>$120</td>
+      <td>35</td>
+      <td><a href="#headphones">Ver detalles</a></td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,33 @@
+/**
+ * Componente: Grid (tabla de datos navegable)
+ * .c-grid es una <table> convertida en role="grid" por JS.
+ * Extiende .c-table con navegación por teclado y anillo de foco de celda.
+ * Importa table.css para los estilos base de tabla.
+ */
+
+@import '../table/table.css';
+
+/* Foco visible en celda */
+[role='grid'] td:focus-within {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: calc(
+    -1 * (var(--focus-ring-width) + var(--focus-ring-offset))
+  );
+}
+
+/* Foco en enlaces y botones dentro de celdas */
+[role='grid'] a:focus-visible,
+[role='grid'] button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Celda navegable pero sin foco */
+[role='grid'] td[tabindex='-1'] {
+  cursor: default;
+}
+
+/* Celda activa */
+[role='grid'] td[tabindex='0'] {
+  cursor: pointer;
+}
