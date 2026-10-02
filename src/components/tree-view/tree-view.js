@@ -451,6 +451,22 @@ export class Tree {
     const item = event.target.closest('[role="treeitem"]');
     if (!item) return;
 
+    // Clic en botón de flecha: expandir/plegar
+    const toggleButton = event.target.closest('.c-tree__toggle');
+    if (toggleButton) {
+      if (item.getAttribute('aria-expanded') === 'true') {
+        item.setAttribute('aria-expanded', 'false');
+        const group = item.querySelector(':scope > [role="group"]');
+        if (group) group.hidden = true;
+      } else {
+        item.setAttribute('aria-expanded', 'true');
+        const group = item.querySelector(':scope > [role="group"]');
+        if (group) group.hidden = false;
+      }
+      item.focus();
+      return;
+    }
+
     if (event.shiftKey && this.multiple && this._lastSelectedItem) {
       // Shift+clic: seleccionar rango desde el último seleccionado
       const visibleItems = this._getVisibleItems();
