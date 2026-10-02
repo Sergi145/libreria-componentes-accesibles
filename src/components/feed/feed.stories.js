@@ -37,9 +37,9 @@ function createFeed(withLoadMore = false, withError = false) {
           <h3>Cuarto artículo</h3>
           <p>Resumen del cuarto artículo con detalles adicionales y contexto importante.</p>
         </article>
-
-        ${withLoadMore ? '<a class="c-feed__more" data-feed-more href="#">Cargar más artículos</a>' : ''}
       </section>
+
+      <a class="c-feed__more" data-feed-more href="#">Cargar más artículos</a>
     </div>
   `;
 

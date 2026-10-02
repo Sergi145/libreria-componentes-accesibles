@@ -49,8 +49,12 @@ export class Feed {
     el.addEventListener('keydown', onKeydown);
     this._listeners.push({ target: el, listener: onKeydown, type: 'keydown' });
 
-    // Si hay loadMore, crear IntersectionObserver
+    // El enlace «Cargar más» vive fuera del feed (role="feed" solo admite artículos)
+    this._moreLink = el.parentElement?.querySelector('[data-feed-more]');
+    this._statusEl = null;
+
     if (this.loadMore) {
+      if (this._moreLink) this._moreLink.hidden = true;
       this._setupIntersectionObserver();
     }
   }
@@ -111,20 +115,16 @@ export class Feed {
     this.el.setAttribute('aria-busy', 'true');
 
     try {
-      // Mostrar "Cargando..."
-      const statusEl = this._createStatusElement('Cargando más artículos...');
-      this.el.appendChild(statusEl);
+      this._showStatus(this._createStatusElement('Cargando más artículos…'));
 
       const newArticles = await this.loadMore();
 
-      // Eliminar elemento de estado
-      statusEl.remove();
+      this._showStatus(null);
 
       if (!newArticles || newArticles.length === 0) {
         // Fin de la carga
         this._isFinished = true;
-        const finalStatus = this._createStatusElement('No hay más artículos');
-        this.el.appendChild(finalStatus);
+        this._showStatus(this._createStatusElement('No hay más artículos'));
 
         // Actualizar aria-setsize en todos los artículos
         const allArticles = Array.from(this.el.querySelectorAll('article'));
@@ -140,12 +140,12 @@ export class Feed {
         // Agregar nuevos artículos
         newArticles.forEach((articleData) => {
           const article = document.createElement('article');
-          article.innerHTML = `<h3>${articleData.title}</h3><p>${articleData.description}</p>`;
-          article.setAttribute('aria-label', articleData.title);
-          this.el.insertBefore(
-            article,
-            this.el.querySelector('.c-feed__more') || null
-          );
+          const title = document.createElement('h3');
+          title.textContent = articleData.title;
+          const description = document.createElement('p');
+          description.textContent = articleData.description;
+          article.append(title, description);
+          this.el.appendChild(article);
         });
 
         // Actualizar aria-posinset y aria-setsize
@@ -161,11 +161,9 @@ export class Feed {
       }
     } catch (error) {
       // Error en la carga
-      const errorEl = this._createStatusElement(
-        'No se pudieron cargar más artículos',
-        true
+      this._showStatus(
+        this._createStatusElement('No se pudieron cargar más artículos', true)
       );
-      this.el.appendChild(errorEl);
 
       // Anunciar error
       this._announce('No se pudieron cargar más artículos');
@@ -173,6 +171,13 @@ export class Feed {
       this._isLoading = false;
       this.el.setAttribute('aria-busy', 'false');
     }
+  }
+
+  // role="feed" solo admite artículos como hijos: el estado va justo después.
+  _showStatus(statusEl) {
+    this._statusEl?.remove();
+    this._statusEl = statusEl;
+    if (statusEl) this.el.after(statusEl);
   }
 
   _createStatusElement(text, withRetry = false) {
@@ -291,6 +296,9 @@ export class Feed {
       target.removeEventListener(type, listener);
     });
     this._listeners = [];
+
+    this._showStatus(null);
+    if (this._moreLink) this._moreLink.hidden = false;
 
     // Quitar role="feed"
     this.el.removeAttribute('role');

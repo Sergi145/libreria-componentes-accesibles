@@ -54,7 +54,11 @@
   font-size: 0.875rem;
 }
 
-/* Enlace "Cargar más" */
+/* Enlace "Cargar más" (fuera de role="feed"; se oculta si hay carga infinita) */
+.c-feed__more[hidden] {
+  display: none;
+}
+
 .c-feed__more {
   display: inline-block;
   padding: var(--space-2) var(--space-3);

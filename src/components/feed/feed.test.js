@@ -3,8 +3,9 @@ import { Feed, initFeeds } from './feed.js';
 
 function buildMarkup() {
   document.body.innerHTML = `
-    <section class="c-feed" id="feed-test" data-feed aria-labelledby="feed-title">
-      <h2 id="feed-title">Noticias</h2>
+    <div class="c-feed">
+    <h2 id="feed-title">Noticias</h2>
+    <section id="feed-test" data-feed aria-labelledby="feed-title">
       <article>
         <h3>Artículo 1</h3>
         <p>Resumen 1</p>
@@ -17,8 +18,9 @@ function buildMarkup() {
         <h3>Artículo 3</h3>
         <p>Resumen 3</p>
       </article>
-      <a class="c-feed__more" data-feed-more href="#">Cargar más</a>
     </section>
+    <a class="c-feed__more" data-feed-more href="#">Cargar más</a>
+    </div>
   `;
 }
 
@@ -167,6 +169,41 @@ describe('Feed', () => {
     const feed = new Feed($('[data-feed]'));
 
     expect(feed.loadMore).toBeUndefined();
+  });
+
+  it('sin loadMore el enlace «Cargar más» sigue visible', () => {
+    buildMarkup();
+    new Feed($('[data-feed]'));
+
+    expect($('[data-feed-more]').hidden).toBe(false);
+  });
+
+  it('con loadMore oculta el enlace y destroy() lo restaura', () => {
+    buildMarkup();
+    const feed = new Feed($('[data-feed]'), { loadMore: vi.fn() });
+    expect($('[data-feed-more]').hidden).toBe(true);
+
+    feed.destroy();
+    expect($('[data-feed-more]').hidden).toBe(false);
+  });
+
+  it('los mensajes de estado se colocan fuera de role="feed"', async () => {
+    buildMarkup();
+    const feed = new Feed($('[data-feed]'), {
+      loadMore: vi.fn().mockRejectedValue(new Error('fallo')),
+    });
+
+    await feed._load();
+
+    expect($('[role="feed"] .c-feed__status')).toBeNull();
+    expect($('[role="feed"]').nextElementSibling.className).toBe(
+      'c-feed__status'
+    );
+    expect(
+      Array.from($('[role="feed"]').children).every(
+        (child) => child.tagName === 'ARTICLE'
+      )
+    ).toBe(true);
   });
 
   it('Feed con loadMore almacena la función', async () => {
