@@ -38,6 +38,9 @@ export class Tree {
 
     // Poner role="tree" en el contenedor
     el.setAttribute('role', 'tree');
+    if (el.hasAttribute('data-multiple')) {
+      el.setAttribute('aria-multiselectable', 'true');
+    }
 
     // Procesar cada nodo (li)
     let labelCounter = 0;
@@ -124,12 +127,31 @@ export class Tree {
     }
   }
 
+  get multiple() {
+    return this.el.getAttribute('aria-multiselectable') === 'true';
+  }
+
   get value() {
     const selected = Array.from(
       this.el.querySelectorAll('[role="treeitem"][aria-selected="true"]')
     );
+    if (this.multiple) {
+      return selected.map(
+        (item) => item.getAttribute('data-value') || item.textContent
+      );
+    }
     if (selected.length === 0) return null;
     return selected[0].getAttribute('data-value') || selected[0].textContent;
+  }
+
+  set value(v) {
+    const values = Array.isArray(v) ? v : [v];
+    Array.from(this.el.querySelectorAll('[role="treeitem"]')).forEach(
+      (item) => {
+        const itemValue = item.getAttribute('data-value') || item.textContent;
+        item.setAttribute('aria-selected', String(values.includes(itemValue)));
+      }
+    );
   }
 
   destroy() {
