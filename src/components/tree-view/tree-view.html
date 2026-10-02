@@ -1,0 +1,61 @@
+<!--
+  Componente: Tree View (árbol expandible)
+  Una <ul> anidada que el JS convierte en role="tree". Sin JS es una
+  lista anidada legible; con JS se convierte en árbol con roles ARIA.
+  Los nodos con hijos llevan data-expanded="true|false" para indicar
+  el estado inicial de expansión.
+-->
+
+<ul
+  class="c-tree"
+  id="tree-ejemplo"
+  data-tree
+  aria-labelledby="tree-ejemplo-label"
+>
+  <li data-value="docs">
+    <span class="c-tree__label">Documentos</span>
+    <ul>
+      <li data-value="readme">
+        <span class="c-tree__label">README.md</span>
+      </li>
+      <li data-value="license">
+        <span class="c-tree__label">LICENSE</span>
+      </li>
+    </ul>
+  </li>
+  <li data-value="src" data-expanded="true">
+    <span class="c-tree__label">src/</span>
+    <ul>
+      <li data-value="components">
+        <span class="c-tree__label">components/</span>
+        <ul>
+          <li data-value="button">
+            <span class="c-tree__label">button.js</span>
+          </li>
+          <li data-value="modal">
+            <span class="c-tree__label">modal.js</span>
+          </li>
+        </ul>
+      </li>
+      <li data-value="utils">
+        <span class="c-tree__label">utils/</span>
+        <ul>
+          <li data-value="helpers">
+            <span class="c-tree__label">helpers.js</span>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li data-value="dist" data-expanded="false">
+    <span class="c-tree__label">dist/</span>
+    <ul>
+      <li data-value="index">
+        <span class="c-tree__label">index.js</span>
+      </li>
+    </ul>
+  </li>
+  <li data-value="package">
+    <span class="c-tree__label">package.json</span>
+  </li>
+</ul>

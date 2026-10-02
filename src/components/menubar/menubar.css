@@ -1,0 +1,126 @@
+/**
+ * Componente: Menubar
+ * .c-menubar es una <ul> horizontal con botones que abren menús verticales.
+ * Roving tabindex: Tab entra una sola vez. Flechas recorren la barra con envoltura.
+ * Sin submenús anidados. El indicador de los elementos marcados sale de
+ * aria-checked.
+ */
+
+.c-menubar {
+  display: flex;
+  gap: 0;
+  margin: 0;
+  padding: var(--space-1);
+  list-style: none;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.c-menubar > li {
+  position: relative;
+}
+
+.c-menubar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: var(--target-size-min);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.c-menubar__item:hover,
+.c-menubar__item:focus {
+  background: var(--color-surface-muted);
+}
+
+.c-menubar__item:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-menubar__menu {
+  position: absolute;
+  z-index: var(--z-overlay);
+  inset-block-start: 100%;
+  inset-inline-start: 0;
+  margin: var(--space-1) 0 0;
+  padding: var(--space-1);
+  min-inline-size: 12rem;
+  list-style: none;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.c-menubar__menu[hidden] {
+  display: none;
+}
+
+.c-menubar__group {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.c-menubar__option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  inline-size: 100%;
+  min-block-size: var(--target-size-min);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.c-menubar__option:hover,
+.c-menubar__option:focus {
+  background: var(--color-surface-muted);
+}
+
+.c-menubar__option:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.c-menubar__option:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+/* Indicador de casillas y radios, a partir de aria-checked. */
+.c-menubar__option[role='menuitemcheckbox']::before,
+.c-menubar__option[role='menuitemradio']::before {
+  content: '';
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+  border: 2px solid currentcolor;
+}
+
+.c-menubar__option[role='menuitemcheckbox']::before {
+  border-radius: var(--radius-sm);
+}
+
+.c-menubar__option[role='menuitemradio']::before {
+  border-radius: 50%;
+}
+
+.c-menubar__option[aria-checked='true']::before {
+  background: var(--color-primary-600);
+  border-color: var(--color-primary-600);
+  box-shadow: inset 0 0 0 2px var(--color-surface);
+}
