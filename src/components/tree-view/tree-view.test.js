@@ -180,4 +180,95 @@ describe('Tree', () => {
     expect(trees[0]).toBeInstanceOf(Tree);
     expect(trees[1]).toBeInstanceOf(Tree);
   });
+
+  describe('teclado', () => {
+    const item = (value) => $(`[data-value="${value}"]`);
+    const press = (key, opts = {}) =>
+      document.activeElement.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key,
+          bubbles: true,
+          cancelable: true,
+          ...opts,
+        })
+      );
+    const tabStops = () =>
+      Array.from($$('[role="treeitem"]'))
+        .filter((i) => i.getAttribute('tabindex') === '0')
+        .map((i) => i.dataset.value);
+
+    it('las hojas no llevan aria-expanded', () => {
+      buildMarkup();
+      new Tree($('[data-tree]'));
+
+      expect(item('readme').hasAttribute('aria-expanded')).toBe(false);
+      expect(item('package').hasAttribute('aria-expanded')).toBe(false);
+      expect(item('dist').getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('↓ avanza un solo nodo y mueve el tabindex="0" con el foco', () => {
+      buildMarkup();
+      new Tree($('[data-tree]'));
+      item('docs').focus();
+
+      press('ArrowDown');
+
+      expect(document.activeElement).toBe(item('readme'));
+      expect(tabStops()).toEqual(['readme']);
+    });
+
+    it('en selección simple la selección sigue al foco', () => {
+      buildMarkup();
+      const tree = new Tree($('[data-tree]'));
+      item('docs').focus();
+
+      press('ArrowDown');
+      press('ArrowDown');
+
+      expect(tree.value).toBe('license');
+    });
+
+    it('en selección múltiple las flechas no cambian la selección y Espacio la alterna', () => {
+      buildMarkup();
+      $('[data-tree]').setAttribute('data-multiple', '');
+      const tree = new Tree($('[data-tree]'));
+      expect(tree.value).toEqual([]);
+      item('docs').focus();
+
+      press('ArrowDown');
+      press('ArrowDown');
+      expect(tree.value).toEqual([]);
+
+      press(' ');
+      expect(tree.value).toEqual(['license']);
+
+      press(' ');
+      expect(tree.value).toEqual([]);
+    });
+
+    it('Espacio en múltiple actualiza los <input type="hidden">', () => {
+      buildMarkup();
+      $('[data-tree]').setAttribute('data-multiple', '');
+      $('[data-tree]').setAttribute('data-name', 'archivos');
+      new Tree($('[data-tree]'));
+      item('readme').focus();
+
+      press(' ');
+
+      expect(
+        Array.from($$('input[name="archivos"]')).map((i) => i.value)
+      ).toEqual(['readme']);
+    });
+
+    it('→ en una hoja no hace nada', () => {
+      buildMarkup();
+      new Tree($('[data-tree]'));
+      item('package').focus();
+
+      press('ArrowRight');
+
+      expect(item('package').hasAttribute('aria-expanded')).toBe(false);
+      expect(document.activeElement).toBe(item('package'));
+    });
+  });
 });

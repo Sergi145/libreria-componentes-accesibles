@@ -18,7 +18,6 @@
  *   tree.value; // → string | null
  */
 
-import { rovingTabindex } from '../../utils/roving-tabindex.js';
 import { createTypeahead } from '../../utils/typeahead.js';
 
 export class Tree {
@@ -32,7 +31,6 @@ export class Tree {
     }
     this.el = el;
     this._initialState = [];
-    this._rovingDestroy = null;
     this._typeahead = null;
     this._listeners = [];
     this._lastSelectedItem = null;
@@ -54,6 +52,7 @@ export class Tree {
         hadAriaExpanded: li.hasAttribute('aria-expanded'),
         hadAriaLabelledby: li.hasAttribute('aria-labelledby'),
         hadAriaSelected: li.hasAttribute('aria-selected'),
+        hadTabindex: li.hasAttribute('tabindex'),
       });
 
       // Poner role="treeitem"
@@ -86,10 +85,8 @@ export class Tree {
             processNode(child, depth + 1);
           }
         });
-      } else {
-        // Nodo sin hijos
-        li.setAttribute('aria-expanded', 'false');
       }
+      // Las hojas no llevan aria-expanded: se anunciarían como «contraído».
 
       // Inicializar selección
       if (!li.hasAttribute('aria-selected')) {
@@ -101,12 +98,6 @@ export class Tree {
       if (li.tagName === 'LI') {
         processNode(li);
       }
-    });
-
-    // Roving tabindex vertical
-    this._rovingDestroy = rovingTabindex(el, '[role="treeitem"]', {
-      orientation: 'vertical',
-      wrap: false,
     });
 
     // Typeahead
@@ -122,11 +113,45 @@ export class Tree {
       { target: el, listener: onClick, type: 'click' }
     );
 
-    // Seleccionar el primer nodo
-    const firstItem = Array.from(el.querySelectorAll('[role="treeitem"]'))[0];
-    if (firstItem) {
-      firstItem.setAttribute('aria-selected', 'true');
+    // Roving tabindex propio (no rovingTabindex de utils): el árbol tiene sus
+    // propias reglas de flechas y, con las dos, cada flecha avanzaba dos nodos.
+    const items = Array.from(el.querySelectorAll('[role="treeitem"]'));
+    const selected = items.find(
+      (item) => item.getAttribute('aria-selected') === 'true'
+    );
+    // En selección simple la selección sigue al foco: empieza en el primero.
+    if (!this.multiple && !selected && items[0]) {
+      items[0].setAttribute('aria-selected', 'true');
     }
+    items.forEach((item) => item.setAttribute('tabindex', '-1'));
+    const start = selected || items[0];
+    if (start) start.setAttribute('tabindex', '0');
+  }
+
+  _focusItem(item) {
+    this.el
+      .querySelectorAll('[role="treeitem"]')
+      .forEach((i) => i.setAttribute('tabindex', i === item ? '0' : '-1'));
+    item.focus();
+  }
+
+  _toggleItem(item) {
+    const selected = item.getAttribute('aria-selected') !== 'true';
+    item.setAttribute('aria-selected', String(selected));
+    this._lastSelectedItem = item;
+    this._syncHiddenInputs();
+    this.el.dispatchEvent(
+      new CustomEvent('tree:change', {
+        bubbles: true,
+        detail: { value: this.value },
+      })
+    );
+  }
+
+  // Mueve el foco; en selección simple la selección lo sigue.
+  _moveTo(item) {
+    this._focusItem(item);
+    if (!this.multiple) this._selectItem(item);
   }
 
   get multiple() {
@@ -166,8 +191,6 @@ export class Tree {
       target.removeEventListener(type, listener);
     });
     this._listeners = [];
-    this._rovingDestroy?.();
-    this._rovingDestroy = null;
     this._typeahead = null;
 
     // Quitar role="tree"
@@ -181,8 +204,10 @@ export class Tree {
         hadAriaExpanded,
         hadAriaLabelledby,
         hadAriaSelected,
+        hadTabindex,
       }) => {
         if (!hadRole) li.removeAttribute('role');
+        if (!hadTabindex) li.removeAttribute('tabindex');
         if (!hadAriaExpanded) li.removeAttribute('aria-expanded');
         if (!hadAriaLabelledby) li.removeAttribute('aria-labelledby');
         if (!hadAriaSelected) li.removeAttribute('aria-selected');
@@ -246,14 +271,7 @@ export class Tree {
     if (key === ' ') {
       event.preventDefault();
       if (this.multiple) {
-        const selected = current.getAttribute('aria-selected') !== 'true';
-        current.setAttribute('aria-selected', String(selected));
-        this.el.dispatchEvent(
-          new CustomEvent('tree:change', {
-            bubbles: true,
-            detail: { value: this.value },
-          })
-        );
+        this._toggleItem(current);
       } else {
         this._selectItem(current);
       }
@@ -265,20 +283,9 @@ export class Tree {
       event.preventDefault();
       if (currentIndex < visibleItems.length - 1) {
         const next = visibleItems[currentIndex + 1];
-        next.focus();
-        if (event.shiftKey && this.multiple) {
-          // Shift+↓: alternar selección del siguiente
-          const selected = next.getAttribute('aria-selected') !== 'true';
-          next.setAttribute('aria-selected', String(selected));
-          this.el.dispatchEvent(
-            new CustomEvent('tree:change', {
-              bubbles: true,
-              detail: { value: this.value },
-            })
-          );
-        } else {
-          this._selectItem(next);
-        }
+        this._moveTo(next);
+        // Shift+↓: alternar selección del siguiente
+        if (event.shiftKey && this.multiple) this._toggleItem(next);
       }
       return;
     }
@@ -288,20 +295,9 @@ export class Tree {
       event.preventDefault();
       if (currentIndex > 0) {
         const prev = visibleItems[currentIndex - 1];
-        prev.focus();
-        if (event.shiftKey && this.multiple) {
-          // Shift+↑: alternar selección del anterior
-          const selected = prev.getAttribute('aria-selected') !== 'true';
-          prev.setAttribute('aria-selected', String(selected));
-          this.el.dispatchEvent(
-            new CustomEvent('tree:change', {
-              bubbles: true,
-              detail: { value: this.value },
-            })
-          );
-        } else {
-          this._selectItem(prev);
-        }
+        this._moveTo(prev);
+        // Shift+↑: alternar selección del anterior
+        if (event.shiftKey && this.multiple) this._toggleItem(prev);
       }
       return;
     }
@@ -309,17 +305,14 @@ export class Tree {
     // → expande o va al primer hijo
     if (key === 'ArrowRight') {
       event.preventDefault();
-      const expanded = current.getAttribute('aria-expanded') === 'true';
-      if (!expanded) {
+      const group = current.querySelector(':scope > [role="group"]');
+      if (!group) return; // hoja: no hace nada
+      if (current.getAttribute('aria-expanded') !== 'true') {
         current.setAttribute('aria-expanded', 'true');
-        const group = current.querySelector(':scope > [role="group"]');
-        if (group) group.hidden = false;
+        group.hidden = false;
       } else {
-        const group = current.querySelector(':scope > [role="group"]');
-        if (group) {
-          const firstChild = group.querySelector(':scope > li');
-          if (firstChild) firstChild.focus();
-        }
+        const firstChild = group.querySelector(':scope > li');
+        if (firstChild) this._moveTo(firstChild);
       }
       return;
     }
@@ -335,7 +328,7 @@ export class Tree {
       } else {
         const group = current.closest('[role="group"]');
         if (group && group.parentElement?.hasAttribute('role')) {
-          group.parentElement.focus();
+          this._moveTo(group.parentElement);
         }
       }
       return;
@@ -346,7 +339,7 @@ export class Tree {
       event.preventDefault();
       if (visibleItems.length > 0) {
         const first = visibleItems[0];
-        first.focus();
+        this._moveTo(first);
         if (event.ctrlKey && event.shiftKey && this.multiple) {
           // Ctrl+Shift+Home: seleccionar desde inicio hasta actual
           for (let i = 0; i <= currentIndex; i++) {
@@ -359,8 +352,6 @@ export class Tree {
               detail: { value: this.value },
             })
           );
-        } else {
-          this._selectItem(first);
         }
       }
       return;
@@ -371,7 +362,7 @@ export class Tree {
       event.preventDefault();
       if (visibleItems.length > 0) {
         const last = visibleItems[visibleItems.length - 1];
-        last.focus();
+        this._moveTo(last);
         if (event.ctrlKey && event.shiftKey && this.multiple) {
           // Ctrl+Shift+End: seleccionar desde actual hasta fin
           for (let i = currentIndex; i < visibleItems.length; i++) {
@@ -384,8 +375,6 @@ export class Tree {
               detail: { value: this.value },
             })
           );
-        } else {
-          this._selectItem(last);
         }
       }
       return;
@@ -397,10 +386,10 @@ export class Tree {
       const group = current.parentElement;
       if (group) {
         Array.from(group.children).forEach((li) => {
-          if (li.tagName === 'LI') {
+          const childGroup = li.querySelector(':scope > [role="group"]');
+          if (li.tagName === 'LI' && childGroup) {
             li.setAttribute('aria-expanded', 'true');
-            const childGroup = li.querySelector(':scope > [role="group"]');
-            if (childGroup) childGroup.hidden = false;
+            childGroup.hidden = false;
           }
         });
       }
@@ -441,8 +430,7 @@ export class Tree {
         currentIndex
       );
       if (nextIndex !== -1 && nextIndex !== undefined) {
-        visibleItems[nextIndex].focus();
-        this._selectItem(visibleItems[nextIndex]);
+        this._moveTo(visibleItems[nextIndex]);
       }
     }
   }
@@ -463,7 +451,7 @@ export class Tree {
         const group = item.querySelector(':scope > [role="group"]');
         if (group) group.hidden = false;
       }
-      item.focus();
+      this._focusItem(item);
       return;
     }
 
@@ -490,21 +478,12 @@ export class Tree {
       }
     } else if (this.multiple) {
       // Clic sin shift: alternar en múltiple
-      const selected = item.getAttribute('aria-selected') !== 'true';
-      item.setAttribute('aria-selected', String(selected));
-      this._lastSelectedItem = item;
-      this._syncHiddenInputs();
-      this.el.dispatchEvent(
-        new CustomEvent('tree:change', {
-          bubbles: true,
-          detail: { value: this.value },
-        })
-      );
+      this._toggleItem(item);
     } else {
       // Clic en simple: seleccionar
       this._selectItem(item);
     }
-    item.focus();
+    this._focusItem(item);
   }
 
   _selectItem(item) {
