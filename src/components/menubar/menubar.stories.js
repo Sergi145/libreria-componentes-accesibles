@@ -1,4 +1,5 @@
 import './menubar.css';
+import { initMenubars } from './menubar.js';
 
 export default {
   title: 'Componentes/Menubar',
@@ -210,6 +211,7 @@ function createMenubar() {
       </li>
     </ul>
   `;
+  initMenubars(wrapper);
   return wrapper;
 }
 

@@ -86,6 +86,7 @@ export const SinJs = {
           class="c-field__control"
           id="${p}"
           name="cantidad"
+          value="1"
           role="spinbutton"
           aria-valuenow="1"
           aria-valuemin="1"

@@ -17,6 +17,10 @@
  * - El estado inicial se pinta en el constructor a partir del `value`
  *   que ya trae el HTML: no hace falta esperar a la primera
  *   interacción.
+ * - El `<output>` se busca desde la raíz del propio `input`
+ *   (`getRootNode()`), no desde `document`: así funciona con marcado
+ *   que aún no está insertado en la página (p. ej. las historias de
+ *   Storybook, que construyen el DOM antes de montarlo).
  *
  * Uso:
  *   import { Range, initRanges } from './range.js';
@@ -65,7 +69,8 @@ export class Range {
   /** @returns {HTMLOutputElement | null} */
   _resolveOutput() {
     const id = this.el.id;
-    return (id && document.querySelector(`output[for="${id}"]`)) || null;
+    if (!id) return null;
+    return this.el.getRootNode().querySelector(`output[for="${id}"]`);
   }
 
   _onInput() {

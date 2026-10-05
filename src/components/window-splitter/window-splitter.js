@@ -151,7 +151,8 @@ export class WindowSplitter {
 
   _syncDisplay(value) {
     this.separator.setAttribute('aria-valuenow', String(value));
-    this.separator.setAttribute('aria-valuetext', `${value} %`);
+    const rounded = Math.round(value * 100) / 100;
+    this.separator.setAttribute('aria-valuetext', `${rounded} %`);
     this._container.style.setProperty('--c-splitter-position', `${value}%`);
   }
 

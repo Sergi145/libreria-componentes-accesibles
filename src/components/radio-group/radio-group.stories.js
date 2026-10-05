@@ -49,21 +49,23 @@ export const Obligatorio = {
     const p = nextPrefix('obligatorio');
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
-      <fieldset class="c-radio-group" id="${p}-preferencia" role="radiogroup"
-        aria-labelledby="${p}-preferencia-legend" data-radio-group data-required>
-        <legend class="c-radio-group__legend" id="${p}-preferencia-legend">
-          Preferencia de contacto <span class="c-radio-group__required">(obligatorio)</span>
-        </legend>
-        <div class="c-radio">
-          <input class="c-radio__input" type="radio" id="${p}-email" name="${p}-contacto" value="email" />
-          <label class="c-radio__label" for="${p}-email">Correo electrónico</label>
-        </div>
-        <div class="c-radio">
-          <input class="c-radio__input" type="radio" id="${p}-tel" name="${p}-contacto" value="tel" />
-          <label class="c-radio__label" for="${p}-tel">Teléfono</label>
-        </div>
-      </fieldset>
-      <button type="button" class="c-button c-button--secondary">Validar</button>
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-4)">
+        <fieldset class="c-radio-group" id="${p}-preferencia" role="radiogroup"
+          aria-labelledby="${p}-preferencia-legend" data-radio-group data-required>
+          <legend class="c-radio-group__legend" id="${p}-preferencia-legend">
+            Preferencia de contacto <span class="c-radio-group__required">(obligatorio)</span>
+          </legend>
+          <div class="c-radio">
+            <input class="c-radio__input" type="radio" id="${p}-email" name="${p}-contacto" value="email" />
+            <label class="c-radio__label" for="${p}-email">Correo electrónico</label>
+          </div>
+          <div class="c-radio">
+            <input class="c-radio__input" type="radio" id="${p}-tel" name="${p}-contacto" value="tel" />
+            <label class="c-radio__label" for="${p}-tel">Teléfono</label>
+          </div>
+        </fieldset>
+        <button type="button" class="c-button c-button--secondary">Validar</button>
+      </div>
     `;
 
     const [group] = initRadioGroups(wrapper);

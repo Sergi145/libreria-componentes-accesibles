@@ -10,8 +10,9 @@
   inserta los botones −/+ con tabindex="-1" (no son paradas de Tab
   propias, APG) y los deshabilita en los extremos.
 
-  Sin JavaScript: no hay botones −/+, y el campo es un <input> de
-  texto normal que se envía igual que cualquier otro.
+  Sin JavaScript: no hay botones −/+ ni teclas de flecha, y el campo es
+  un <input> de texto normal con su `value` inicial, que se envía igual
+  que cualquier otro.
 -->
 
 <!-- Paso entero, sin data-format -->
@@ -23,6 +24,7 @@
     class="c-field__control c-spinbutton__input"
     id="cantidad"
     name="cantidad"
+    value="1"
     role="spinbutton"
     aria-valuenow="1"
     aria-valuemin="1"
@@ -41,6 +43,7 @@
     class="c-field__control c-spinbutton__input"
     id="peso"
     name="peso"
+    value="70"
     role="spinbutton"
     aria-valuenow="70"
     aria-valuemin="30"

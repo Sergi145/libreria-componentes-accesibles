@@ -71,6 +71,20 @@ describe('Range', () => {
     ).toBe('70');
   });
 
+  it('encuentra el <output> en un contenedor aún no insertado en el documento', () => {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = `
+      <input type="range" id="detached" min="0" max="100" value="40" data-format="{value} %" />
+      <output for="detached" id="detached-output">40 %</output>
+    `;
+    const range = new Range(wrapper.querySelector('input'));
+
+    input(wrapper.querySelector('input'), '75');
+
+    expect(wrapper.querySelector('output').textContent).toBe('75 %');
+    expect(range.value).toBe(75);
+  });
+
   it('funciona sin un <output> asociado: solo escribe aria-valuetext', () => {
     document.body.innerHTML = `<input type="range" id="suelto" min="0" max="10" value="5" />`;
 

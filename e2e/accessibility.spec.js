@@ -298,6 +298,29 @@ const stories = [
     name: 'Feed / con carga infinita',
   },
   { id: 'componentes-feed--con-error', name: 'Feed / con error' },
+
+  // Menubar
+  { id: 'componentes-menubar--basica', name: 'Menubar / básica' },
+  { id: 'componentes-menubar--acciones', name: 'Menubar / acciones' },
+  {
+    id: 'componentes-menubar--casillas-y-radios',
+    name: 'Menubar / casillas y radios',
+  },
+
+  // Tree view
+  { id: 'componentes-tree-view--basica', name: 'Tree view / básica' },
+  {
+    id: 'componentes-tree-view--con-seleccion',
+    name: 'Tree view / con selección',
+  },
+  {
+    id: 'componentes-tree-view--seleccion-multiple',
+    name: 'Tree view / selección múltiple',
+  },
+
+  // Grid
+  { id: 'componentes-grid--basica', name: 'Grid / básica' },
+  { id: 'componentes-grid--con-enlaces', name: 'Grid / con enlaces' },
 ];
 
 for (const story of stories) {
@@ -646,7 +669,9 @@ test('Popover: Enter lo abre, Escape lo cierra con el foco en el disparador', as
   await button.focus();
   await page.keyboard.press('Enter');
   await expect(button).toHaveAttribute('aria-expanded', 'true');
-  await expect(page.getByText('Código de 24 caracteres')).toBeVisible();
+  await expect(
+    page.locator('.c-popover__panel').getByText('Código de 24 caracteres')
+  ).toBeVisible();
 
   await page.keyboard.press('Escape');
   await expect(button).toHaveAttribute('aria-expanded', 'false');
@@ -1013,4 +1038,171 @@ test('Window splitter: → cambia aria-valuenow, Enter colapsa y el arrastre con
   await page.mouse.up();
 
   await expect(separator).toHaveAttribute('aria-valuenow', '75');
+});
+
+test('Menubar: ↓ abre el menú, → pasa al siguiente y Escape devuelve el foco', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-menubar--basica&viewMode=story');
+
+  const archivo = page.getByRole('menuitem', { name: 'Archivo', exact: true });
+  const editar = page.getByRole('menuitem', { name: 'Editar', exact: true });
+  await archivo.focus();
+  await page.keyboard.press('ArrowDown');
+
+  await expect(archivo).toHaveAttribute('aria-expanded', 'true');
+  await expect(
+    page.getByRole('menuitem', { name: 'Nuevo', exact: true })
+  ).toBeFocused();
+
+  await page.keyboard.press('ArrowRight');
+  await expect(archivo).toHaveAttribute('aria-expanded', 'false');
+  await expect(editar).toHaveAttribute('aria-expanded', 'true');
+  await expect(
+    page.getByRole('menuitem', { name: 'Deshacer', exact: true })
+  ).toBeFocused();
+
+  await page.keyboard.press('Escape');
+  await expect(editar).toHaveAttribute('aria-expanded', 'false');
+  await expect(editar).toBeFocused();
+});
+
+test('Tree view: → expande un nodo plegado y ↓ entra en su primer hijo', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tree-view--basica&viewMode=story'
+  );
+
+  const documentos = page.getByRole('treeitem', {
+    name: 'Documentos',
+    exact: true,
+  });
+  await documentos.focus();
+  await page.keyboard.press('ArrowRight');
+
+  await expect(documentos).toHaveAttribute('aria-expanded', 'true');
+  await page.keyboard.press('ArrowDown');
+  await expect(
+    page.getByRole('treeitem', { name: 'README.md', exact: true })
+  ).toBeFocused();
+});
+
+test('Tree view múltiple: Espacio alterna la selección y ↓ solo mueve el foco', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-tree-view--seleccion-multiple&viewMode=story'
+  );
+
+  const documentos = page.getByRole('treeitem', {
+    name: 'Documentos',
+    exact: true,
+  });
+  const readme = page.getByRole('treeitem', { name: 'README.md', exact: true });
+  const license = page.getByRole('treeitem', { name: 'LICENSE', exact: true });
+
+  await documentos.focus();
+  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Space');
+  await expect(readme).toHaveAttribute('aria-selected', 'true');
+
+  await page.keyboard.press('ArrowDown');
+  await expect(license).toBeFocused();
+  await expect(readme).toHaveAttribute('aria-selected', 'true');
+  await expect(license).toHaveAttribute('aria-selected', 'false');
+});
+
+test('Grid: una sola parada de Tab, las flechas no dan la vuelta y Ctrl+Fin va a la última celda', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-grid--basica&viewMode=story');
+
+  await expect(page.locator('[data-grid] [tabindex="0"]')).toHaveCount(1);
+
+  const laptop = page.locator('#product-laptop');
+  await laptop.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.locator('[data-grid] td').nth(1)).toBeFocused();
+
+  await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('ArrowLeft');
+  await expect(laptop).toBeFocused();
+
+  await page.keyboard.press('Control+End');
+  await expect(
+    page.getByRole('button', { name: 'Agregar Hub USB', exact: true })
+  ).toBeFocused();
+});
+
+test('Grid: Enter en una cabecera ordenable ordena y el foco se queda en ella', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-grid--basica&viewMode=story');
+
+  const stock = page.locator('th[data-sort]', { hasText: 'Stock' });
+  const boton = page.getByRole('button', { name: 'Stock', exact: true });
+  await boton.focus();
+  await page.keyboard.press('Enter');
+
+  await expect(stock).toHaveAttribute('aria-sort', 'ascending');
+  await expect(boton).toBeFocused();
+
+  await page.keyboard.press('Enter');
+  await expect(stock).toHaveAttribute('aria-sort', 'descending');
+  await expect(page.locator('[aria-sort]')).toHaveCount(1);
+});
+
+test('Feed: AvPág pasa al artículo siguiente', async ({ page }) => {
+  await page.goto('/iframe.html?id=componentes-feed--basica&viewMode=story');
+
+  await page
+    .getByRole('article', { name: 'Primer artículo', exact: true })
+    .focus();
+  await page.keyboard.press('PageDown');
+
+  await expect(
+    page.getByRole('article', { name: 'Segundo artículo', exact: true })
+  ).toBeFocused();
+});
+
+test('Feed con carga: al llegar al final se añaden artículos y el foco no se mueve', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-feed--con-carga-infinita&viewMode=story'
+  );
+
+  const primer = page.getByRole('article', {
+    name: 'Primer artículo',
+    exact: true,
+  });
+  await primer.focus();
+
+  await expect(
+    page.getByRole('article', { name: 'Artículo cargado 1', exact: true })
+  ).toBeVisible({ timeout: 5000 });
+  await expect(primer).toBeFocused();
+});
+
+test('Feed con error: «Reintentar» con teclado vuelve a cargar', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-feed--con-error&viewMode=story');
+
+  await expect(
+    page.getByText('No se pudieron cargar más artículos').first()
+  ).toBeVisible({ timeout: 5000 });
+
+  const reintentar = page.getByRole('button', {
+    name: 'Reintentar',
+    exact: true,
+  });
+  await reintentar.focus();
+  await page.keyboard.press('Enter');
+
+  await expect(
+    page.getByRole('article', { name: 'Artículo cargado 2', exact: true })
+  ).toBeVisible({ timeout: 5000 });
 });

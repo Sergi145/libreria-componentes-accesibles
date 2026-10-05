@@ -187,6 +187,104 @@ describe('Menubar', () => {
     expect($('#menu-editar').hidden).toBe(false);
   });
 
+  it('Inicio y Fin dentro de un menú no salen de él', () => {
+    buildMarkup();
+    new Menubar($('[role="menubar"]'));
+    barItems()[0].click();
+    const menuItems = Array.from(
+      $('#menu-archivo').querySelectorAll('[role="menuitem"]')
+    );
+
+    menuItems[0].focus();
+    key(menuItems[0], 'End');
+    expect(document.activeElement).toBe(menuItems[menuItems.length - 1]);
+
+    key(menuItems[menuItems.length - 1], 'Home');
+    expect(document.activeElement).toBe(menuItems[0]);
+  });
+
+  it('Enter en un elemento de la barra sin menú no cancela su activación', () => {
+    document.body.innerHTML = `
+      <ul role="menubar" aria-label="Acciones">
+        <li role="none"><button type="button" role="menuitem">Ayuda</button></li>
+      </ul>`;
+    new Menubar($('[role="menubar"]'));
+
+    const event = key(barItems()[0], 'Enter');
+
+    expect(event.defaultPrevented).toBe(false);
+  });
+
+  it('Escape cierra el menú y devuelve el foco a su elemento de la barra', () => {
+    buildMarkup();
+    new Menubar($('[role="menubar"]'));
+    const archivoBtn = barItems()[0];
+    archivoBtn.click();
+
+    key($('#menu-archivo [role="menuitem"]'), 'Escape');
+
+    expect($('#menu-archivo').hidden).toBe(true);
+    expect(document.activeElement).toBe(archivoBtn);
+  });
+
+  it('Tab cierra el menú', () => {
+    buildMarkup();
+    new Menubar($('[role="menubar"]'));
+    barItems()[0].click();
+
+    key($('#menu-archivo [role="menuitem"]'), 'Tab');
+
+    expect($('#menu-archivo').hidden).toBe(true);
+  });
+
+  it('una casilla alterna aria-checked sin cerrar el menú', () => {
+    buildMarkup();
+    new Menubar($('[role="menubar"]'));
+    barItems()[2].click();
+    const casilla = $('#menu-vista [role="menuitemcheckbox"]');
+
+    casilla.click();
+
+    expect(casilla.getAttribute('aria-checked')).toBe('false');
+    expect($('#menu-vista').hidden).toBe(false);
+  });
+
+  it('un radio deja uno solo marcado en su grupo y no cierra el menú', () => {
+    buildMarkup();
+    new Menubar($('[role="menubar"]'));
+    barItems()[2].click();
+    const radios = Array.from(
+      $('#menu-vista').querySelectorAll('[role="menuitemradio"]')
+    );
+
+    radios[1].click();
+
+    expect(radios.map((r) => r.getAttribute('aria-checked'))).toEqual([
+      'false',
+      'true',
+    ]);
+    expect($('#menu-vista').hidden).toBe(false);
+  });
+
+  it('→ desde un menú enfoca el siguiente elemento de la barra aunque no tenga menú', () => {
+    document.body.innerHTML = `
+      <ul role="menubar" aria-label="Acciones">
+        <li role="none">
+          <button type="button" role="menuitem" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-a">Archivo</button>
+          <ul id="menu-a" role="menu" hidden>
+            <li role="none"><button type="button" role="menuitem">Nuevo</button></li>
+          </ul>
+        </li>
+        <li role="none"><button type="button" role="menuitem" id="ayuda">Ayuda</button></li>
+      </ul>`;
+    new Menubar($('[role="menubar"]'));
+    barItems()[0].click();
+
+    key($('#menu-a [role="menuitem"]'), 'ArrowRight');
+
+    expect(document.activeElement).toBe($('#ayuda'));
+  });
+
   it('destroy() quita los listeners', () => {
     buildMarkup();
     const menubar = new Menubar($('[role="menubar"]'));

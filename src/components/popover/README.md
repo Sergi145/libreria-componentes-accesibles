@@ -8,9 +8,10 @@ así está implementado (reutiliza `Disclosure` y añade `dismissable`).
 El marcado va siempre en el HTML: un envoltorio `.c-popover` con el
 `<button>` y, **justo después**, el panel `hidden`.
 
-> **Dependencias:** `popover.js` importa `../../utils/disclosure.js` y
-> `../../utils/dismiss.js`. Si copias la carpeta a otro proyecto, copia
-> también esas dos. `dist/popover/` es autónomo (Vite las empaqueta).
+> **Dependencias:** `popover.js` importa `../../utils/disclosure.js`,
+> `../../utils/dismiss.js` y `../../utils/live-region.js`. Si copias la
+> carpeta a otro proyecto, copia también esas tres. `dist/popover/` es
+> autónomo (Vite las empaqueta).
 
 ## Uso
 
@@ -45,7 +46,9 @@ O con la clase: `new Popover(button)`, con `open()`, `close({ returnFocus })`,
 ## Comportamiento
 
 - **Enter / Espacio** (o clic): abre y cierra; alterna `aria-expanded` y
-  `hidden`.
+  `hidden`. Al abrir, el texto del panel se anuncia con `announce()`
+  (región viva cortés): el foco se queda en el botón, y sin ese anuncio
+  el lector solo diría «expandido».
 - **`Escape`**: lo cierra y devuelve el foco al botón (WCAG 1.4.13:
   descartable). Solo intercepta `Escape` mientras está abierto, y lo
   cancela para no cerrar un `<dialog>` que lo contenga.
@@ -82,8 +85,8 @@ elige la posición que quepa.
 - Tab hasta el botón; Enter y Espacio abren y cierran el panel.
 - Con el panel abierto, `Escape` lo cierra y el foco sigue en el botón.
 - Clic fuera: se cierra.
-- Con NVDA/VoiceOver: se anuncia «contraído/expandido» y, al abrir, el
-  siguiente elemento en la lectura es el texto del panel.
+- Con NVDA/VoiceOver: al abrir se anuncia «expandido» seguido del texto
+  del panel, sin tener que navegar hasta él.
 - Zoom al 200 % y `dir="rtl"`: el panel sigue visible y bien colocado.
 
 ## Conformidad con la guía

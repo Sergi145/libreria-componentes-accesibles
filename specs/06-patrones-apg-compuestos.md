@@ -214,17 +214,17 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 
 ## Criterios de aceptación
 
-- [ ] `npm run check` (lint JS + lint CSS + Vitest) termina sin errores.
-- [ ] `npm run lint:html` termina sin errores.
-- [ ] `npm run test:e2e` pasa: cero violaciones de axe en todas las historias de la lista y todos los tests de teclado en verde.
-- [ ] `npm run build` genera `dist/<componente>/` con `.js`, `.css` y `.html` para `menubar`, `tree-view`, `grid` y `feed`, además de los 35 existentes.
-- [ ] Ningún `.js` de `dist/` contiene `import` de rutas relativas: `menu`, `sort` y las demás utilidades quedan empaquetadas dentro.
-- [ ] `menu-button.test.js` y `table.test.js` pasan sin modificar ninguna línea, y `menu-button.js` y `table.js` importan de `src/utils/menu.js` y `src/utils/sort.js`.
+- [x] `npm run check` (lint JS + lint CSS + Vitest) termina sin errores.
+- [x] `npm run lint:html` termina sin errores.
+- [x] `npm run test:e2e` pasa: cero violaciones de axe en todas las historias de la lista y todos los tests de teclado en verde.
+- [x] `npm run build` genera `dist/<componente>/` con `.js`, `.css` y `.html` para `menubar`, `tree-view`, `grid` y `feed`, además de los 35 existentes.
+- [x] Ningún `.js` de `dist/` contiene `import` de rutas relativas: `menu`, `sort` y las demás utilidades quedan empaquetadas dentro.
+- [x] `menu-button.test.js` y `table.test.js` pasan sin modificar ninguna línea, y `menu-button.js` y `table.js` importan de `src/utils/menu.js` y `src/utils/sort.js`.
 - [ ] Cada componente nuevo tiene un README con uso, accesibilidad, pruebas manuales y el apartado «Conformidad con la guía».
-- [ ] Menubar: Tab entra una sola vez; ←/→ recorren la barra con envoltura; ↓ abre el menú con `aria-expanded="true"` y el foco en su primer elemento.
-- [ ] Menubar: con un menú abierto, → cierra ese menú y abre el siguiente; nunca hay dos menús sin `hidden` a la vez.
+- [x] Menubar: Tab entra una sola vez; ←/→ recorren la barra con envoltura; ↓ abre el menú con `aria-expanded="true"` y el foco en su primer elemento.
+- [x] Menubar: con un menú abierto, → cierra ese menú y abre el siguiente; nunca hay dos menús sin `hidden` a la vez.
 - [ ] Menubar: Escape cierra el menú y `document.activeElement` es su elemento de la barra; un `<dialog>` contenedor no se cierra.
-- [ ] Menubar: activar un `menuitemcheckbox` alterna `aria-checked` sin cerrar; activar un `menuitemradio` deja uno solo con `aria-checked="true"` en su grupo.
+- [x] Menubar: activar un `menuitemcheckbox` alterna `aria-checked` sin cerrar; activar un `menuitemradio` deja uno solo con `aria-checked="true"` en su grupo.
 - [ ] Menubar: escribir «gu» en menos de 500 ms enfoca el primer elemento que empieza por «gu».
 - [ ] Tree view: sin JS, el `.html` es una lista anidada sin atributos `role`; con JS tiene `role="tree"`, `treeitem` y `group`.
 - [ ] Tree view: el nombre accesible de un nodo con hijos es solo el texto de su etiqueta.
@@ -232,9 +232,9 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 - [ ] Tree view simple: ↓ mueve el foco y la selección; solo un nodo tiene `aria-selected="true"`; se dispara `tree:change`.
 - [ ] Tree view múltiple: tiene `aria-multiselectable="true"`; ↓ no cambia la selección; Espacio alterna; seleccionar un padre no selecciona sus hijos; `value` devuelve un array.
 - [ ] Tree view con `data-name`: hay un `<input type="hidden">` con ese `name` por cada valor seleccionado, y ninguno más.
-- [ ] Grid: tiene `role="grid"` y una sola parada de tabulación; las flechas mueven el foco de celda sin envoltura; Ctrl+Fin enfoca la última celda.
-- [ ] Grid: en una celda con un único botón o enlace, el foco está en ese elemento y no en el `<td>`.
-- [ ] Grid: Enter en una cabecera ordenable pone `aria-sort="ascending"`, una segunda vez `"descending"`, y el foco sigue en esa cabecera; solo una cabecera tiene `aria-sort`.
+- [x] Grid: tiene `role="grid"` y una sola parada de tabulación; las flechas mueven el foco de celda sin envoltura; Ctrl+Fin enfoca la última celda.
+- [x] Grid: en una celda con un único botón o enlace, el foco está en ese elemento y no en el `<td>`.
+- [x] Grid: Enter en una cabecera ordenable pone `aria-sort="ascending"`, una segunda vez `"descending"`, y el foco sigue en esa cabecera; solo una cabecera tiene `aria-sort`.
 - [ ] Grid: sin JS es una `<table>` con `<caption>` y sin `role="grid"`.
 - [ ] Feed: tiene `role="feed"`; cada `<article>` es enfocable, tiene nombre accesible y `aria-posinset` correlativo desde 1.
 - [ ] Feed: AvPág/RePág mueven el foco entre artículos; Ctrl+Fin enfoca el primer elemento enfocable posterior al feed.
@@ -246,7 +246,7 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 - [ ] Todos los controles interactivos miden al menos 24×24 px y usan el anillo `--color-focus-ring` con `:focus-visible`.
 - [ ] Todas las transiciones nuevas (flecha del árbol, apertura de menú) se desactivan con `prefers-reduced-motion: reduce`.
 - [ ] El elemento seleccionado, marcado o expandido se distingue sin depender del color y también con `forced-colors: active`.
-- [ ] Los tests existentes de los SPEC 01 a 05 siguen pasando sin modificar sus aserciones.
+- [x] Los tests existentes de los SPEC 01 a 05 siguen pasando sin modificar sus aserciones.
 
 ## Decisiones
 
@@ -284,6 +284,7 @@ Su README incluye un apartado «Conformidad con la guía» que recoge lo que la 
 - **Sí:** sin JS, enlace «Cargar más» con `href` (paginación del servidor). Con `loadMore`, el JS lo oculta.
 - **Sí:** el estado de carga reutiliza el CSS de `c-spinner` (SPEC 03), igual que Alert y Toast enlazan `close-button.css`.
 - **Sí:** cada `<article>` del feed tiene `tabindex="0"`, como en el ejemplo de APG, para que cada artículo sea una parada al recorrer con Tab además de con AvPág/RePág.
+- **Sí (desvío del punto 11):** la sección (`data-feed`) no lleva `tabindex`: solo los artículos son paradas de Tab, y así la sección no se enfoca sola. Ctrl+Fin/Ctrl+Inicio buscan el primer/último elemento enfocable del documento fuera del feed (saltando los ocultos y los `tabindex="-1"`), no solo el hermano contiguo.
 - **Sí:** `Menubar`, `Tree`, `Grid` y `Feed` siguen la convención de las clases del proyecto: constructor con el elemento, `destroy()` y una función `init…`.
 
 ## Riesgos

@@ -116,3 +116,20 @@
 [role='treeitem'][aria-expanded='false'] > [role='group'] {
   display: none;
 }
+
+/* Alto contraste: se pierden los fondos, así que la selección se marca con
+   un subrayado y un indicador de borde grueso. La flecha de expansión sigue
+   siendo el icono que gira. */
+@media (forced-colors: active) {
+  [role='treeitem'][aria-selected='true'] > .c-tree__label {
+    text-decoration: underline;
+  }
+
+  .c-tree__mark {
+    box-sizing: border-box;
+  }
+
+  [role='treeitem'][aria-selected='true'] > .c-tree__label .c-tree__mark {
+    border-width: 0.5em;
+  }
+}
