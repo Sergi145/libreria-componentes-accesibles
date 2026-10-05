@@ -17,6 +17,7 @@ patrón [WAI-ARIA APG — Spinbutton](https://www.w3.org/WAI/ARIA/apg/patterns/s
     class="c-field__control c-spinbutton__input"
     id="peso"
     name="peso"
+    value="70"
     role="spinbutton"
     aria-valuenow="70"
     aria-valuemin="30"
@@ -116,8 +117,14 @@ que el foco se quede siempre en el campo, nunca en el botón.
   mensaje lleva texto e icono propios (ver `.c-field__error`/
   `.c-field__error-icon` de `text-field.css`), enlazado con
   `aria-describedby`.
-- **Sin JavaScript**: no hay botones −/+; el campo es un `<input>` de
-  texto normal que se envía igual que cualquier otro.
+- **Sin JavaScript**: no hay botones −/+ ni teclas de flecha; el campo
+  es un `<input>` de texto normal. Por eso el marcado lleva un
+  `value` inicial (`value="70"`): sin él, el campo aparecería vacío y
+  el formulario enviaría un valor vacío, aunque `aria-valuenow` diga
+  otra cosa. Los atributos `aria-*` solo los lee el lector de pantalla
+  y no cambian lo que se ve ni lo que se envía. El `role="spinbutton"`
+  promete un teclado que sin JS no existe; si el componente no se va a
+  inicializar, conviene quitarlo.
 - **Patrón de referencia**: [WAI-ARIA APG — Spinbutton](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/).
 
 ## Pruebas manuales recomendadas
@@ -135,8 +142,8 @@ que el foco se quede siempre en el campo, nunca en el botón.
 - Escribir un texto no numérico, salir del campo y comprobar que el
   lector anuncia el error al volver a él; corregirlo y comprobar que
   el error se retira sin tener que salir otra vez.
-- Sin JavaScript, comprobar que el campo se puede escribir y enviar
-  con un formulario normal.
+- Sin JavaScript, comprobar que el campo muestra su valor inicial, se
+  puede escribir y se envía con un formulario normal.
 
 ## Dependencias
 

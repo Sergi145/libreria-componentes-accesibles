@@ -13,6 +13,11 @@
  *    descartable).
  *  - Un clic o el foco fuera lo cierra sin mover el foco.
  *
+ * Decisiones no obvias:
+ * - Al abrir, el texto del panel se anuncia con `announce()`. El foco se
+ *   queda en el botón, así que sin esto el lector solo dice «expandido» y
+ *   el contenido no se lee hasta que el usuario navega hasta él.
+ *
  * Uso:
  *   import { Popover } from './popover.js';
  *   new Popover(document.querySelector('[data-popover]'));
@@ -20,6 +25,7 @@
 
 import { Disclosure } from '../../utils/disclosure.js';
 import { dismissable } from '../../utils/dismiss.js';
+import { announce } from '../../utils/live-region.js';
 
 export class Popover {
   /** @param {HTMLButtonElement} trigger */
@@ -83,11 +89,19 @@ export class Popover {
         trigger: this.trigger,
         onDismiss: (reason) => this.close({ returnFocus: reason === 'escape' }),
       });
+      announce(textoDelPanel(panel));
     } else if (!this.expanded && this._dismissDestroy) {
       this._dismissDestroy();
       this._dismissDestroy = null;
     }
   }
+}
+
+/** Une el texto de cada bloque del panel para que se lea con pausas. */
+function textoDelPanel(panel) {
+  return Array.from(panel.children, (el) => el.textContent.trim())
+    .filter(Boolean)
+    .join(' ');
 }
 
 /**

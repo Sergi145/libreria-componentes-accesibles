@@ -44,7 +44,11 @@ src/
 │  ├─ field-validation.js   # setFieldError()/clearFieldError() (usa Text field, Checkbox, Radio group, Combobox, Spinbutton)
 │  ├─ field-validation.test.js
 │  ├─ typeahead.js          # buscar por texto escrito (usa Listbox, Combobox)
-│  └─ typeahead.test.js
+│  ├─ typeahead.test.js
+│  ├─ menu.js               # elementos de menú: habilitados, foco, casillas/radios (usa Menu Button, Menubar)
+│  ├─ menu.test.js
+│  ├─ sort.js               # valor de ordenación y comparación text/number (usa Table, Grid)
+│  └─ sort.test.js
 └─ components/
    ├─ button/
    │  ├─ button.html        # marcado de referencia
@@ -86,6 +90,10 @@ src/
    ├─ listbox/              # role="listbox"; selección simple o múltiple, con grupos
    ├─ combobox/             # editable (lista/estricto) y de solo-selección sobre un <select>
    ├─ spinbutton/            # input numérico con botones +/- y formato opcional
+   ├─ menubar/              # role="menubar": menús de acciones, casillas y radios
+   ├─ tree-view/            # lista anidada que pasa a role="tree"; usa utils/roving-tabindex + typeahead
+   ├─ grid/                 # <table> que pasa a role="grid"; enlaza table.css; usa utils/sort
+   ├─ feed/                 # role="feed" con carga por scroll; enlaza spinner.css; usa utils/live-region
    └─ window-splitter/       # separador arrastrable entre dos paneles
 e2e/
 └─ accessibility.spec.js    # auditoría axe-core + tests de teclado sobre Storybook (Playwright)
@@ -103,9 +111,9 @@ prefieres no compartirlos, sustituye las variables `var(--...)` de cada
 `src/utils/` reúne la lógica que comparten varios componentes en vez de
 duplicarla:
 
-- `rovingTabindex()` (`Toolbar`, `Tabs`, `Menu Button` y `Carousel`): mover el
+- `rovingTabindex()` (`Toolbar`, `Tabs`, `Menu Button`, `Menubar`, `Tree view`, `Grid` y `Carousel`): mover el
   foco con flechas dentro de un grupo.
-- `dismissable()` (`Dropdown`, `Menu Button`, `Popover` y `Tooltip`): cerrar con
+- `dismissable()` (`Dropdown`, `Menu Button`, `Menubar`, `Popover` y `Tooltip`): cerrar con
   Esc y con clic o foco fuera.
 - `placeFloating()` (`Tooltip`): colocarse donde no se corte.
 - `Disclosure` (`Navbar`, `Dropdown` y `Popover`): `aria-expanded` + `hidden`.
@@ -121,6 +129,10 @@ duplicarla:
   (acumula letras con un tiempo de espera, y repetir la misma letra pasa
   a la siguiente coincidencia); `normalizeText()` quita tildes y
   mayúsculas para comparar.
+- `menu.js` (`Menu Button` y `Menubar`): elementos de menú habilitados, foco con
+  `tabindex`, activación de casillas y radios, y búsqueda de una letra.
+- `sort.js` (`Table` y `Grid`): valor de ordenación de una celda
+  (`data-sort-value` o texto) y comparación `text`/`number`.
 
 Vite las empaqueta dentro del `.js` de cada componente que las usa, así que el
 resultado en `dist/` sigue siendo autónomo — pero si copias la carpeta de uno
@@ -240,6 +252,10 @@ y se puede copiar tal cual.
 | [`Listbox`](src/components/listbox)                 | [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)                 | `aria-activedescendant`; selección simple o múltiple; typeahead               |
 | [`Combobox`](src/components/combobox)               | [Combobox](https://www.w3.org/WAI/ARIA/apg/patterns/combobox/)               | Editable (lista o estricto) o de solo-selección sobre un `<select>`           |
 | [`Spinbutton`](src/components/spinbutton)           | [Spinbutton](https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/)           | Input numérico con botones +/-; formato (moneda, unidades…) opcional          |
+| [`Menubar`](src/components/menubar)                 | [Menu Bar](https://www.w3.org/WAI/ARIA/apg/patterns/menubar/)                | Roving tabindex; menús de acciones, casillas y radios; sin submenús anidados  |
+| [`Tree view`](src/components/tree-view)             | [Tree View](https://www.w3.org/WAI/ARIA/apg/patterns/treeview/)              | Lista anidada que el JS convierte en árbol; selección simple o múltiple; `*`  |
+| [`Grid`](src/components/grid)                       | [Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/)                       | `<table>` de solo lectura con navegación por celdas; columnas ordenables      |
+| [`Feed`](src/components/feed)                       | [Feed](https://www.w3.org/WAI/ARIA/apg/patterns/feed/)                       | Artículos enfocables con AvPág/RePág; carga por scroll con `loadMore`         |
 | [`Window splitter`](src/components/window-splitter) | [Window Splitter](https://www.w3.org/WAI/ARIA/apg/patterns/window-splitter/) | Separador arrastrable (ratón o teclado) entre dos paneles; colapsable         |
 
 ## Convenciones de los componentes

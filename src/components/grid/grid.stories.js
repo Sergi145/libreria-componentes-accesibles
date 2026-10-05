@@ -18,9 +18,9 @@ function createGrid() {
       <caption>Productos disponibles (navegación con flechas)</caption>
       <thead>
         <tr>
-          <th scope="col">Nombre</th>
+          <th scope="col" data-sort="text">Nombre</th>
           <th scope="col">Precio</th>
-          <th scope="col">Stock</th>
+          <th scope="col" data-sort="number">Stock</th>
           <th scope="col">Acción</th>
         </tr>
       </thead>

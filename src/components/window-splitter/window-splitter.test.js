@@ -83,6 +83,25 @@ describe('WindowSplitter', () => {
     expect(separator.getAttribute('aria-valuenow')).toBe('30');
   });
 
+  it('aria-valuetext redondea a 2 decimales; aria-valuenow conserva la precisión', () => {
+    const separator = buildSplitter({ value: 50, min: 0, max: 100 });
+    new WindowSplitter(separator);
+    const container = document.querySelector('.c-splitter');
+    container.getBoundingClientRect = () => ({
+      left: 0,
+      top: 0,
+      width: 300,
+      height: 0,
+    });
+
+    separator.dispatchEvent(
+      new MouseEvent('pointerdown', { clientX: 100, bubbles: true })
+    );
+
+    expect(separator.getAttribute('aria-valuenow')).toBe('33.33333333333333');
+    expect(separator.getAttribute('aria-valuetext')).toBe('33.33 %');
+  });
+
   it('--c-splitter-position en el contenedor está sincronizado con aria-valuenow', () => {
     const separator = buildSplitter({ value: 50 });
     new WindowSplitter(separator);

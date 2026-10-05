@@ -100,7 +100,8 @@ paneles lado a lado usa `"vertical"` y la apilada, `"horizontal"`.
 
 - **`role="separator"`** con `tabindex="0"` (puesto por JS) y
   `aria-valuenow`/`aria-valuemin`/`aria-valuemax`/`aria-valuetext`
-  («30 %»).
+  («30 %»; el texto se redondea a 2 decimales, p. ej. «33.33 %», mientras
+  `aria-valuenow` conserva la precisión del arrastre).
 - **`aria-controls`** apunta al panel principal; **`aria-label`**
   describe qué panel cambia de tamaño.
 - **Zona de agarre** de `--target-size-min` (24×24px) con una línea

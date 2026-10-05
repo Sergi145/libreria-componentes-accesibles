@@ -47,6 +47,18 @@ describe('Popover', () => {
     expect(document.getElementById('p1').hidden).toBe(true);
   });
 
+  it('al abrir anuncia el texto del panel sin mover el foco', async () => {
+    const trigger = document.querySelector('[data-popover]');
+    new Popover(trigger);
+
+    trigger.click();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const region = document.querySelector('[data-live-region="polite"]');
+    expect(region.textContent).toBe('Código de 24 caracteres.');
+    expect(document.activeElement).not.toBe(document.querySelector('#p1 p'));
+  });
+
   it('el panel es el siguiente hermano del disparador', () => {
     const trigger = document.querySelector('[data-popover]');
     expect(trigger.nextElementSibling.id).toBe('p1');

@@ -99,23 +99,8 @@ export class Grid {
     });
 
     // Agregar role="gridcell" y tabindex a todas las celdas
-    allCells.forEach((cell, index) => {
-      cell.setAttribute('role', 'gridcell');
-      cell.setAttribute('tabindex', String(index === 0 ? 0 : -1));
-
-      // Si la celda contiene un único enlace o botón, poner el foco ahí
-      const link = cell.querySelector('a:only-child');
-      const button = cell.querySelector(
-        'button:only-child:not(.c-grid__sort-button)'
-      );
-      if (link) {
-        link.setAttribute('tabindex', '0');
-        cell.setAttribute('tabindex', '-1');
-      } else if (button) {
-        button.setAttribute('tabindex', '0');
-        cell.setAttribute('tabindex', '-1');
-      }
-    });
+    allCells.forEach((cell) => cell.setAttribute('role', 'gridcell'));
+    if (allCells[0]) this._setActiveCell(allCells[0]);
 
     // Listener de teclado
     const onKeydown = (event) => this._onKeydown(event);
@@ -156,13 +141,9 @@ export class Grid {
           element.innerHTML = originalContent;
           element.removeAttribute('aria-sort');
         } else if (element.tagName === 'TD') {
-          // Quitar tabindex de links y buttons dentro de celdas de datos
-          const link = element.querySelector('a');
-          const button = element.querySelector(
-            'button:not(.c-grid__sort-button)'
-          );
-          if (link) link.removeAttribute('tabindex');
-          if (button) button.removeAttribute('tabindex');
+          element
+            .querySelectorAll('a, button')
+            .forEach((el) => el.removeAttribute('tabindex'));
         }
       }
     );
@@ -195,21 +176,22 @@ export class Grid {
   }
 
   _focusCell(cell) {
-    const allCells = this._getAllCells();
-    allCells.forEach((c) => c.setAttribute('tabindex', '-1'));
-    cell.setAttribute('tabindex', '0');
+    this._setActiveCell(cell);
+    this._getFocusTarget(cell).focus();
+  }
 
-    const link = cell.querySelector('a:only-child');
-    const button = cell.querySelector(
-      'button:only-child:not(.c-grid__sort-button)'
-    );
-    if (link) {
-      link.focus();
-    } else if (button) {
-      button.focus();
-    } else {
-      cell.focus();
-    }
+  _setActiveCell(cell) {
+    this._getAllCells().forEach((c) => {
+      c.setAttribute('tabindex', '-1');
+      c.querySelectorAll('a, button').forEach((el) =>
+        el.setAttribute('tabindex', '-1')
+      );
+    });
+    this._getFocusTarget(cell).setAttribute('tabindex', '0');
+  }
+
+  _getFocusTarget(cell) {
+    return cell.querySelector('a:only-child, button:only-child') ?? cell;
   }
 
   _sortBy(header) {

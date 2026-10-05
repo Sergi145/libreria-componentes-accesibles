@@ -26,7 +26,7 @@ import {
   toggleMenuItem,
 } from '../../utils/menu.js';
 
-const ITEM_SELECTOR = '[role="menuitem"]';
+const BAR_ITEM_SELECTOR = '[role="menubar"] > li > [role="menuitem"]';
 
 export class Menubar {
   /** @param {HTMLElement} el [role="menubar"] */
@@ -45,13 +45,11 @@ export class Menubar {
     this._menuListeners = [];
     this._listeners = [];
 
-    const items = Array.from(
-      el.querySelectorAll(`:scope > li > ${ITEM_SELECTOR}`)
-    );
+    const items = Array.from(el.querySelectorAll(BAR_ITEM_SELECTOR));
     if (items.length === 0) return;
 
     // Roving tabindex en los botones de la barra
-    this._rovingDestroy = rovingTabindex(el, ITEM_SELECTOR, {
+    this._rovingDestroy = rovingTabindex(el, BAR_ITEM_SELECTOR, {
       orientation: 'horizontal',
       wrap: true,
     });
@@ -187,24 +185,20 @@ export class Menubar {
 
   _onBarKeydown(event, barItem) {
     const { key } = event;
+    const hasMenu = barItem.hasAttribute('aria-controls');
 
-    // ↓ y Enter/Espacio: abrir menú
-    if (key === 'ArrowDown' || key === 'Enter' || key === ' ') {
+    // ↓ y Enter/Espacio abren el menú; sin menú, Enter/Espacio siguen su curso
+    // para que el botón se active con su clic nativo.
+    if (key === 'ArrowDown' || ((key === 'Enter' || key === ' ') && hasMenu)) {
       event.preventDefault();
-      const menuId = barItem.getAttribute('aria-controls');
-      if (menuId) {
-        this.open(barItem, { focus: 'first' });
-      }
+      this.open(barItem, { focus: 'first' });
       return;
     }
 
     // ↑: abrir menú y enfoca el último
     if (key === 'ArrowUp') {
       event.preventDefault();
-      const menuId = barItem.getAttribute('aria-controls');
-      if (menuId) {
-        this.open(barItem, { focus: 'last' });
-      }
+      this.open(barItem, { focus: 'last' });
       return;
     }
 
@@ -225,9 +219,7 @@ export class Menubar {
 
   _onMenuKeydown(event) {
     const { key } = event;
-    const barItems = Array.from(
-      this.el.querySelectorAll(`:scope > li > ${ITEM_SELECTOR}`)
-    );
+    const barItems = Array.from(this.el.querySelectorAll(BAR_ITEM_SELECTOR));
     const currentBarItem = this._openMenuBarItem;
     const currentIndex = barItems.indexOf(currentBarItem);
 
@@ -237,7 +229,7 @@ export class Menubar {
       const nextIndex = (currentIndex + 1) % barItems.length;
       const nextItem = barItems[nextIndex];
       this.close({ returnFocus: false });
-      this.open(nextItem, { focus: 'first' });
+      this._openOrFocusBarItem(nextItem);
       return;
     }
 
@@ -247,7 +239,7 @@ export class Menubar {
       const prevIndex = (currentIndex - 1 + barItems.length) % barItems.length;
       const prevItem = barItems[prevIndex];
       this.close({ returnFocus: false });
-      this.open(prevItem, { focus: 'first' });
+      this._openOrFocusBarItem(prevItem);
       return;
     }
 
@@ -278,6 +270,14 @@ export class Menubar {
       if (nextIndex !== -1 && nextIndex !== undefined) {
         focusMenuItem(this._openMenu, menuItems[nextIndex]);
       }
+    }
+  }
+
+  _openOrFocusBarItem(barItem) {
+    if (barItem.hasAttribute('aria-controls')) {
+      this.open(barItem, { focus: 'first' });
+    } else {
+      barItem.focus();
     }
   }
 

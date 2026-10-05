@@ -124,3 +124,15 @@
   border-color: var(--color-primary-600);
   box-shadow: inset 0 0 0 2px var(--color-surface);
 }
+
+/* Sin colores de fondo, el marcado se pinta con un borde grueso que rellena el cuadro. */
+@media (forced-colors: active) {
+  .c-menubar__option[role='menuitemcheckbox']::before,
+  .c-menubar__option[role='menuitemradio']::before {
+    box-sizing: border-box;
+  }
+
+  .c-menubar__option[aria-checked='true']::before {
+    border-width: 0.5em;
+  }
+}
