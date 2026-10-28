@@ -47,6 +47,7 @@ export class Offcanvas extends Modal {
 
   destroy() {
     this.dialog.removeEventListener('click', this._onBackdropClick);
+    this.dialog.removeEventListener('keydown', this._onTrapKeydown);
     this._mediaQuery?.removeEventListener('change', this._onBreakpointChange);
   }
 

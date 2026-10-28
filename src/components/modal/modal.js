@@ -13,6 +13,12 @@
  *  - La conexión entre el botón que abre el modal y el <dialog>.
  *  - Cierre al hacer clic en el backdrop (salvo en la variante
  *    alertdialog, ver más abajo).
+ *  - Un atrapado de foco estricto (Tab / Shift+Tab ciclan dentro del
+ *    diálogo). El nativo deja que Tab salga a la interfaz del
+ *    navegador (barra de direcciones, pestañas) antes de volver al
+ *    diálogo; aquí el foco nunca sale.
+ *  - En el fallback sin showModal(), además, el foco inicial y su
+ *    devolución al cerrar.
  *
  * Variante alertdialog: un <dialog role="alertdialog"> es un modal que
  * interrumpe para pedir una respuesta (confirmaciones destructivas). El
@@ -32,6 +38,10 @@
  *     .addEventListener('click', () => modal.open());
  */
 
+// Elementos que pueden recibir foco con Tab (tabindex negativo excluido).
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex^="-"])';
+
 export class Modal {
   /** @param {HTMLDialogElement} dialogEl */
   constructor(dialogEl) {
@@ -41,6 +51,9 @@ export class Modal {
     this.dialog = dialogEl;
     this._onBackdropClick = this._onBackdropClick.bind(this);
     this.dialog.addEventListener('click', this._onBackdropClick);
+    this._onTrapKeydown = this._onTrapKeydown.bind(this);
+    this.dialog.addEventListener('keydown', this._onTrapKeydown);
+    this._returnFocusTo = null;
   }
 
   open() {
@@ -48,10 +61,13 @@ export class Modal {
       this.dialog.showModal();
     } else {
       // Fallback para navegadores sin soporte de <dialog> (muy pocos):
-      // pierde el atrapado de foco nativo, así que en ese caso conviene
-      // usar un polyfill (p. ej. dialog-polyfill) en vez de confiar solo
-      // en esta rama.
+      // no hay atrapado de foco ni inertización nativos, así que se
+      // atrapa Tab a mano. El fondo sigue sin ser inerte para lectores
+      // de pantalla: para eso conviene un polyfill (p. ej.
+      // dialog-polyfill).
+      this._returnFocusTo = document.activeElement;
       this.dialog.setAttribute('open', '');
+      (this._focusables()[0] ?? this.dialog).focus();
     }
   }
 
@@ -61,12 +77,44 @@ export class Modal {
       this.dialog.close(returnValue);
     } else {
       this.dialog.removeAttribute('open');
+      this._returnFocusTo?.focus?.();
+      this._returnFocusTo = null;
     }
   }
 
   /** @returns {boolean} */
   get isAlert() {
     return this.dialog.getAttribute('role') === 'alertdialog';
+  }
+
+  /** @returns {HTMLElement[]} */
+  _focusables() {
+    return [...this.dialog.querySelectorAll(FOCUSABLE)];
+  }
+
+  /**
+   * Tab en el último control vuelve al primero y Shift+Tab en el
+   * primero salta al último. Solo actúa con el diálogo abierto.
+   * @param {KeyboardEvent} event
+   */
+  _onTrapKeydown(event) {
+    if (event.key !== 'Tab' || !this.dialog.open) return;
+    const items = this._focusables();
+    if (items.length === 0) {
+      event.preventDefault();
+      this.dialog.focus();
+      return;
+    }
+    const first = items[0];
+    const last = items[items.length - 1];
+    const active = document.activeElement;
+    if (event.shiftKey && (active === first || active === this.dialog)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   /** @param {MouseEvent} event */
