@@ -96,6 +96,104 @@ describe('Modal', () => {
     expect(dialog.open).toBe(true);
   });
 
+  describe('focus trap', () => {
+    it('con showModal también cicla: Tab en el último vuelve al primero', () => {
+      const dialog = document.getElementById('m1');
+      dialog.insertAdjacentHTML(
+        'beforeend',
+        '<button type="button" id="extra">Extra</button>'
+      );
+      new Modal(dialog).open();
+      const extra = document.getElementById('extra');
+      extra.focus();
+
+      const event = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        bubbles: true,
+        cancelable: true,
+      });
+      extra.dispatchEvent(event);
+
+      expect(event.defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(dialog.querySelector('button'));
+    });
+  });
+
+  describe('fallback sin showModal (focus trap propio)', () => {
+    function openFallback() {
+      document.body.innerHTML = `
+        <button type="button" id="trigger">Abrir</button>
+        <dialog id="f1" class="c-modal" aria-labelledby="f1-title">
+          <h2 id="f1-title">Título</h2>
+          <button type="button" id="b1">Uno</button>
+          <button type="button" id="b2">Dos</button>
+        </dialog>
+      `;
+      const dialog = document.getElementById('f1');
+      dialog.showModal = undefined;
+      const trigger = document.getElementById('trigger');
+      trigger.focus();
+      const modal = new Modal(dialog);
+      modal.open();
+      return { dialog, modal, trigger };
+    }
+
+    const tab = (el, shiftKey = false) => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        shiftKey,
+        bubbles: true,
+        cancelable: true,
+      });
+      el.dispatchEvent(event);
+      return event;
+    };
+
+    it('al abrir, el foco pasa al primer control', () => {
+      openFallback();
+      expect(document.activeElement.id).toBe('b1');
+    });
+
+    it('Tab en el último control vuelve al primero', () => {
+      openFallback();
+      const b2 = document.getElementById('b2');
+      b2.focus();
+
+      const event = tab(b2);
+
+      expect(event.defaultPrevented).toBe(true);
+      expect(document.activeElement.id).toBe('b1');
+    });
+
+    it('Shift+Tab en el primer control salta al último', () => {
+      openFallback();
+      const b1 = document.getElementById('b1');
+
+      const event = tab(b1, true);
+
+      expect(event.defaultPrevented).toBe(true);
+      expect(document.activeElement.id).toBe('b2');
+    });
+
+    it('Tab en un control que no es el último no se intercepta', () => {
+      openFallback();
+      const event = tab(document.getElementById('b1'));
+      expect(event.defaultPrevented).toBe(false);
+    });
+
+    it('close() devuelve el foco al disparador y quita el trap', () => {
+      const { dialog, modal, trigger } = openFallback();
+
+      modal.close();
+
+      expect(dialog.hasAttribute('open')).toBe(false);
+      expect(document.activeElement).toBe(trigger);
+      const b2 = document.getElementById('b2');
+      b2.focus();
+      expect(tab(b2).defaultPrevented).toBe(false);
+    });
+  });
+
   describe('variante alertdialog', () => {
     it('isAlert es true solo cuando el <dialog> tiene role="alertdialog"', () => {
       const dialog = document.getElementById('m1');

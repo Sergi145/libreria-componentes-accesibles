@@ -357,6 +357,32 @@ test('Modal: Escape cierra el diálogo y devuelve el foco al trigger', async ({
   await expect(trigger).toBeFocused();
 });
 
+test('Modal: Tab y Shift+Tab ciclan dentro del diálogo sin salir nunca', async ({
+  page,
+}) => {
+  await page.goto('/iframe.html?id=componentes-modal--default&viewMode=story');
+
+  const trigger = page.getByRole('button', { name: 'Abrir modal' });
+  await trigger.focus();
+  await trigger.press('Enter');
+  await expect(
+    page.getByRole('dialog', { name: 'Confirmar acción' })
+  ).toBeVisible();
+
+  // Estricto: el foco siempre está en un control del diálogo (ni <body>
+  // ni la interfaz del navegador).
+  const focusInsideDialog = () =>
+    page.evaluate(() => !!document.activeElement?.closest('dialog[open]'));
+  for (let i = 0; i < 8; i++) {
+    await page.keyboard.press('Tab');
+    expect(await focusInsideDialog()).toBe(true);
+  }
+  for (let i = 0; i < 8; i++) {
+    await page.keyboard.press('Shift+Tab');
+    expect(await focusInsideDialog()).toBe(true);
+  }
+});
+
 test('Accordion: las flechas mueven el foco entre cabeceras', async ({
   page,
 }) => {
