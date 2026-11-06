@@ -110,6 +110,9 @@ export function setFieldError(control, message) {
     errorEl = document.createElement('p');
     errorEl.id = errorId;
     errorEl.className = 'c-field__error';
+    // El texto va antes de insertarlo: si el host es una región viva, el
+    // lector ve una sola adición con el mensaje ya dentro y no lo repite.
+    errorEl.textContent = message;
     const { parent, before } = resolveHost(control, controlId);
     parent.insertBefore(errorEl, before);
   }

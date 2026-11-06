@@ -141,6 +141,34 @@ formulario (`insertBefore` al principio); para elegir dónde va,
 escribe tú mismo `<div data-error-summary></div>` en el marcado y
 `FormValidation` lo reutiliza.
 
+### Variante: errores por campo en regiones vivas y validación asíncrona
+
+La historia «Formulario con validación asíncrona (aria-live)» no usa
+resumen de errores ni mueve el foco: cada campo tiene debajo su propio
+mensaje, y el lector lo anuncia por una región viva. Sirve cuando hay
+que esperar al servidor (nombre de usuario libre, correo ya
+registrado…).
+
+- Cada campo lleva un `<div data-field-error="<id>" aria-live="polite">`
+  presente desde el principio y vacío. `setFieldError()` inserta ahí el
+  mensaje (`<p id="<id>-error">`), así que se anuncia al aparecer y sigue
+  enlazado con `aria-describedby`.
+- Una región `role="status"` solo dice «Cuenta creada correctamente». La
+  comprobación en curso no se anuncia: el lector solo oye el resultado.
+- Mientras se espera, el formulario lleva `aria-busy="true"` y el botón
+  `aria-disabled="true"` (no `disabled`: perdería el foco). Un segundo
+  envío se ignora hasta que acabe el primero.
+- La validación se hace con **debounce** (600 ms sin escribir), no al
+  salir del campo ni al enviar. Cada pulsación retira el error del
+  campo y reinicia la cuenta atrás, así no se anuncia nada mientras se
+  escribe. Primero la nativa; solo si pasa, el usuario se consulta al
+  servidor (una consulta por valor, y se descarta la respuesta si el
+  valor cambió mientras tanto). «Crear cuenta» cancela los debounce
+  pendientes y completa lo que aún no se había validado. El error
+  asíncrono usa `setFieldError()`, no `setCustomValidity()`.
+- El mensaje lleva texto en peso medio, icono `aria-hidden` y una
+  entrada de 150 ms que `prefers-reduced-motion` desactiva.
+
 ## Dependencias
 
 `text-field.css` no depende de ningún otro componente. Los colores
