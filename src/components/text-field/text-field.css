@@ -79,6 +79,21 @@ textarea.c-field__control {
   margin: 0;
   color: var(--color-text);
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  animation: c-field-error-in 150ms ease-out;
+}
+
+@keyframes c-field-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .c-field__error {
+    animation: none;
+  }
 }
 
 .c-field__error-icon {

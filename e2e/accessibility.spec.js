@@ -202,6 +202,10 @@ const stories = [
     name: 'Text field / formulario con resumen de errores',
   },
   {
+    id: 'componentes-text-field--formulario-asincrono',
+    name: 'Text field / formulario con validación asíncrona',
+  },
+  {
     id: 'componentes-text-field--deshabilitado-y-solo-lectura',
     name: 'Text field / deshabilitado y solo lectura',
   },
@@ -862,6 +866,46 @@ test('Formulario: enviar vacío lleva el foco al resumen y un enlace enfoca su c
   const nameField = page.getByLabel('Nombre');
   await summary.getByRole('link').first().click();
   await expect(nameField).toBeFocused();
+});
+
+test('Formulario asíncrono: valida tras una pausa al escribir y anuncia el error en su región viva', async ({
+  page,
+}) => {
+  await page.goto(
+    '/iframe.html?id=componentes-text-field--formulario-asincrono&viewMode=story'
+  );
+
+  const usuario = page.getByLabel('Nombre de usuario');
+  const correo = page.getByLabel('Correo electrónico');
+
+  // Sin cambiar el foco ni pulsar «Crear cuenta»: basta con dejar de escribir.
+  await usuario.fill('ana');
+  await expect(usuario).not.toHaveAttribute('aria-invalid', 'true');
+  const usuarioError = page.locator('[data-field-error][aria-live]', {
+    hasText: 'ya está en uso',
+  });
+  await expect(usuarioError).toBeVisible();
+  await expect(usuario).toHaveAttribute('aria-invalid', 'true');
+  // Con el foco en el campo, el error solo suena por su región viva: no
+  // entra en aria-describedby hasta salir (si no, se relee la ayuda).
+  await expect(usuario).not.toHaveAttribute(
+    'aria-describedby',
+    /usuario-error/
+  );
+
+  await correo.fill('no-es-un-correo');
+  await expect(
+    page.locator('[data-field-error][aria-live]', {
+      hasText: 'Introduce un correo electrónico válido',
+    })
+  ).toBeVisible();
+
+  // Al salir del campo, el error queda enlazado para quien vuelva a él.
+  await expect(usuario).toHaveAttribute('aria-describedby', /usuario-error/);
+
+  // Escribir de nuevo retira el error al instante.
+  await usuario.fill('nuevo-usuario');
+  await expect(usuarioError).toHaveCount(0);
 });
 
 test('Radio group: las flechas mueven el foco y cambian la selección', async ({
