@@ -84,7 +84,7 @@ src/
    ├─ text-field/           # input/textarea/select + validación nativa + resumen de errores
    ├─ checkbox/             # casilla + estado mixto (Seleccionar todo)
    ├─ radio-group/          # fieldset role="radiogroup" + validación de grupo
-   ├─ switch/               # solo CSS; input checkbox con role="switch"
+   ├─ switch/               # button role="switch" + aria-checked dinámico
    ├─ range/                # input range + output sincronizado
    ├─ table/                # tabla semántica + ordenable por columna
    ├─ listbox/              # role="listbox"; selección simple o múltiple, con grupos
@@ -246,7 +246,7 @@ y se puede copiar tal cual.
 | [`Text field`](src/components/text-field)           | —                                                                            | `input`/`textarea`/`select`; validación nativa; resumen de errores enfocable  |
 | [`Checkbox`](src/components/checkbox)               | [Checkbox](https://www.w3.org/WAI/ARIA/apg/patterns/checkbox/)               | Estado mixto (`indeterminate`) con «Seleccionar todo»                         |
 | [`Radio group`](src/components/radio-group)         | [Radio Group](https://www.w3.org/WAI/ARIA/apg/patterns/radio/)               | `fieldset role="radiogroup"`; validación de grupo obligatorio                 |
-| [`Switch`](src/components/switch)                   | [Switch](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)                   | Solo CSS; `input checkbox role="switch"`; estado por posición e icono         |
+| [`Switch`](src/components/switch)                   | [Switch](https://www.w3.org/WAI/ARIA/apg/patterns/switch/)                   | `button role="switch"` + `aria-checked` dinámico; estado por posición e icono |
 | [`Range`](src/components/range)                     | —                                                                            | `input type="range"` + `output` sincronizado; `aria-valuetext`                |
 | [`Table`](src/components/table)                     | [Table](https://www.w3.org/WAI/ARIA/apg/patterns/table/)                     | `caption` obligatorio; envoltorio con scroll enfocable; ordenable por columna |
 | [`Listbox`](src/components/listbox)                 | [Listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/)                 | `aria-activedescendant`; selección simple o múltiple; typeahead               |
